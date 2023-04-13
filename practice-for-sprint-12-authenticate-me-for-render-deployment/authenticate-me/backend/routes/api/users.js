@@ -12,6 +12,10 @@ const router = express.Router();
 
 
 const validateSignup = [
+    check('firstName')
+        .exists({ checkFalsy: true }),
+    check('lastName')
+        .exists({ checkFalsy: true }),
     check('email')
         .exists({ checkFalsy: true })
         .isEmail()
@@ -34,14 +38,22 @@ const validateSignup = [
 
 // Sign up /api/users
 router.post('', validateSignup, async (req, res) => {
-    const { email, password, username } = req.body;
+    const { email, password, username, firstName, lastName } = req.body;
+    // console.log('email', email)
+    // console.log('password', password)
+    // console.log('username', username)
+    // console.log('firstName', firstName)
+    // console.log('lastName', lastName)
     const hashedPassword = bcrypt.hashSync(password);
-    const user = await User.create({ email, username, hashedPassword });
+    const user = await User.create({ email, username, hashedPassword, firstName, lastName });
 
     const safeUser = {
         id: user.id,
         email: user.email,
         username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+
     };
 
     await setTokenCookie(res, safeUser);
