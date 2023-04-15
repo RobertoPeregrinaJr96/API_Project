@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN
     },
     spotId: {
-      DataTypes: INTEGER,
+      type: DataTypes.INTEGER,
       references: {
         model: 'Spots',
         onDelete: 'CASCADE',
