@@ -18,26 +18,23 @@ module.exports = {
       startDate: {
         type: Sequelize.DATE,
         allowNull: false
-        // should i put a unique constraint
       },
       endDate: {
         type: Sequelize.DATE,
         allowNull: false,
-
-        // should i put a unique constraint
       },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
-          model: 'Users'
+          model: 'Users',
+          key:'id'
         }
       },
       spotId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
-          model: 'Spots'
+          model: 'Spots',
+          key:'id'
         }
       },
       createdAt: {

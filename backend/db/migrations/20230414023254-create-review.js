@@ -24,22 +24,26 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
         reference: {
-          model: 'Users'
+          model: 'Users',
+          key:'id'
         }
       },
-      sportId: {
+      spotId: {
         type: Sequelize.INTEGER,
         reference: {
-          model: 'Spots'
+          model: 'Spots',
+          key:'id'
         }
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     }, options);
   },

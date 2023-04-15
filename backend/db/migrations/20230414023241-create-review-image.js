@@ -19,13 +19,12 @@ module.exports = {
       },
       url: {
         type: Sequelize.STRING
-        // unique???
       },
       reviewId: {
         type: Sequelize.INTEGER,
         reference: {
           model: 'Reviews',
-          // other key?????
+          key:'id'
         }
       },
       createdAt: {
@@ -41,7 +40,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = "Users";
+    options.tableName = "ReviewImages";
     await queryInterface.dropTable(options);
   }
 };

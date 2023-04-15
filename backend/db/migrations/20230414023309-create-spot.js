@@ -18,58 +18,47 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
       city: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
       state: {
-        allowNull: false,
         type: Sequelize.STRING,
       },
       country: {
         type: Sequelize.STRING,
-        allowNull: false,
-
       },
       lat: {
         type: Sequelize.DECIMAL,
-        allowNull: false,
-
       },
-      Ing: {
+      lng: {
         type: Sequelize.DECIMAL,
-        allowNull: false,
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false,
-
       },
       description: {
         type: Sequelize.STRING,
-        allowNull: false,
-
       },
       price: {
         type: Sequelize.DECIMAL,
-        allowNull: false,
-
       },
-      spotId: {
+      ownerId: {
         type: Sequelize.INTEGER,
         reference: {
-          model: 'Spots'
+          model: 'Spots',
+          key: 'id'
         }
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     }, options);
   },
