@@ -56,10 +56,11 @@ router.get('/current', async (req, res) => {
 })
 
 const validateSpotId = [
-    create('id')
+    check('id')
         .exists({ checkFalsy: true })
-        .isNumber()
-        .withMessage('Not a Valid Id')
+        .isNumeric()
+        .withMessage('Not a Valid Id'),
+    handleValidationErrors
 ]
 
 // Get details of a Spot from an id
@@ -93,45 +94,45 @@ router.get('/:spotId', async (req, res) => {
 })
 
 const validateCreateSpot = [
-    check(address)
+    check('address')
         .exists({ checkFalsy: true })
         .isString()
-        .isU
         .withMessage('Street address is required'),
-    check(city)
+    check('city')
         .exists({ checkFalsy: true })
         .isString()
         .withMessage('City is required'),
-    check(state)
+    check('state')
         .exists({ checkFalsy: true })
         .isString()
         .withMessage('State is required'),
-    check(country)
+    check('country')
         .exists({ checkFalsy: true })
         .isString()
         .withMessage('Country is required'),
-    check(lat)
+    check('lat')
         .exists({ checkFalsy: true })
         .isDecimal()
         .withMessage('Latitude is not valid'),
-    check(lng)
+    check('lng')
         .exists({ checkFalsy: true })
         .isDecimal()
         .withMessage('Longitude is not valid'),
-    check(name)
+    check('name')
         .exists({ checkFalsy: true })
         .isString()
-        .isLength({ min: 1, max: 49 })
+        .isLength({ max: 49 })
         .withMessage('Name must be less than 50 characters'),
-    check(description)
+    check('description')
         .exists({ checkFalsy: true })
         .isString()
-        .isLength(min: 1)
+        .isLength({min: 1})
         .withMessage('Description is required'),
-    check(price)
+    check('price')
         .exists({ checkFalsy: true })
         .isDecimal()
         .withMessage('Price per day is required'),
+    handleValidationErrors
 ]
 
 // Create a Spot
@@ -161,26 +162,14 @@ router.post('/', validateCreateSpot, async (req, res) => {
 })
 
 
-
-// router.post('/:spotId/images', async (req, res) => {
-//     const id = req.params.spotId
-//     const spot = await Spot.findByPk(id,{
-//         include:{
-//             model:SpotImage
-//         }
-//     })
-
-//     res.json(spot)
-// })
-
 const validateGetImageFromBody = [
-    create('url')
+    check('url')
         .exists({ checkFalsy: true })
-        .isUrl
         .withMessage('Not a valid Url'),
-    create('preview')
+    check('preview')
         .exists({ checkFalsy: true })
         .withMessage('Please enter ether true or false'),
+    handleValidationErrors
 ]
 
 // Add an Image to a Spot based on the Spot's id
@@ -220,7 +209,7 @@ router.post('/:spotId/images', validateGetImageFromBody, async (req, res) => {
 
 
 // Edit a Spot
-router.put('/:spotId', validateSpotId, validateCreateSpot, async (req, res) => {
+router.put('/:spotId', [validateSpotId, validateCreateSpot], async (req, res) => {
 
     const id = req.params.spotId;
 
@@ -261,7 +250,7 @@ router.put('/:spotId', validateSpotId, validateCreateSpot, async (req, res) => {
 
 
 // Delete a Spot
-router.delete('/:spotId',validateSpotId ,async (req, res) => {
+router.delete('/:spotId', validateSpotId, async (req, res) => {
 
     const id = req.params.spotId;
     // console.log(id)
