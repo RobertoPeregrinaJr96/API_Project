@@ -1,7 +1,5 @@
-
+'use strict';
 /** @type {import('sequelize-cli').Migration} */
-
-"use strict";
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -9,27 +7,35 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable("Users", {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('Bookings', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
-        type: Sequelize.STRING(30),
-        allowNull: false,
-        unique: true
-      },
-      email: {
-        type: Sequelize.STRING(256),
-        allowNull: false,
-        unique: true
-      },
-      hashedPassword: {
-        type: Sequelize.STRING.BINARY,
+      startDate: {
+        type: Sequelize.DATE,
         allowNull: false
+      },
+      endDate: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key:'id'
+        }
+      },
+      spotId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Spots',
+          key:'id'
+        }
       },
       createdAt: {
         allowNull: false,
@@ -43,8 +49,8 @@ module.exports = {
       }
     }, options);
   },
-  down: async (queryInterface, Sequelize) => {
-    options.tableName = "Users";
+  async down(queryInterface, Sequelize) {
+    options.tableName = "Bookings";
     await queryInterface.dropTable(options);
   }
 };
