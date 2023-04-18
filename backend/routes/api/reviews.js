@@ -13,7 +13,6 @@ const router = express.Router();
 // GET all reviews of current User
 router.get('/current', async (req, res) => {
 
-
     const { user } = req
     console.log(user)
 
@@ -27,9 +26,10 @@ router.get('/current', async (req, res) => {
     console.log(id)
 
     const userReview = await Review.findAll({
-        include: {
-            model: Spot
-        },
+        include: [
+            { model: Spot },
+            { model: ReviewImage }
+        ],
         where: {
             userId: id
         }
@@ -41,5 +41,130 @@ router.get('/current', async (req, res) => {
     res.json(userReview)
 })
 
+const validateReview = [
+    check('review')
+        .exists()
+        .isString()
+        .withMessage('Review text is required'),
+    check('stars')
+        .exists()
+        .isInt()
+        .withMessage('Stars must be an integer from 1 to 5'),
+    handleValidationErrors
+]
+
+const validateReviewImage = [
+    check('url')
+        .exists()
+        .isURL()
+        .withMessage('Please use a valid URL'),
+    handleValidationErrors
+]
+
+// Add an Image to a Review based on the Review's Id
+router.post('/:reviewId/images', validateReviewImage, async (req, res) => {
+
+    const id = req.params.reviewId
+    // console.log(id)
+
+    if (!id) {
+        res.status(404)
+        res.json({
+            message: 'Review couldn\'t be found'
+        })
+    }
+
+    const { url } = req.body
+    // console.log('url', url)
+
+    const review = await Review.findByPk(id, {
+        include: [
+            { model: ReviewImage }
+        ]
+    })
+
+    // console.log(review)
+
+    let count;
+
+    const arr = review.ReviewImages
+    console.log(arr.length)
+
+    if (arr.length) {
+        count = arr.length
+    }
+
+    if (count >= 9) {
+        res.status(403)
+        res.json({
+            message: 'Maximum number of images for this resource was reached'
+        })
+    }
+
+    const reviewImg = ReviewImage.build({
+        url,
+        reviewId: id
+    })
+
+    // console.log(reviewImg)
+
+    await reviewImg.save()
+
+    res.status(200);
+    res.json(reviewImg)
+
+})
+
+router.put('/:reviewId', validateReview, async (req, res) => {
+
+    const id = req.params.reviewId;
+    console.log(id);
+
+
+    const { review, stars } = req.body;
+    console.log(review);
+    console.log(stars);
+
+    const reviews = await Review.findByPk(id);
+    console.log(reviews);
+
+    if(!reviews){
+        res.status(404);
+        res.json({
+            message:'Review couldn\'t be found'
+        })
+    }
+
+    reviews.review = review;
+    reviews.stars = stars;
+
+    await reviews.save();
+
+    res.status(200);
+    res.json(reviews)
+
+})
+
+// Delete an existing review
+router.delete('/:reviewId',async (req,res)=>{
+
+    const id = req.params.reviewId;
+    console.log(id);
+
+    const review = await Review.findByPk(id,{
+        include:[
+            {model:ReviewImage}
+        ]
+    })
+    console.log(review)
+
+    await review.destroy();
+
+    res.status(200);
+    res.json({
+        message:'Successfully deleted'
+    })
+
+})
 
 module.exports = router
