@@ -6,7 +6,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { Spot, SpotImage, Review, ReviewImage, Booking, BookingImage } = require('../../db/models');
-const booking = require('../../db/models/booking');
+
 
 
 const router = express.Router();
