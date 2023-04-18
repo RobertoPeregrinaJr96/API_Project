@@ -5,7 +5,7 @@ const { User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
-const { Spot, SpotImage } = require('../../db/models');
+const { Spot, SpotImage, Review, ReviewImage } = require('../../db/models');
 
 
 const router = express.Router();
@@ -58,7 +58,7 @@ router.get('/current', async (req, res) => {
 const validateSpotId = [
     check('id')
         .exists({ checkFalsy: true })
-        .isNumeric()
+        .isNumeric({ strict: true })
         .withMessage('Not a Valid Id'),
     handleValidationErrors
 ]
@@ -112,11 +112,13 @@ const validateCreateSpot = [
         .withMessage('Country is required'),
     check('lat')
         .exists({ checkFalsy: true })
-        .isDecimal()
+        .isDecimal({ force_decimal: true, decimal_digits: '1,10', locale: 'en-US' })
+        // .isLatLong({ checkDMS: false })
         .withMessage('Latitude is not valid'),
     check('lng')
         .exists({ checkFalsy: true })
-        .isDecimal()
+        .isDecimal({ force_decimal: true, decimal_digits: '1,10', locale: 'en-US' })
+        // .isLatLong({ checkDMS: false })
         .withMessage('Longitude is not valid'),
     check('name')
         .exists({ checkFalsy: true })
@@ -126,7 +128,6 @@ const validateCreateSpot = [
     check('description')
         .exists({ checkFalsy: true })
         .isString()
-        .isLength({min: 1})
         .withMessage('Description is required'),
     check('price')
         .exists({ checkFalsy: true })
@@ -139,6 +140,8 @@ const validateCreateSpot = [
 router.post('/', validateCreateSpot, async (req, res) => {
 
     const { address, city, state, country, lat, lng, name, description, price, ownerId } = req.body
+
+    // console.log(id)
 
     const newSpot = await Spot.create({
         address,
@@ -161,13 +164,14 @@ router.post('/', validateCreateSpot, async (req, res) => {
     res.json(newSpot)
 })
 
-
 const validateGetImageFromBody = [
     check('url')
         .exists({ checkFalsy: true })
+        .isURL()
         .withMessage('Not a valid Url'),
     check('preview')
         .exists({ checkFalsy: true })
+        .isBoolean({ strict: true })
         .withMessage('Please enter ether true or false'),
     handleValidationErrors
 ]
@@ -205,19 +209,24 @@ router.post('/:spotId/images', validateGetImageFromBody, async (req, res) => {
     res.json(newImage)
 })
 
-
-
-
 // Edit a Spot
-router.put('/:spotId', [validateSpotId, validateCreateSpot], async (req, res) => {
+router.put('/:spotId', [validateCreateSpot], async (req, res) => {
 
     const id = req.params.spotId;
+
+    let spot = await Spot.findByPk(id)
+    console.log(spot)
+
+    if (!spot) {
+        res.status(404);
+        res.json({
+            message: 'Spot couldn\'t be found'
+        })
+    }
 
     let { address, city, state, country, lat, lng, name, description, price, ownerId } = req.body
 
 
-    let spot = await Spot.findByPk(id)
-    console.log(spot)
 
     // const log = [console.log('address', address),
     // console.log('city', city),
@@ -243,20 +252,27 @@ router.put('/:spotId', [validateSpotId, validateCreateSpot], async (req, res) =>
     spot.ownerId = ownerId;
 
     await spot.save();
-    // console.log(spot)
+    console.log(spot)
 
     res.json(spot)
 })
 
 
 // Delete a Spot
-router.delete('/:spotId', validateSpotId, async (req, res) => {
+router.delete('/:spotId', async (req, res) => {
 
     const id = req.params.spotId;
     // console.log(id)
 
     const spot = await Spot.findByPk(id)
     // console.log(spot);
+
+    if (!spot) {
+        res.status(404);
+        res.json({
+            message: 'Spot couldn\'t be found'
+        })
+    }
 
     await spot.destroy();
 
@@ -266,20 +282,102 @@ router.delete('/:spotId', validateSpotId, async (req, res) => {
 
 })
 
+// GET all Reviews by a Spot's ID
+router.get('/:spotId/reviews', async (req, res) => {
+
+    const id = req.params.spotId;
+    console.log(id)
+
+    if (!id) {
+        res.status(404);
+        res.json({
+            message: 'Please login'
+        });
+    }
+
+    const spotReview = await Spot.findByPk(id, {
+        include: [
+            { model: Review },
+
+        ],
+
+    })
+    console.log(spotReview)
+
+    if (!spotReview) {
+        res.status(404);
+        res.json({
+            message: 'Spot couldn\'t be found'
+        })
+    }
+
+    const reviewImg = await Review.findByPk(spotReview.id, {
+        include: [
+            { model: User },
+            { model: ReviewImage },
+        ]
+    })
 
 
+    res.status(200);
+    res.json(reviewImg)
+})
 
+const validateReview = [
+    check('review')
+        .exists({ checkFalsy: true })
+        .isString()
+        .withMessage('Review text is required'),
+    check('stars')
+        .exists({ checkFalsy: true })
+        .isInt({ min: 1, max: 5 })
+        .isNumeric()
+        .isLength({ max: 5 })
+        .withMessage('Stars must be an integer from 1 to 5'),
+    handleValidationErrors
+]
 
+//Create a Review for a Spot based on the Spot's id
+router.post('/:spotId/reviews', validateReview, async (req, res) => {
 
+    const id = req.params.spotId;
+    console.log(id)
 
+    if (!id) {
+        res.status(500);
+        res.json({
+            message: 'Please login'
+        });
+    }
 
+    const spot = await Spot.findByPk(id, {
+        include: [
+            { model: Review },
 
+        ],
 
+    })
+    console.log(spot)
 
+    if (!spot) {
+        res.status(404);
+        res.json({
+            message: 'Spot couldn\'t be found'
+        })
+    }
+    const { user } = req
+    const { review, stars } = req.body
 
+    const spotReview = await Review.create({
+        review,
+        stars,
+        spotId: spot.id,
+        userId: user.id
+    })
 
+    res.status(201);
+    res.json(spotReview)
 
-
-
+})
 
 module.exports = router

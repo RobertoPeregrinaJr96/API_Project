@@ -6,10 +6,22 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 
-
-
 const router = express.Router();
 
+// GET all users
+router.get('/', async (req,res)=>{
+
+    const users = await User.findAll()
+
+    if(!users){
+        res.status(401);
+        res.json({
+            message:'Authentication required'
+        })
+    }
+    res.status(200);
+    res.json(users)
+})
 
 const validateSignup = [
     check('firstName')
@@ -34,7 +46,6 @@ const validateSignup = [
         .withMessage('Password must be 6 characters or more.'),
     handleValidationErrors
 ];
-
 
 // Sign up /api/users
 router.post('', validateSignup, async (req, res) => {
