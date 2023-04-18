@@ -7,7 +7,7 @@ const { requireAuth } = require('../../utils/auth.js');
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
 const spotsRouter = require('./spots.js')
-
+const reviewRouter = require('./reviews.js')
 
 
 router.use(restoreUser);
@@ -16,8 +16,9 @@ router.use('/session', sessionRouter);
 
 router.use('/users', usersRouter);
 
-router.use('/spots',spotsRouter)
+router.use('/spots', spotsRouter)
 
+router.use('/reviews', reviewRouter)
 
 // POST /api/test
 router.post('/test', function (req, res) {
@@ -27,7 +28,7 @@ router.post('/test', function (req, res) {
 // GET /api/test
 router.get('/test', async (req, res) => {
     let message = req.body
-    res.json({ message })
+    res.json({ message: 'this is a gnarly message' })
 })
 
 // GET /api/set-token-cookie
@@ -51,10 +52,10 @@ router.get('/restore-user', (req, res) => {
 
 // GET /api/require-auth
 router.get(
-  '/require-auth',
-  requireAuth,
-  (req, res) => {
-    return res.json(req.user);
-  }
+    '/require-auth',
+    requireAuth,
+    (req, res) => {
+        return res.json(req.user);
+    }
 );
 module.exports = router;
