@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Booking.belongsTo(models.Spot, { foreignKey: 'userId' })
-      Booking.belongsTo(models.User, { foreignKey: 'spotId' })
+      Booking.belongsTo(models.User, { foreignKey: 'userId' })
+      Booking.belongsTo(models.Spot, { foreignKey: 'spotId' })
     }
   }
   Booking.init({
@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Booking',
     defaultScope: {
 
-      exclude: [ "createdAt", "updatedAt"]
+      exclude: ["createdAt", "updatedAt"]
     },
   });
   return Booking;

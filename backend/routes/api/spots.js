@@ -5,7 +5,8 @@ const { User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
-const { Spot, SpotImage, Review, ReviewImage } = require('../../db/models');
+const { Spot, SpotImage, Review, ReviewImage, Booking, BookingImage } = require('../../db/models');
+const booking = require('../../db/models/booking');
 
 
 const router = express.Router();
@@ -379,5 +380,97 @@ router.post('/:spotId/reviews', validateReview, async (req, res) => {
     res.json(spotReview)
 
 })
+
+// NOT DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// Get all Bookings for a Spot based on the Spot's id
+// router.get('/:spotId/bookings', async (req, res) => {
+
+//     const id = req.params.spotId;
+
+//     const { user } = req;
+//     // console.log(user)
+
+//     const spot = await Spot.findByPk(id, {
+//         include: [
+//             { model: Booking }
+//         ]
+
+//     })
+
+//     if (!spot) {
+//         res.status(404);
+//         res.json({
+//             message: 'Spot could\'t be found'
+//         })
+//     }
+
+//     // console.log('spot',spot);
+//     // console.log('id', id);
+//     // console.log('user.id', user.id);
+//     // console.log('spot.ownerId', spot.ownerId)
+
+//     if (user.id == spot.ownerId) {
+//         res.status(200);
+//         res.json({
+//             Bookings: [
+//                 user,
+//                 spot.Booking
+//             ]
+//         })
+//         // res.json({ "message": 'you own this' })
+//     }
+
+//     res.status(200);
+//     res.json({
+//         Bookings: [
+//             spot.Bookings
+//         ]
+//     })
+
+// })
+
+//  const validateBooking = [
+//     check('startDate')
+//     .exists()
+//     .withMessage('Start date conflicts with an existing booking')
+
+//  ]
+
+
+// same problem as the one above as im getting back an extra SpotId and UserId???
+// Create a Booking from a Spot based on the Spot's id
+router.post('/:spotId/bookings', async (req, res) => {
+
+    const {startDate,endDate} = req.body
+
+    const id = req.params.spotId;
+    console.log(id);
+
+    const { user } = req;
+    console.log(user.id);
+
+    const spot = await Spot.findByPk(id);
+    console.log(spot.ownerId);
+
+    if(!spot){
+        res.status({
+            message:'Spot could\'t be found'
+        })
+    }
+
+    const newBooking = await Booking.build({
+        startDate,
+        endDate,
+        userId: user.id,
+        spotId: spot.id,
+    })
+
+    await newBooking.save();
+
+    res.status(200);
+    res.json(newBooking)
+
+})
+
 
 module.exports = router

@@ -18,7 +18,7 @@ const demoSpots = [
     name: 'DemoName1',
     description: 'this DemoPlace is so great for the DemoFamily',
     price: 560.34,
-    ownerId: 5,
+    ownerId: 1,
   },
   {
     address: '456 Demo street lane',
