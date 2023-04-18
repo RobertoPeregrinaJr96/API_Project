@@ -383,51 +383,51 @@ router.post('/:spotId/reviews', validateReview, async (req, res) => {
 
 // NOT DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Get all Bookings for a Spot based on the Spot's id
-// router.get('/:spotId/bookings', async (req, res) => {
+router.get('/:spotId/bookings', async (req, res) => {
 
-//     const id = req.params.spotId;
+    const id = req.params.spotId;
 
-//     const { user } = req;
-//     // console.log(user)
+    const { user } = req;
+    // console.log(user)
 
-//     const spot = await Spot.findByPk(id, {
-//         include: [
-//             { model: Booking }
-//         ]
+    const spot = await Spot.findByPk(id, {
+        include: [
+            { model: Booking }
+        ]
 
-//     })
+    })
 
-//     if (!spot) {
-//         res.status(404);
-//         res.json({
-//             message: 'Spot could\'t be found'
-//         })
-//     }
+    if (!spot) {
+        res.status(404);
+        res.json({
+            message: 'Spot could\'t be found'
+        })
+    }
 
-//     // console.log('spot',spot);
-//     // console.log('id', id);
-//     // console.log('user.id', user.id);
-//     // console.log('spot.ownerId', spot.ownerId)
+    // console.log('spot',spot);
+    // console.log('id', id);
+    // console.log('user.id', user.id);
+    // console.log('spot.ownerId', spot.ownerId)
 
-//     if (user.id == spot.ownerId) {
-//         res.status(200);
-//         res.json({
-//             Bookings: [
-//                 user,
-//                 spot.Booking
-//             ]
-//         })
-//         // res.json({ "message": 'you own this' })
-//     }
+    if (user.id == spot.ownerId) {
+        res.status(200);
+        res.json({
+            Bookings: [
+                user,
+                spot.Booking
+            ]
+        })
+        // res.json({ "message": 'you own this' })
+    }
 
-//     res.status(200);
-//     res.json({
-//         Bookings: [
-//             spot.Bookings
-//         ]
-//     })
+    res.status(200);
+    res.json({
+        Bookings: [
+            spot.Bookings
+        ]
+    })
 
-// })
+})
 
 //  const validateBooking = [
 //     check('startDate')

@@ -25,17 +25,17 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'Users',
-          key:'id'
-        }
+        // references: {
+          // model: 'Users',
+          // key:'id'
+        // }
       },
       spotId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'Spots',
-          key:'id'
-        }
+        // references: {
+          // model: 'Spots',
+          // key:'id'
+        // }
       },
       createdAt: {
         allowNull: false,

@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       references: {
         model: 'Users',
-        key: 'id'
+        // key: 'id'
       }
     },
     spotId: {
@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       references: {
         model: 'Spots',
-        key: 'id'
+        // key: 'id'
       }
     }
   }, {
