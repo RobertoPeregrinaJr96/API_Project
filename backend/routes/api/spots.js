@@ -421,7 +421,9 @@ router.get('/:spotId/reviews', async (req, res) => {
 
     const reviewImg = await Review.findByPk(spotReview.id, {
         include: [
-            { model: User },
+            { model: User ,
+                attributes:['id','email','username']
+                },
             { model: ReviewImage },
         ]
     })
@@ -498,9 +500,9 @@ router.get('/:spotId/bookings', async (req, res) => {
             { model: Booking }
 
         ],
-        attributes:{
-            exclude:['SpotId','UserId']
-        }
+        // attributes:{
+        //     exclude:['SpotId','UserId']
+        // }
 
     })
 

@@ -54,6 +54,7 @@ router.get('/current', async (req, res) => {
         where: {
             userId: id
         },
+        attributes:['id','firstName','lastName']
 
     })
 
