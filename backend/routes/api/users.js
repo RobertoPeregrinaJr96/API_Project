@@ -8,15 +8,43 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
+// GET current User
+router.get('/', requireAuth, async (req, res) => {
+
+    const { user } = req
+    console.log(user)
+
+    if (!user) {
+        res.status(404);
+        res.json({
+            message: null
+        })
+    }
+
+    const { id, username, email, firstName, lastName } = user
+
+    res.status(200);
+    res.json({
+        user: {
+            id,
+            firstName,
+            lastName,
+            email,
+            username
+        }
+    })
+})
+
+
 // GET all users
-router.get('/', async (req,res)=>{
+router.get('/', requireAuth, async (req, res) => {
 
     const users = await User.findAll()
 
-    if(!users){
+    if (!users) {
         res.status(401);
         res.json({
-            message:'Authentication required'
+            message: 'Authentication required'
         })
     }
     res.status(200);
@@ -47,16 +75,45 @@ const validateSignup = [
     handleValidationErrors
 ];
 
-// Sign up /api/users
-router.post('', validateSignup, async (req, res) => {
+// Sign up /api/users        <error handling done?>
+router.post('/', validateSignup, async (req, res) => {
     const { email, password, username, firstName, lastName } = req.body;
-    // console.log('email', email)
-    // console.log('password', password)
-    // console.log('username', username)
-    // console.log('firstName', firstName)
-    // console.log('lastName', lastName)
+
     const hashedPassword = bcrypt.hashSync(password);
-    const user = await User.create({ email, username, hashedPassword, firstName, lastName });
+
+    const usersEmail = await User.findOne({
+        where: {
+            email
+        }
+    })
+    const usersUsername = await User.findOne({
+        where: {
+            username
+        }
+    })
+
+    if (usersEmail) {
+        res.status(500);
+        res.json({
+            "message": "User already exists",
+            'email': 'User with that email already exists'
+        })
+    }
+    if (usersUsername) {
+        res.status(500);
+        res.json({
+            "message": "User already exists",
+            'username': 'User with that username already exists'
+        })
+    }
+
+    const user = await User.create({
+        email,
+        username,
+        hashedPassword,
+        firstName,
+        lastName
+    });
 
     const safeUser = {
         id: user.id,
@@ -67,6 +124,7 @@ router.post('', validateSignup, async (req, res) => {
 
     };
 
+
     await setTokenCookie(res, safeUser);
 
     return res.json({
@@ -74,10 +132,6 @@ router.post('', validateSignup, async (req, res) => {
     });
 }
 );
-
-
-
-
 
 
 module.exports = router;

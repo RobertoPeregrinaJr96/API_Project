@@ -5,7 +5,7 @@ const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
-const { Review, ReviewImage, Spot, Booking, BookingImage } = require('../../db/models');
+const { Booking, Spot } = require('../../db/models')
 
 
 const router = express.Router();
@@ -35,72 +35,26 @@ router.get('/current', async (req, res) => {
 })
 
 
-const validateStartDate = [
-    check('startDate')
-        .exists()
-        .isAfter('startDate')
-        .withMessage('skdfk')
-]
-
-
 // not Done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Edit a Booking
-router.put('/:bookingId', async (req, res) => {
+router.put('/:bookingId',requireAuth, async (req, res) => {
 
-    const id = req.params.bookingId;
-    console.log('id', id);
+    const { user } = req;
+    console.log(user);
 
-    let { startDate, endDate } = req.body;
-    // console.log('startDate',typeof startDate);
-    // console.log('endDate',typeof endDate);
-
-    // startDate.split('-').join('');
-    // endDate.split('-').join('');
-
-    // console.log('startDate', startDate);
-    // console.log('endDate', endDate);
-
-    const start = Date.parse(startDate);
-    const end = Date.parse(endDate);
-    console.log('start', start);
-    console.log('end', end)
-
-    const start1 = new Date(startDate);
-    const end1 = new Date(endDate);
-    console.log('start1', start1);
-    console.log('end1', end1)
+    const { bookingId } = req.params;
+    console.log(bookingId)
 
 
-    // if (start1 < end1) {
-    //     res.status(400);
-    //     return res.json({
-    //         message: 'endDate cannot come before startDate'
-    //     })
-    // }
-    if (start1 > end1) {
-        res.status(403);
-        return res.json({
-            message: 'Past bookings can\'t be modified'
-        })
-    }
+    const booking = await Booking.findAll( );
+    console.log(booking)
 
-    const booking = await Booking.findByPk(id);
-    console.log(booking);
 
-    if (!booking) {
-        res.status(404);
-        res.json({
-            message: 'Booking couldn\'t be found'
-        })
-    }
 
-    booking.startDate = startDate;
-    booking.endDate = endDate;
 
-    // await booking.save();
 
     res.status(200);
-    res.json(booking)
+    res.json({ message: "hello" })
 
 })
 
@@ -140,6 +94,49 @@ router.delete('/:bookingId', async (req, res) => {
 
 
 
+
+// const id = req.params.bookingId;
+// // console.log('id', id);
+
+// let { startDate, endDate } = req.body;
+// console.log(req.body)
+
+// const start = new Date(startDate) ;
+// const end = new Date(endDate) ;
+// console.log('start', start);
+// console.log('end', end)
+
+// if (start > end) {
+//     res.status(403);
+//     return res.json({
+//         message: 'Past bookings can\'t be modified'
+//     })
+// }
+
+// let book = await Booking.findAll({
+//     where:{
+//         id:id
+//     }
+// })
+// console.log(book);
+
+// if (!book) {
+//     res.status(404);
+//     res.json({
+//         message: 'Booking couldn\'t be found'
+//     })
+// }
+
+// book.startDate = String(start);
+// book.endDate = String(end) ;
+// console.log('book.startDate',book.startDate)
+// console.log('book.endDate',book.endDate)
+
+
+// // await book.save();
+
+// res.status(200);
+// res.json(book)
 
 
 module.exports = router

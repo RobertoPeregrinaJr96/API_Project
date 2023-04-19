@@ -6,13 +6,14 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { Spot, SpotImage, Review, ReviewImage, Booking, BookingImage } = require('../../db/models');
+const { Op } = require('sequelize');
 
 
 
 const router = express.Router();
 
 // Get all Spots
-router.get('/', async (req, res) => {
+router.get('/', requireAuth, async (req, res) => {
 
     const spots = await Spot.findAll()
     // console.log(spots)
@@ -56,16 +57,9 @@ router.get('/current', async (req, res) => {
     res.json(userSpots)
 })
 
-const validateSpotId = [
-    check('id')
-        .exists({ checkFalsy: true })
-        .isNumeric({ strict: true })
-        .withMessage('Not a Valid Id'),
-    handleValidationErrors
-]
 
 // Get details of a Spot from an id
-router.get('/:spotId', async (req, res) => {
+router.get('/:spotId', requireAuth, async (req, res) => {
 
     const id = req.params.spotId;
     // console.log(id);
@@ -78,9 +72,11 @@ router.get('/:spotId', async (req, res) => {
     }
 
     const spot = await Spot.findByPk(id, {
+        // attributes: { exclude: ['createdAt', 'updatedAt'] },
         include: {
-            model: SpotImage
-        }
+            model: SpotImage,
+            attributes: { exclude: ['createdAt', 'updatedAt', 'spotId'] },
+        },
     })
 
     if (!spot) {
@@ -90,8 +86,41 @@ router.get('/:spotId', async (req, res) => {
         })
     }
 
+    const reviewCount = await Review.findAndCountAll({
+        where: {
+            spotId: id
+        }
+    })
+    // !!!!!!!!!!!!!! FIX THIS FIRST THIME IN GMORE
+    const aveRating = await Review.count({
+        where: {
+            spotId:
+        }
+    })
+    ///!!!!!!!!!!!!!!!!!!!
+    console.log(aveRating)
+
+    const safeSpot = {
+        "id": spot.id,
+        "address": spot.address,
+        "city": spot.city,
+        "state": spot.state,
+        "country": spot.country,
+        "lat": spot.lat,
+        "lng": spot.lng,
+        "name": spot.name,
+        "description": spot.description,
+        "price": spot.price,
+        "createdAt": spot.createdAt,
+        "updatedAt": spot.updatedAt,
+        "numReviews": reviewCount.count,
+        "avgStarRating": aveRating,
+        "ownerId": spot.ownerId,
+        "SpotImages": spot.SpotImages
+    }
+
     // console.log(spot)
-    res.json(spot)
+    res.json(safeSpot)
 })
 
 const validateCreateSpot = [
@@ -140,9 +169,11 @@ const validateCreateSpot = [
 // Create a Spot
 router.post('/', validateCreateSpot, async (req, res) => {
 
-    const { address, city, state, country, lat, lng, name, description, price, ownerId } = req.body
+    const { address, city, state, country, lat, lng, name, description, price, } = req.body
 
     // console.log(id)
+
+    const { user } = req
 
     const newSpot = await Spot.create({
         address,
@@ -154,7 +185,7 @@ router.post('/', validateCreateSpot, async (req, res) => {
         name,
         description,
         price,
-        ownerId
+        ownerId: user.id
     })
 
     console.log(newSpot)
@@ -441,7 +472,7 @@ router.get('/:spotId/bookings', async (req, res) => {
 // Create a Booking from a Spot based on the Spot's id
 router.post('/:spotId/bookings', async (req, res) => {
 
-    const {startDate,endDate} = req.body
+    const { startDate, endDate } = req.body
 
     const id = req.params.spotId;
     console.log(id);
@@ -452,9 +483,9 @@ router.post('/:spotId/bookings', async (req, res) => {
     const spot = await Spot.findByPk(id);
     console.log(spot.ownerId);
 
-    if(!spot){
+    if (!spot) {
         res.status({
-            message:'Spot could\'t be found'
+            message: 'Spot could\'t be found'
         })
     }
 

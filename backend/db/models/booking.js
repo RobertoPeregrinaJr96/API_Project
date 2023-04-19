@@ -18,25 +18,16 @@ module.exports = (sequelize, DataTypes) => {
   Booking.init({
     startDate: {
       type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        isDate: true,
-        isBefore: this.endDate
-      }
+
       // should i put a unique constraint
     },
     endDate: {
       type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        isDate: true,
-        isAfter: this.startDate
-      }
+
       // should i put a unique constraint
     },
     userId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
         model: 'Users',
         key: 'id'
@@ -44,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     spotId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
         model: 'Spots',
         key: 'id'
@@ -55,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Booking',
     defaultScope: {
 
-      exclude: ["createdAt", "updatedAt"]
+      exclude: [  "createdAt", "updatedAt"]
     },
   });
   return Booking;

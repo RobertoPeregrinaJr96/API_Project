@@ -29,13 +29,13 @@ const demoReviews = [
   },
   {
     review: 'this was okay place to stay',
-    stars: 2,
+    stars: 8,
     userId: 4,
-    spotId: 2,
+    spotId: 8,
   },
   {
     review: 'this is a other worldly place to stay',
-    stars: 6,
+    stars: 8,
     userId: 6,
     spotId: 4,
   },
@@ -43,7 +43,7 @@ const demoReviews = [
     review: 'this was okay place to stay',
     stars: 4,
     userId: 5,
-    spotId: 2,
+    spotId: 8,
   },
   {
     review: 'this was okay place to stay',

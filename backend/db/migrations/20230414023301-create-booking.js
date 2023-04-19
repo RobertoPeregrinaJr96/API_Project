@@ -17,11 +17,11 @@ module.exports = {
       },
       startDate: {
         type: Sequelize.DATE,
-        allowNull: false,
+
       },
       endDate: {
         type: Sequelize.DATE,
-        allowNull: false,
+
       },
       userId: {
         type: Sequelize.INTEGER,
