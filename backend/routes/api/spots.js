@@ -83,6 +83,20 @@ const validateGetImageFromBody = [
     handleValidationErrors
 ]
 
+const validateReview = [
+    check('review')
+        .exists({ checkFalsy: true })
+        .isString()
+        .withMessage('Review text is required'),
+    check('stars')
+        .exists({ checkFalsy: true })
+        .isInt({ min: 1, max: 5 })
+        .isNumeric()
+        .isLength({ max: 5 })
+        .withMessage('Stars must be an integer from 1 to 5'),
+    handleValidationErrors
+]
+
 
 // Get all Spots
 router.get('/', [requireAuth], async (req, res) => {
@@ -376,7 +390,7 @@ router.delete('/:spotId', async (req, res) => {
 
 })
 
-// GET all Reviews by a Spot's ID
+// GET all Reviews by a Spot's ID //   Error handling is Done
 router.get('/:spotId/reviews', async (req, res) => {
 
     const id = req.params.spotId;
@@ -417,22 +431,8 @@ router.get('/:spotId/reviews', async (req, res) => {
     res.json(reviewImg)
 })
 
-const validateReview = [
-    check('review')
-        .exists({ checkFalsy: true })
-        .isString()
-        .withMessage('Review text is required'),
-    check('stars')
-        .exists({ checkFalsy: true })
-        .isInt({ min: 1, max: 5 })
-        .isNumeric()
-        .isLength({ max: 5 })
-        .withMessage('Stars must be an integer from 1 to 5'),
-    handleValidationErrors
-]
-
 //Create a Review for a Spot based on the Spot's id
-router.post('/:spotId/reviews', validateReview, async (req, res) => {
+router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) => {
 
     const id = req.params.spotId;
     console.log(id)
@@ -459,8 +459,18 @@ router.post('/:spotId/reviews', validateReview, async (req, res) => {
             message: 'Spot couldn\'t be found'
         })
     }
+
     const { user } = req
+
+    if(user.id === spot.Review.userId){
+        res.status(500);
+        res.json({
+            message:''
+        })
+    }
+
     const { review, stars } = req.body
+
 
     const spotReview = await Review.create({
         review,
@@ -486,7 +496,11 @@ router.get('/:spotId/bookings', async (req, res) => {
     const spot = await Spot.findByPk(id, {
         include: [
             { model: Booking }
-        ]
+
+        ],
+        attributes:{
+            exclude:['SpotId','UserId']
+        }
 
     })
 
