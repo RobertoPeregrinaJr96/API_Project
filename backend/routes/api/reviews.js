@@ -15,10 +15,18 @@ const validateReview = [
         .exists()
         .isString()
         .withMessage('Review text is required'),
+    check('review')
+        .not()
+        .isInt()
+        .withMessage('Review text is required'),
     check('stars')
         .exists()
-        .isInt()
-        .isLength({ min: 1, max: 5 })
+        .isInt({gt: 1, lt: 5})
+        .isLength( )
+        .withMessage('Stars must be an integer from 1 to 5'),
+    check('stars')
+        .not()
+        .isString()
         .withMessage('Stars must be an integer from 1 to 5'),
     handleValidationErrors
 ]
@@ -48,31 +56,40 @@ router.get('/current', async (req, res) => {
 
     const userReview = await Review.findAll({
         include: [
+            { model: User, attributes: ['id', 'firstName', 'lastName'] },
             { model: Spot },
-            { model: ReviewImage }
+            { model: ReviewImage },
         ],
         where: {
             userId: id
         },
-        attributes:['id','firstName','lastName']
 
     })
+    1
+    // const {userId,firstName,lastName} = userReview.User
+
+    const safeUser = {
+        id: User.id,
+        firstName: User.firstName,
+        lastName: User.lastName
+    }
+    // console.log(safeUser)
 
     console.log(userReview)
 
     const safeReview = {
         "Reviews": userReview
         // {
-        //     "id":
-        //     "userId":
-        //     "spotId":
-        //     "review":
-        //     "stars":
-        //     "createdAt":
-        //     "updatedAt":
-        //     "User":
-        //     "Spot":
-        //     "ReviewImages":
+        //     "id": userReview.id,
+        //     "userId": userReview.userId,
+        //     "spotId": userReview.spotId,
+        //     "review": userReview.review,
+        //     "stars": userReview.stars,
+        //     "createdAt": userReview.createdAt,
+        //     "updatedAt": userReview.updatedAt,
+        //     "User": safeUser,
+        //     "Spot": userReview.Spot,
+        //     "ReviewImages": userReview.ReviewImage
         // }
     }
 
@@ -136,7 +153,7 @@ router.post('/:reviewId/images', [requireAuth, validateReviewImage], async (req,
 
 })
 
-router.put('/:reviewId', validateReview, async (req, res) => {
+router.put('/:reviewId',[ validateReview], async (req, res) => {
 
     const id = req.params.reviewId;
     console.log(id);
@@ -145,6 +162,19 @@ router.put('/:reviewId', validateReview, async (req, res) => {
     const { review, stars } = req.body;
     console.log(review);
     console.log(stars);
+
+    // if (!review || typeof review !== String) {
+    //     res.status(404);
+    //     res.json({
+    //         message: 'Review text is required'
+    //     })
+    // }
+    // if (!stars || typeof stars !== Number) {
+    //     res.stats(404);
+    //     res.json({
+    //         message: 'Stars must be an integer from 1 to 5'
+    //     })
+    // }
 
     const reviews = await Review.findByPk(id);
     console.log(reviews);
