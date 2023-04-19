@@ -1,5 +1,7 @@
 'use strict';
 
+const { DATE } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 
 let options = {};
@@ -7,25 +9,66 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 const demoBookings = [
-  // MM/DD/YYYY
   {
-    startDate: '02-01-2023',
-    endDate: '03-01-2023',
+    startDate: new Date('2021-05-07'),
+    endDate: new Date('2021-05-09'),
     userId: 1,
+    spotId: 5,
+  },
+  {
+    startDate: new Date('2021-05-14'),
+    endDate: new Date('2021-05-15'),
+    userId: 6,
+    spotId: 5,
+  },
+  {
+    startDate: new Date('2021-05-17'),
+    endDate: new Date('2021-05-24'),
+    userId: 3,
     spotId: 2,
   },
   {
-    startDate: '04-01-2023',
-    endDate: '05-01-2023',
-    userId: 2,
-    spotId: 3,
+    startDate: new Date('2021-05-30'),
+    endDate: new Date('2021-05-31'),
+    userId: 4,
+    spotId: 2,
   },
   {
-    startDate: '06-01-2023',
-    endDate: '07-01-2023',
-    userId: 3,
-    spotId: 4,
+    startDate: new Date('2021-06-04'),
+    endDate: new Date('2021-06-11'),
+    userId: 1,
+    spotId: 9,
   },
+  {
+    startDate: new Date('2021-06-23'),
+    endDate: new Date('2021-06-27'),
+    userId: 1,
+    spotId: 7,
+  },
+  {
+    startDate: new Date('2021-06-28'),
+    endDate: new Date('2021-07-07'),
+    userId: 6,
+    spotId: 2,
+  },
+  {
+    startDate: new Date('2021-07-15'),
+    endDate: new Date('2021-07-16'),
+    userId: 4,
+    spotId: 8,
+  },
+  {
+    startDate: new Date('2021-07-19'),
+    endDate: new Date('2021-07-29'),
+    userId: 5,
+    spotId: 9,
+  },
+  {
+    startDate: new Date("2021-11-19"),
+    endDate: new Date("2021-11-20"),
+    userId: 1,
+    spotId: 1,
+  }
 ]
 
 module.exports = {
@@ -40,7 +83,7 @@ module.exports = {
      * }], {});
     */
     options.tableName = 'Bookings';
-    return queryInterface.bulkInsert(options, demoBookings, {});
+    await queryInterface.bulkInsert(options, demoBookings);
   },
 
   async down(queryInterface, Sequelize) {
@@ -51,6 +94,6 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     options.tableName = 'Bookings';
-    return queryInterface.bulkDelete(options, demoBookings, {});
+    await queryInterface.bulkDelete(options, demoBookings);
   }
 };

@@ -28,6 +28,46 @@ const demoSpotImages = [
     preview: true,
     spotId: 4,
   },
+  {
+    url: 'demo5URL.com',
+    preview: true,
+    spotId: 5,
+  },
+  {
+    url: 'demo6URL.com',
+    preview: true,
+    spotId: 6,
+  },
+  {
+    url: 'demo7URL.com',
+    preview: false,
+    spotId: 7,
+  },
+  {
+    url: 'demo8URL.com',
+    preview: true,
+    spotId: 8,
+  },
+  {
+    url: 'demo9URL.com',
+    preview: true,
+    spotId: 9,
+  },
+  {
+    url: 'demo10URL.com',
+    preview: true,
+    spotId: 9,
+  },
+  {
+    url: 'demo11URL.com',
+    preview: false,
+    spotId: 9,
+  },
+  {
+    url: 'demo12URL.com',
+    preview: true,
+    spotId: 9,
+  },
 
 ]
 

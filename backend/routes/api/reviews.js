@@ -10,7 +10,28 @@ const { Review, ReviewImage, Spot } = require('../../db/models');
 
 const router = express.Router();
 
-// GET all reviews of current User
+const validateReview = [
+    check('review')
+        .exists()
+        .isString()
+        .withMessage('Review text is required'),
+    check('stars')
+        .exists()
+        .isInt()
+        .isLength({ min: 1, max: 5 })
+        .withMessage('Stars must be an integer from 1 to 5'),
+    handleValidationErrors
+]
+
+const validateReviewImage = [
+    check('url')
+        .exists()
+        .isURL()
+        .withMessage('Please use a valid URL'),
+    handleValidationErrors
+]
+
+// GET all reviews of current User // No Error handling needed
 router.get('/current', async (req, res) => {
 
     const { user } = req
@@ -32,37 +53,36 @@ router.get('/current', async (req, res) => {
         ],
         where: {
             userId: id
-        }
+        },
+
     })
 
     console.log(userReview)
 
+    const safeReview = {
+        "Reviews": userReview
+        // {
+        //     "id":
+        //     "userId":
+        //     "spotId":
+        //     "review":
+        //     "stars":
+        //     "createdAt":
+        //     "updatedAt":
+        //     "User":
+        //     "Spot":
+        //     "ReviewImages":
+        // }
+    }
+
     res.status(200)
-    res.json(userReview)
+    res.json(safeReview)
 })
 
-const validateReview = [
-    check('review')
-        .exists()
-        .isString()
-        .withMessage('Review text is required'),
-    check('stars')
-        .exists()
-        .isInt()
-        .withMessage('Stars must be an integer from 1 to 5'),
-    handleValidationErrors
-]
 
-const validateReviewImage = [
-    check('url')
-        .exists()
-        .isURL()
-        .withMessage('Please use a valid URL'),
-    handleValidationErrors
-]
 
 // Add an Image to a Review based on the Review's Id
-router.post('/:reviewId/images', validateReviewImage, async (req, res) => {
+router.post('/:reviewId/images', [requireAuth, validateReviewImage], async (req, res) => {
 
     const id = req.params.reviewId
     // console.log(id)
@@ -128,10 +148,10 @@ router.put('/:reviewId', validateReview, async (req, res) => {
     const reviews = await Review.findByPk(id);
     console.log(reviews);
 
-    if(!reviews){
+    if (!reviews) {
         res.status(404);
         res.json({
-            message:'Review couldn\'t be found'
+            message: 'Review couldn\'t be found'
         })
     }
 
@@ -146,14 +166,14 @@ router.put('/:reviewId', validateReview, async (req, res) => {
 })
 
 // Delete an existing review
-router.delete('/:reviewId',async (req,res)=>{
+router.delete('/:reviewId', async (req, res) => {
 
     const id = req.params.reviewId;
     console.log(id);
 
-    const review = await Review.findByPk(id,{
-        include:[
-            {model:ReviewImage}
+    const review = await Review.findByPk(id, {
+        include: [
+            { model: ReviewImage }
         ]
     })
     console.log(review)
@@ -162,7 +182,7 @@ router.delete('/:reviewId',async (req,res)=>{
 
     res.status(200);
     res.json({
-        message:'Successfully deleted'
+        message: 'Successfully deleted'
     })
 
 })

@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       Spot.belongsTo(models.User, { foreignKey: 'ownerId' });
       Spot.hasMany(models.SpotImage, { foreignKey: 'spotId' });
       Spot.hasMany(models.Review,{foreignKey:'spotId'})
+      Spot.hasMany(models.Booking,{foreignKey:'spotId'})
     }
   }
   Spot.init({
@@ -58,6 +59,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     ownerId: {
       type: DataTypes.INTEGER,
+      allowNull:false,
       references: {
         model: 'Users',
         key: 'id'
@@ -69,8 +71,8 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Spot',
     defaultScope: {
 
-      exclude: ["createdAt", "updatedAt"]
-    }
+      exclude: [ "createdAt", "updatedAt"]
+    },
   });
   return Spot;
 };

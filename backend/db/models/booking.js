@@ -11,30 +11,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Booking.belongsTo(models.Spot, { foreignKey: 'userId' })
-      Booking.belongsTo(models.User, { foreignKey: 'spotId' })
+      Booking.belongsTo(models.User, { foreignKey: 'userId',otherKey:'id' })
+      Booking.belongsTo(models.Spot, { foreignKey: 'spotId',otherKey:'id' })
     }
   }
   Booking.init({
     startDate: {
       type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        isDate: true
-      }
+
       // should i put a unique constraint
     },
     endDate: {
       type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        isDate: true
-      }
+
       // should i put a unique constraint
     },
     userId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
         model: 'Users',
         key: 'id'
@@ -42,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     spotId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
         model: 'Spots',
         key: 'id'
@@ -51,7 +43,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Booking',
+    defaultScope: {
 
+      exclude: [  "createdAt", "updatedAt"]
+    },
   });
   return Booking;
 };

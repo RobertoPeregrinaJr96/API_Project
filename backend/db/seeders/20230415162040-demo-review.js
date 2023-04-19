@@ -27,6 +27,42 @@ const demoReviews = [
     userId: 3,
     spotId: 4,
   },
+  {
+    review: 'this was okay place to stay',
+    stars: 8,
+    userId: 4,
+    spotId: 8,
+  },
+  {
+    review: 'this is a other worldly place to stay',
+    stars: 8,
+    userId: 6,
+    spotId: 4,
+  },
+  {
+    review: 'this was okay place to stay',
+    stars: 4,
+    userId: 5,
+    spotId: 8,
+  },
+  {
+    review: 'this was okay place to stay',
+    stars: 9,
+    userId: 4,
+    spotId: 8,
+  },
+  {
+    review: 'this is a other worldly place to stay',
+    stars: 1,
+    userId: 4,
+    spotId: 7,
+  },
+  {
+    review: 'this was okay place to stay',
+    stars: 6,
+    userId: 3,
+    spotId: 9,
+  },
 ]
 
 module.exports = {
