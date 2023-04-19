@@ -18,33 +18,43 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING,
+        allowNull:false,
       },
       city: {
         type: Sequelize.STRING,
+        allowNull:false,
       },
       state: {
         type: Sequelize.STRING,
+        allowNull:false,
       },
       country: {
         type: Sequelize.STRING,
+        allowNull:false,
       },
       lat: {
         type: Sequelize.DECIMAL,
+        allowNull:false,
       },
       lng: {
         type: Sequelize.DECIMAL,
+        allowNull:false,
       },
       name: {
         type: Sequelize.STRING,
+        allowNull:false,
       },
       description: {
         type: Sequelize.STRING,
+        allowNull:false,
       },
       price: {
         type: Sequelize.DECIMAL,
+        allowNull:false,
       },
       ownerId: {
         type: Sequelize.INTEGER,
+        allowNull:false,
         reference: {
           model: 'Users',
           key: 'id'

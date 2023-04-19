@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
       validate: {
-        isDate: true
+        isDate: true,
+        isBefore: this.endDate
       }
       // should i put a unique constraint
     },
@@ -28,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
       validate: {
-        isDate: true
+        isDate: true,
+        isAfter: this.startDate
       }
       // should i put a unique constraint
     },
@@ -37,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       references: {
         model: 'Users',
-        // key: 'id'
+        key: 'id'
       }
     },
     spotId: {
@@ -45,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       references: {
         model: 'Spots',
-        // key: 'id'
+        key: 'id'
       }
     }
   }, {

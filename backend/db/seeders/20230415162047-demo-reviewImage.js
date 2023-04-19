@@ -20,6 +20,30 @@ const demoReviewImage = [
     url: 'demoReviewURL3.com',
     reviewId: 3,
   },
+  {
+    url: 'demoReviewURL4.com',
+    reviewId: 1,
+  },
+  {
+    url: 'demoReviewURL5.com',
+    reviewId: 2,
+  },
+  {
+    url: 'demoReviewURL6.com',
+    reviewId: 3,
+  },
+  {
+    url: 'demoReviewURL7.com',
+    reviewId: 7,
+  },
+  {
+    url: 'demoReviewURL8.com',
+    reviewId: 2,
+  },
+  {
+    url: 'demoReviewURL9.com',
+    reviewId: 3,
+  },
 ]
 
 module.exports = {
