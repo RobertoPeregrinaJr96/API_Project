@@ -7,6 +7,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const { Spot, SpotImage, Review, ReviewImage, Booking, BookingImage } = require('../../db/models');
 const { Op } = require('sequelize');
+const review = require('../../db/models/review');
 
 
 
@@ -101,18 +102,57 @@ const validateReview = [
 // Get all Spots
 router.get('/', [requireAuth], async (req, res) => {
 
-    const spots = await Spot.findAll()
+    const spotsTest = await Spot.findAll()
     // console.log(spots)
 
-    if (!spots) {
+    if (!spotsTest) {
         res.status(404)
         res.json({
             message: 'Cannot find any Spots'
         })
     }
 
+    const spots = await Spot.findAll({
+        include: [
+            { model: Review },
+            { model: SpotImage, }
+        ]
+    });
+
+    let arr = []
+    spots.forEach(spot => arr.push(spot.toJSON()))
+    // console.log('arr',arr)
+
+    let count = 0;
+    arr.forEach(spot => {
+        spot.Reviews.forEach(review => {
+            count += review.stars
+        })
+    })
+
+    let aveStarRating = (count / arr.length)
+    arr.forEach(spot => {
+        spot.aveRating = aveStarRating.toFixed(1)
+        delete spot.Reviews
+    })
+    arr.forEach(spot => {
+        spot.SpotImages.forEach(image => {
+            // console.log(image)
+            if (image.preview === true || image.preview === 1) {
+                spot.previewImage = image.url
+                // console.log(spot.previewImage)
+            }
+            if (!spot.previewImage) {
+                spot.previewImage = 'no previewImage found'
+            }
+            delete spot.SpotImages
+            // console.log(spot.previewImage)
+        })
+    })
+
+
     res.status(200)
-    res.json(spots)
+    res.json(arr)
 
 })
 
@@ -132,19 +172,62 @@ router.get('/current', [requireAuth], async (req, res) => {
     // console.log(id)
 
     const userSpots = await Spot.findAll({
+        include: [{ model: Review }, { model: SpotImage }],
         where: {
             ownerId: id
         }
+    })
+    let arr = []
+    userSpots.forEach(spot => {
+        if (id === spot.ownerId) {
+            arr.push(spot.toJSON())
+        }
+    })
+    // console.log('arr', arr)
+
+    let count = 0;
+    arr.forEach(spot => {
+        const id = spot.id
+        spot.Reviews.forEach(review => {
+            console.log(review)
+            if (id == review.spotId)
+                count += review.stars
+            console.log(count)
+        })
+    })
+    console.log(arr.length)
+    console.log(count)
+    let aveStarRating = (count / arr.length)
+    console.log('aveStarRating', aveStarRating)
+
+    arr.forEach(spot => {
+        spot.aveRating = aveStarRating.toFixed(1)
+        delete spot.Reviews
+    })
+
+    arr.forEach(spot => {
+        spot.SpotImages.forEach(image => {
+            // console.log(image)
+            if (image.preview === true || image.preview === 1) {
+                spot.previewImage = image.url
+                // console.log(spot.previewImage)
+            }
+            if (!spot.previewImage) {
+                spot.previewImage = 'no previewImage found'
+            }
+            delete spot.SpotImages
+            // console.log(spot.previewImage)
+        })
     })
 
     // console.log(userSpots)
 
     res.status(200)
-    res.json(userSpots)
+    res.json(arr)
 })
 
 
-// Get details of a Spot from an id  // Error handling is Done
+// Get details of a Spot from an id  // Error handling is Done //
 router.get('/:spotId', [requireAuth], async (req, res) => {
 
     const id = req.params.spotId;
@@ -164,6 +247,11 @@ router.get('/:spotId', [requireAuth], async (req, res) => {
             attributes: { exclude: ['createdAt', 'updatedAt', 'spotId'] },
         },
     })
+
+    const spotOwner = await User.findByPk(spot.ownerId,{
+        attributes:['id','firstName','lastName']
+    })
+    console.log(spotOwner)
 
     if (!spot) {
         res.status(404);
@@ -189,7 +277,7 @@ router.get('/:spotId', [requireAuth], async (req, res) => {
         // console.log(aveRating)
     }
 
-    let avgStarRating = aveRating / count
+    let avgStarRating = (aveRating / count).toFixed(1)
     console.log(avgStarRating)
 
     const safeSpot = {
@@ -208,7 +296,8 @@ router.get('/:spotId', [requireAuth], async (req, res) => {
         "updatedAt": spot.updatedAt,
         "numReviews": count,
         "avgStarRating": avgStarRating,
-        "SpotImages": spot.SpotImages
+        "SpotImages": spot.SpotImages,
+        'Owner': spotOwner
     }
 
     // console.log(spot)
@@ -421,9 +510,10 @@ router.get('/:spotId/reviews', async (req, res) => {
 
     const reviewImg = await Review.findByPk(spotReview.id, {
         include: [
-            { model: User ,
-                attributes:['id','email','username']
-                },
+            {
+                model: User,
+                attributes: ['id', 'email', 'username']
+            },
             { model: ReviewImage },
         ]
     })
@@ -464,10 +554,10 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) 
 
     const { user } = req
 
-    if(user.id === spot.Review.userId){
+    if (user.id === spot.Review.userId) {
         res.status(500);
         res.json({
-            message:''
+            message: ''
         })
     }
 

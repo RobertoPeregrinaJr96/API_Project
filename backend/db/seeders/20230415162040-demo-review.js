@@ -17,25 +17,25 @@ const demoReviews = [
   },
   {
     review: 'this is a other worldly place to stay',
-    stars: 9,
+    stars: 2,
     userId: 2,
     spotId: 3,
   },
   {
     review: 'this was okay place to stay',
-    stars: 6,
+    stars: 1,
     userId: 3,
     spotId: 4,
   },
   {
     review: 'this was okay place to stay',
-    stars: 8,
+    stars: 4,
     userId: 4,
     spotId: 8,
   },
   {
     review: 'this is a other worldly place to stay',
-    stars: 8,
+    stars: 5,
     userId: 6,
     spotId: 4,
   },
@@ -47,7 +47,7 @@ const demoReviews = [
   },
   {
     review: 'this was okay place to stay',
-    stars: 9,
+    stars: 3,
     userId: 4,
     spotId: 8,
   },
@@ -59,7 +59,7 @@ const demoReviews = [
   },
   {
     review: 'this was okay place to stay',
-    stars: 6,
+    stars: 4,
     userId: 3,
     spotId: 9,
   },
