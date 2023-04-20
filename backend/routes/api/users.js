@@ -53,9 +53,13 @@ router.get('/', requireAuth, async (req, res) => {
 
 const validateSignup = [
     check('firstName')
-        .exists({ checkFalsy: true }),
+        .exists({ checkFalsy: true })
+        .isString()
+        .withMessage('First Name is required'),
     check('lastName')
-        .exists({ checkFalsy: true }),
+        .exists({ checkFalsy: true })
+        .isString()
+        .withMessage('Last Name is required'),
     check('email')
         .exists({ checkFalsy: true })
         .isEmail()

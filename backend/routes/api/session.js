@@ -12,16 +12,19 @@ const validateLogin = [
     check('credential')
         .exists({ checkFalsy: true })
         .notEmpty()
-        .withMessage('Please provide a valid email or username.'),
+        .withMessage('Email or username is required.'),
     check('password')
         .exists({ checkFalsy: true })
-        .withMessage('Please provide a password.'),
+        .withMessage('Password is required.'),
     handleValidationErrors
 ];
 
 // Restore session user
 router.get('/', (req, res) => {
     const { user } = req;
+
+    if(!user) res.status(200).json({"user":null})
+
     if (user) {
         const safeUser = {
             id: user.id,
@@ -58,6 +61,8 @@ router.post('/', validateLogin, async (req, res, next) => {
 
     const safeUser = {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
     };

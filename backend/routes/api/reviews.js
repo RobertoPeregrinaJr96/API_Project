@@ -5,7 +5,7 @@ const { User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
-const { Review, ReviewImage, Spot } = require('../../db/models');
+const { Review, ReviewImage, Spot, SpotImage } = require('../../db/models');
 
 
 const router = express.Router();
@@ -35,7 +35,7 @@ const validateReviewImage = [
 router.get('/current', async (req, res) => {
 
     const { user } = req
-    console.log(user)
+    // console.log(user)
 
     if (!user) {
         res.json({
@@ -47,32 +47,58 @@ router.get('/current', async (req, res) => {
     console.log(id)
 
     const userReview = await Review.findAll({
-        include: [
-            { model: Spot },
-            { model: ReviewImage }
-        ],
         where: {
             userId: id
-        },
-        attributes:['id','firstName','lastName']
-
+        }
     })
+    // console.log('userReview', userReview)
 
-    console.log(userReview)
+    const userInfo = await User.findByPk(id, {
+        attributes: ['id', 'firstName', 'lastName']
+    })
+    // console.log('userInfo', userInfo)
+
+    const spotInfo = await Spot.findByPk(userReview[0].spotId, {
+        include: { model: SpotImage }
+    })
+    // console.log('spotInfo',spotInfo)
+
+    // arr = []
+
+    // spotInfo.Spots.forEach(spot => {
+    //         arr.push(spot.toJSON())
+
+    // })
+    // console.log(arr)
+    // spotInfo.Spots.forEach(element => {
+    //     element.SpotImages.forEach(img => {
+    //         if (img.preview == true || img.preview == 1) {
+    //             element.previewImage = img.url
+    //         }
+    //         if (!element.preview) {
+    //             element.previewImage = 'no previewImage found'
+    //         }
+    //     })
+    //     delete element.SpotImages
+    // });
+
+    // console.log(arr)
+
+    // console.log(userReview)
 
     const safeReview = {
         "Reviews": userReview
         // {
-        //     "id":
-        //     "userId":
-        //     "spotId":
-        //     "review":
-        //     "stars":
-        //     "createdAt":
-        //     "updatedAt":
-        //     "User":
-        //     "Spot":
-        //     "ReviewImages":
+        //     "id": userReview.id,
+        //     "userId": userReview.userId,
+        //     "spotId": userReview.spotId,
+        //     "review":userReview.review,
+        //     "stars": userReview.stars,
+        //     "createdAt": userReview.createdAt,
+        //     "updatedAt": userReview.updatedAt,
+        //     "User": user,
+        //     "Spot":userReview.Spots,
+        //     "ReviewImages": userReview.ReviewImage
         // }
     }
 

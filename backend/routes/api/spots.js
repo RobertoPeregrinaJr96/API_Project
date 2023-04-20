@@ -175,7 +175,9 @@ router.get('/current', [requireAuth], async (req, res) => {
             ownerId: id
         }
     })
+
     let arr = []
+
     userSpots.forEach(spot => {
         if (id === spot.ownerId) {
             arr.push(spot.toJSON())
@@ -184,6 +186,7 @@ router.get('/current', [requireAuth], async (req, res) => {
     // console.log('arr', arr)
 
     let count = 0;
+
     arr.forEach(spot => {
         const id = spot.id
         spot.Reviews.forEach(review => {
@@ -213,14 +216,15 @@ router.get('/current', [requireAuth], async (req, res) => {
             if (!spot.previewImage) {
                 spot.previewImage = 'no previewImage found'
             }
-            delete spot.SpotImages
+
             // console.log(spot.previewImage)
         })
+        delete spot.SpotImages
     })
     // console.log(userSpots)
 
     res.status(200)
-    res.json(arr)
+    res.json({"Spots":arr})
 })
 
 
