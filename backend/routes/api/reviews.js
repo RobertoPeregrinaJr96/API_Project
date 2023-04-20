@@ -6,7 +6,6 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { Review, ReviewImage, Spot } = require('../../db/models');
-const { reset } = require('nodemon');
 
 
 const router = express.Router();
@@ -22,8 +21,8 @@ const validateReview = [
         .withMessage('Review text is required'),
     check('stars')
         .exists()
-        .isInt({ gt: 1, lt: 5 })
-        .isLength()
+        .isInt({gt: 1, lt: 5})
+        .isLength( )
         .withMessage('Stars must be an integer from 1 to 5'),
     check('stars')
         .not()
@@ -154,7 +153,7 @@ router.post('/:reviewId/images', [requireAuth, validateReviewImage], async (req,
 
 })
 
-router.put('/:reviewId', [validateReview], async (req, res) => {
+router.put('/:reviewId',[ validateReview], async (req, res) => {
 
     const id = req.params.reviewId;
     console.log(id);
@@ -198,7 +197,7 @@ router.put('/:reviewId', [validateReview], async (req, res) => {
 })
 
 // Delete an existing review
-router.delete('/:reviewId', [requireAuth], async (req, res) => {
+router.delete('/:reviewId', async (req, res) => {
 
     const id = req.params.reviewId;
     console.log(id);
@@ -208,20 +207,7 @@ router.delete('/:reviewId', [requireAuth], async (req, res) => {
             { model: ReviewImage }
         ]
     })
-
-    if (!review) {
-        res.status(404);
-        res.json({
-            message: 'Review couldn\'t be found'
-        })
-    }
     console.log(review)
-
-    const {user} = req
-
-    if(review.userId !== user.id){
-        res.status(403)
-    }
 
     await review.destroy();
 
