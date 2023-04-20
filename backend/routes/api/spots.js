@@ -452,18 +452,28 @@ router.put('/:spotId', [requireAuth, validateCreateSpot], async (req, res) => {
 
 
 // Delete a Spot
-router.delete('/:spotId', async (req, res) => {
+router.delete('/:spotId',[requireAuth], async (req, res) => {
 
     const id = req.params.spotId;
     // console.log(id)
 
+    const {user} = req
+    console.log(user)
+
     const spot = await Spot.findByPk(id)
-    // console.log(spot);
+    console.log(spot);
 
     if (!spot) {
         res.status(404);
         res.json({
             message: 'Spot couldn\'t be found'
+        })
+    }
+
+    if(spot.ownerId !== user.id){
+        res.status(403)
+        res.json({
+            message:'This user doesn\'t own this spot and therefore unable to remove it'
         })
     }
 
