@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Booking.belongsTo(models.User, { foreignKey: 'userId',otherKey:'id' })
-      Booking.belongsTo(models.Spot, { foreignKey: 'spotId',otherKey:'id' })
+      Booking.belongsTo(models.User, { foreignKey: 'userId', onDelete: 'CASCADE', otherKey: 'id' })
+      Booking.belongsTo(models.Spot, { foreignKey: 'spotId', otherKey: 'id', onDelete: 'CASCADE' })
     }
   }
   Booking.init({
@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Booking',
     defaultScope: {
 
-      exclude: [  "createdAt", "updatedAt"]
+      exclude: ["createdAt", "updatedAt"]
     },
   });
   return Booking;

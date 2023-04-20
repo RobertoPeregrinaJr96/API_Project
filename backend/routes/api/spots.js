@@ -91,8 +91,6 @@ const validateReview = [
     check('stars')
         .exists({ checkFalsy: true })
         .isInt({ min: 1, max: 5 })
-        .isNumeric()
-        .isLength({ max: 5 })
         .withMessage('Stars must be an integer from 1 to 5'),
     handleValidationErrors
 ]
@@ -506,14 +504,18 @@ router.get('/:spotId/reviews', async (req, res) => {
     const id = req.params.spotId;
     console.log(id)
 
-    if(!id){
+    const spotTest = await Spot.findByPk(id)
+
+    if (!spotTest) {
         res.status(404);
         res.json({
-            message:'Not a valid Id'
+            message: "Spot couldn't be found"
         })
     }
 
-    const {user} = req
+    console.log('break')
+
+    const { user } = req
 
     if (!user) {
         res.status(404);
@@ -524,42 +526,42 @@ router.get('/:spotId/reviews', async (req, res) => {
 
     const spot = await Spot.findByPk(id, {
         include: [
-            { model: Review },
-
+            { model: Review }
         ],
 
     })
-    console.log(spotReview)
+    const spotId = spot.id
+    console.log(spotId)
 
-    if (!spotReview) {
-        res.status(404);
-        res.json({
-            message: 'Spot couldn\'t be found'
-        })
-    }
 
-    const reviewImg = await Review.findByPk(spot.id, {
+    console.log('break')
+
+    const reviewImg = await Review.findAll({
         include: [
             {
                 model: User,
                 attributes: ['id', 'email', 'username']
             },
-            { model: ReviewImage },
-        ]
+            {
+                model: ReviewImage,
+                attributes: ['id', 'url']
+            },
+        ],
+        where: { spotId: spotId }
     })
 
 
     res.status(200);
-    res.json(reviewImg)
+    res.json({ Reviews: [reviewImg] })
 })
 
 //Create a Review for a Spot based on the Spot's id
 router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) => {
 
     const id = req.params.spotId;
-    console.log('id',id)
+    // console.log('id', id)
 
-    const {user} = req
+    const { user } = req
     // console.log('user',user)
 
     // if user is not logged in then send a error response
@@ -569,6 +571,30 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) 
             message: 'Please login'
         });
     }
+
+    const userId = user.id
+    console.log("userId",userId)
+    console.log('break')
+
+
+
+    // test if the user already left a review for the spot
+    const reviewTest = await Review.findAll({
+        where: {
+            spotId: id,
+            userId: userId
+        }
+    })
+    console.log('reviewTest',reviewTest)
+    console.log('length',reviewTest.length)
+
+    if(reviewTest.length){
+        res.status(403);
+        res.json({
+            message:'You have already made a review for this spot'
+        })
+    }
+
     // we find the spot by the id in the endpoint
     const spot = await Spot.findByPk(id, {
         include: [
@@ -577,20 +603,13 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) 
         ],
 
     })
-    console.log(spot)
+    // console.log(spot)
 
     // if spot does not exist then send error response
     if (!spot) {
         res.status(404);
         res.json({
             message: 'Spot couldn\'t be found'
-        })
-    }
-    // if the spot id
-    if (user.id === spot.userId) {
-        res.status(500);
-        res.json({
-            message: ''
         })
     }
 
