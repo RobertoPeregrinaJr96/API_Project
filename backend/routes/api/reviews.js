@@ -44,9 +44,12 @@ router.get('/current', async (req, res) => {
     }
 
     const { id } = user
-    console.log(id)
+    // console.log(id)
 
     const userReview = await Review.findAll({
+        include:[
+            {model:ReviewImage ,attributes:['id','url']}
+        ],
         where: {
             userId: id
         }
@@ -58,48 +61,50 @@ router.get('/current', async (req, res) => {
     })
     // console.log('userInfo', userInfo)
 
-    const spotInfo = await Spot.findByPk(userReview[0].spotId, {
-        include: { model: SpotImage }
+    const spotInfo = await Spot.findAll({
+        include: {
+             model: SpotImage,
+        },
+        where: userReview[0].spotId
     })
-    // console.log('spotInfo',spotInfo)
+    // console.log('spotInfo', spotInfo)
 
-    // arr = []
+    arr = []
 
-    // spotInfo.Spots.forEach(spot => {
-    //         arr.push(spot.toJSON())
+    spotInfo.forEach(spot => arr.push(spot.toJSON()))
 
-    // })
-    // console.log(arr)
-    // spotInfo.Spots.forEach(element => {
-    //     element.SpotImages.forEach(img => {
-    //         if (img.preview == true || img.preview == 1) {
-    //             element.previewImage = img.url
-    //         }
-    //         if (!element.preview) {
-    //             element.previewImage = 'no previewImage found'
-    //         }
-    //     })
-    //     delete element.SpotImages
-    // });
+    arr.forEach(spot => {
+        spot.SpotImages.forEach(image => {
+            // console.log(image)
+            if (image.preview === true || image.preview === 1) {
+                spot.previewImage = image.url
+                // console.log(spot.previewImage)
+            }
+            if (!spot.previewImage) {
+                spot.previewImage = 'no previewImage found'
+            }
+            delete spot.SpotImages
+            // console.log(spot.previewImage)
+        })
+    })
 
-    // console.log(arr)
+    // arr.unshift(user)
+    // arr.unshift(userReview)
 
-    // console.log(userReview)
+    console.log(arr)
+
+    console.log(userReview)
 
     const safeReview = {
-        "Reviews": userReview
-        // {
-        //     "id": userReview.id,
-        //     "userId": userReview.userId,
-        //     "spotId": userReview.spotId,
-        //     "review":userReview.review,
-        //     "stars": userReview.stars,
-        //     "createdAt": userReview.createdAt,
-        //     "updatedAt": userReview.updatedAt,
-        //     "User": user,
-        //     "Spot":userReview.Spots,
-        //     "ReviewImages": userReview.ReviewImage
-        // }
+        ...[
+            {Reviews: userReview},
+            {"User":userInfo},
+            {"Spot":arr},
+            {ReviewImages:[
+                 userReview.ReviewImages
+            ]}
+        ]
+
     }
 
     res.status(200)

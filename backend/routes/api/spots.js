@@ -224,7 +224,7 @@ router.get('/current', [requireAuth], async (req, res) => {
     // console.log(userSpots)
 
     res.status(200)
-    res.json({"Spots":arr})
+    res.json({ "Spots": arr })
 })
 
 
@@ -248,17 +248,17 @@ router.get('/:spotId', [requireAuth], async (req, res) => {
             attributes: { exclude: ['createdAt', 'updatedAt', 'spotId'] },
         },
     })
-    const spotOwner = await User.findByPk(spot.ownerId,{
-        attributes:['id','firstName','lastName']
-    })
-    console.log(spotOwner)
-
     if (!spot) {
         res.status(404);
         res.json({
             message: 'Spot couldn\'t be found'
         })
     }
+    const spotOwner = await User.findByPk(spot.ownerId, {
+        attributes: ['id', 'firstName', 'lastName']
+    })
+    console.log(spotOwner)
+
 
     const { count, rows } = await Review.findAndCountAll({
         where: {
@@ -367,6 +367,16 @@ router.post('/:spotId/images', [requireAuth, validateGetImageFromBody], async (r
         })
     }
 
+    const { user } = req;
+    console.log(user);
+
+    if (user.id !== id) {
+        res.status(403)
+        res.json({
+            "message": "You do not own this spot"
+        })
+    }
+
     // we will grab the url and preview from the request body by deconstructing the object
     const { url, preview } = req.body
     // console.log(url)
@@ -390,6 +400,7 @@ router.post('/:spotId/images', [requireAuth, validateGetImageFromBody], async (r
         'preview': newImage.preview
     }
 
+    res.status(200)
     res.json(safeImage)
 })
 
@@ -456,12 +467,12 @@ router.put('/:spotId', [requireAuth, validateCreateSpot], async (req, res) => {
 
 
 // Delete a Spot
-router.delete('/:spotId',[requireAuth], async (req, res) => {
+router.delete('/:spotId', [requireAuth], async (req, res) => {
 
     const id = req.params.spotId;
     // console.log(id)
 
-    const {user} = req
+    const { user } = req
     console.log(user)
 
     const spot = await Spot.findByPk(id)
@@ -474,10 +485,10 @@ router.delete('/:spotId',[requireAuth], async (req, res) => {
         })
     }
 
-    if(spot.ownerId !== user.id){
+    if (spot.ownerId !== user.id) {
         res.status(403)
         res.json({
-            message:'This user doesn\'t own this spot and therefore unable to remove it'
+            message: 'This user doesn\'t own this spot and therefore unable to remove it'
         })
     }
 
@@ -495,14 +506,23 @@ router.get('/:spotId/reviews', async (req, res) => {
     const id = req.params.spotId;
     console.log(id)
 
-    if (!id) {
+    if(!id){
+        res.status(404);
+        res.json({
+            message:'Not a valid Id'
+        })
+    }
+
+    const {user} = req
+
+    if (!user) {
         res.status(404);
         res.json({
             message: 'Please login'
         });
     }
 
-    const spotReview = await Spot.findByPk(id, {
+    const spot = await Spot.findByPk(id, {
         include: [
             { model: Review },
 
@@ -518,7 +538,7 @@ router.get('/:spotId/reviews', async (req, res) => {
         })
     }
 
-    const reviewImg = await Review.findByPk(spotReview.id, {
+    const reviewImg = await Review.findByPk(spot.id, {
         include: [
             {
                 model: User,
@@ -537,15 +557,19 @@ router.get('/:spotId/reviews', async (req, res) => {
 router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) => {
 
     const id = req.params.spotId;
-    console.log(id)
+    console.log('id',id)
 
-    if (!id) {
+    const {user} = req
+    // console.log('user',user)
+
+    // if user is not logged in then send a error response
+    if (!user) {
         res.status(500);
         res.json({
             message: 'Please login'
         });
     }
-
+    // we find the spot by the id in the endpoint
     const spot = await Spot.findByPk(id, {
         include: [
             { model: Review },
@@ -555,16 +579,15 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) 
     })
     console.log(spot)
 
+    // if spot does not exist then send error response
     if (!spot) {
         res.status(404);
         res.json({
             message: 'Spot couldn\'t be found'
         })
     }
-
-    const { user } = req
-
-    if (user.id === spot.Review.userId) {
+    // if the spot id
+    if (user.id === spot.userId) {
         res.status(500);
         res.json({
             message: ''
