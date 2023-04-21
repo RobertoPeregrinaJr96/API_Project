@@ -133,7 +133,6 @@ router.get('/current', async (req, res) => {
     res.json({ Reviews: arr })
 })
 
-
 // Add an Image to a Review based on the Review's Id
 router.post('/:reviewId/images', [requireAuth, validateReviewImage], async (req, res) => {
 
@@ -204,7 +203,7 @@ router.post('/:reviewId/images', [requireAuth, validateReviewImage], async (req,
     await reviewImg.save()
 
     const safeImage = {
-        id: reviewImg.id,
+        reviewId: reviewImg.id,
         url: reviewImg.url
     }
 
@@ -284,12 +283,15 @@ router.delete('/:reviewId', [requireAuth], async (req, res) => {
 
     if (userId !== review.dataValues.id) {
         res.status(403);
-        res.json({ message: 'You do not have permission to delete this review' })
+        res.json({ "message": "Forbidden" })
     }
-    console.log('break4')
+    console.log('break4 ---------------------------------------')
     console.log(review)
 
+    console.log('break 5 ------------------------------------')
     await review.destroy();
+    const reviewTest = await Review.findByPk(id)
+    console.log(reviewTest)
 
     res.status(200);
     res.json({

@@ -7,6 +7,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const { Spot, SpotImage, Review, ReviewImage, Booking, BookingImage } = require('../../db/models');
 const { Op } = require('sequelize');
+const spot = require('../../db/models/spot');
 
 
 
@@ -463,7 +464,6 @@ router.put('/:spotId', [requireAuth, validateCreateSpot], async (req, res) => {
     res.json(safeSpot)
 })
 
-
 // Delete a Spot
 router.delete('/:spotId', [requireAuth], async (req, res) => {
 
@@ -573,7 +573,7 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) 
     }
 
     const userId = user.id
-    console.log("userId",userId)
+    console.log("userId", userId)
     console.log('break')
 
 
@@ -585,13 +585,13 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) 
             userId: userId
         }
     })
-    console.log('reviewTest',reviewTest)
-    console.log('length',reviewTest.length)
+    console.log('reviewTest', reviewTest)
+    console.log('length', reviewTest.length)
 
-    if(reviewTest.length){
+    if (reviewTest.length) {
         res.status(403);
         res.json({
-            message:'You have already made a review for this spot'
+            message: 'You have already made a review for this spot'
         })
     }
 
@@ -599,9 +599,7 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) 
     const spot = await Spot.findByPk(id, {
         include: [
             { model: Review },
-
         ],
-
     })
     // console.log(spot)
 
@@ -628,64 +626,57 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) 
 
 })
 
-// NOT DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Get all Bookings for a Spot based on the Spot's id
-router.get('/:spotId/bookings', async (req, res) => {
+router.get('/:spotId/bookings', [requireAuth], async (req, res) => {
 
     const id = req.params.spotId;
+    console.log(id)
 
     const { user } = req;
     // console.log(user)
 
-    const spot = await Spot.findByPk(id, {
+    const testSpot = await Spot.findByPk(id, {
         include: [
             { model: Booking }
-
         ],
-        // attributes:{
-        //     exclude:['SpotId','UserId']
-        // }
-
     })
 
-    if (!spot) {
+    if (!testSpot) {
         res.status(404);
         res.json({
             message: 'Spot could\'t be found'
         })
     }
 
-    // console.log('spot',spot);
-    // console.log('id', id);
-    // console.log('user.id', user.id);
-    // console.log('spot.ownerId', spot.ownerId)
-
-    if (user.id == spot.ownerId) {
-        res.status(200);
-        res.json({
-            Bookings: [
-                user,
-                spot.Booking
-            ]
+    // what the guest see's
+    if (testSpot.ownerId !== user.id) {
+        const guestBooking = await Booking.findAll({
+            attributes: ['spotId', 'startDate', 'endDate'],
+            where: {
+                spotId: testSpot.id
+            }
         })
-        // res.json({ "message": 'you own this' })
-    }
+        res.status(200)
+        res.json(guestBooking)
 
-    res.status(200);
-    res.json({
-        Bookings: [
-            spot.Bookings
-        ]
+    }
+    // what the owner of the spot sees
+    const confirmedBooking = await Booking.findAll({
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName']
+            }
+        ],
+        where: {
+            spotId: testSpot.id
+        }
     })
 
+    res.status(200);
+    res.json({ Booking: confirmedBooking })
 })
 
-//  const validateBooking = [
-//     check('startDate')
-//     .exists()
-//     .withMessage('Start date conflicts with an existing booking')
-
-//  ]
 
 
 // same problem as the one above as im getting back an extra SpotId and UserId???
@@ -694,14 +685,15 @@ router.post('/:spotId/bookings', async (req, res) => {
 
     const { startDate, endDate } = req.body
 
+
     const id = req.params.spotId;
-    console.log(id);
+    // console.log(id);
 
     const { user } = req;
-    console.log(user.id);
+    // console.log(user.id);
 
     const spot = await Spot.findByPk(id);
-    console.log(spot.ownerId);
+    // console.log(spot.ownerId);
 
     if (!spot) {
         res.status({
@@ -709,19 +701,174 @@ router.post('/:spotId/bookings', async (req, res) => {
         })
     }
 
-    const newBooking = await Booking.build({
-        startDate,
-        endDate,
-        userId: user.id,
-        spotId: spot.id,
+    const start = new Date(startDate)
+    console.log(start)
+    const end = new Date(endDate)
+    // console.log(end)
+
+    if (start > end) {
+        res.status(400)
+        res.json({
+            message: 'endDate cannot be on or before startDate'
+        })
+    }
+
+    const testObj = {}
+
+    const testBook = await Booking.findAll({
+        where: {
+            spotId: id,
+        }
     })
 
-    await newBooking.save();
+    // console.log(testSpot)
 
-    res.status(200);
-    res.json(newBooking)
+    // testBook.forEach(booking => {
 
+    //     // console.log(booking)
+    //     console.log(booking.startDate)
+
+
+    //     if (booking.startDate == start && booking.startDate.getTime() > end.getTime()) testObj.startDate = 'Start date conflicts with an existing booking'
+
+    //     if (booking.endDate == end) testObj.endDate = 'End date conflicts with an existing booking'
+    // })
+
+    // if (testObj.startDate || testObj.endDate) {
+    //     res.status(403)
+    //     res.json(testObj)
+    // }
+
+
+    console.log("break ======================================================")
+
+    if (user.id !== spot.ownerId) {
+
+        const newBooking = await Booking.build({
+            startDate: new Date(startDate),
+            endDate: new Date(endDate),
+            userId: user.id,
+            spotId: spot.id,
+        })
+
+        await newBooking.save();
+
+        const safeBooking = {
+            startDate: newBooking.startDate.toISOString().split('T0')[0],
+            endDate: newBooking.endDate.toISOString().split('T0')[0],
+            userId: user.id,
+            spotId: id,
+            createdAt: newBooking.createdAt,
+            updatedAt: newBooking.updatedAt
+        }
+
+        res.status(200);
+        res.json(safeBooking)
+    }
+    res.json({ message: 'You own the spot' })
 })
 
 
 module.exports = router
+
+
+
+
+// // const { user } = req;
+// //     console.log("user", user);
+
+// //     const id = req.params.bookingId
+// //     console.log('id', id)
+
+// //     const booking = await Booking.findAll({ where: { id: id } });
+// //     console.log(booking)
+
+// //     // error message for if booking not found
+// //     if (!booking) {
+// //         res.status(404);
+// //         res.json({
+// //             "message": "Spot couldn't be found"
+// //         })
+// //     }
+
+// //     // if you are not the owner
+// //     if (booking.userId !== user.id) {
+// //         res.status(200);
+// //         const noOwnerBooking = await Booking.findByPk(id, {
+// //             attributes: ['spotId', 'startDate', 'endDate']
+// //         })
+
+// //         let { spotId, startDate, endDate } = noOwnerBooking
+
+// //         const safeResponse = {
+// //             spotId: spotId,
+// //             startDate: new Date(startDate.toDateString()),
+// //             endDate: new Date(endDate.toDateString())
+// //         }
+
+// //         res.json({ Booking: safeResponse })
+// //     }
+
+
+// //     res.status(200);
+// //     res.json({ message: "hello" })
+
+
+// const id = req.params.spotId;
+// console.log(id)
+
+// const { user } = req;
+// // console.log(user)
+
+// const testSpot = await Spot.findByPk(id, {
+//     include: [
+//         { model: Booking }
+//     ],
+// })
+
+// if (!testSpot) {
+//     res.status(404);
+//     res.json({
+//         message: 'Spot could\'t be found'
+//     })
+// }
+
+// const bookingArr = []
+
+// testSpot.dataValues.Bookings.forEach(booking => {
+//     bookingArr.push(booking.dataValues)
+// })
+
+// console.log(bookingArr)
+
+
+// // if you are not the owner
+// if (user.id == testSpot.dataValues.ownerId) {
+//     res.status(200);
+
+//     const safeResponse = {}
+
+//     // bookingArr.forEach(booking => {
+
+//     //     const noOwnerBooking = await Booking.findByPk(booking.id, {
+//     //         attributes: ['spotId', 'startDate', 'endDate']
+//     //     })
+
+//     //     let { spotId, startDate, endDate } = noOwnerBooking
+
+//     //     safeResponse.spotId = spotId,
+//     //         safeResponse.startDate = new Date(startDate.toDateString()),
+//     //         safeResponse.endDate = new Date(endDate.toDateString())
+//     // }
+//     // )
+
+
+//     res.json({ Booking: safeResponse })
+// }
+
+// res.status(200);
+// res.json({
+//     Bookings: [
+
+//     ]
+// })

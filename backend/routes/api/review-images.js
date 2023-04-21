@@ -18,17 +18,36 @@ router.delete('/:imageId', requireAuth, async (req, res) => {
     const id = req.params.imageId;
     console.log(id)
 
-    const img = await ReviewImage.findByPk(id)
-    console.log(img)
+    const imgTest = await ReviewImage.findByPk(id)
+    console.log('imgTest',imgTest)
 
-    if (!img) {
+    if (!imgTest) {
         res.status(404);
         res.json({
             message: 'Review Image couldn\'t be found'
         })
     }
 
-    await img.destroy()
+    console.log('break 1 ------------------------------')
+
+    const review = await Review.findByPk(imgTest.reviewId)
+    console.log('review',review)
+    console.log('user.id',user.id)
+    console.log('review.userId',review.dataValues.userId)
+
+    console.log('break 1 ------------------------------')
+    if (user.id !== review.dataValues.userId) {
+        res.status(403);
+        res.json({
+            message: "Forbidden"
+        })
+    }
+
+
+    console.log('break 1 ------------------------------')
+
+    await imgTest.destroy()
+    console.log('break 1 ------------------------------')
 
     res.status(200);
     res.json({
