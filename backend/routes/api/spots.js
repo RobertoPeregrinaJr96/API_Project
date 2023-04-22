@@ -133,7 +133,7 @@ router.get('/', async (req, res) => {
     if (isNaN(page)) page = 1;
     if (isNaN(size)) size = 1;
 
-    if (isNaN(page) && isNaN(size)) {
+    if (page && size) {
 
         pagination.limit = size;
         console.log('limit', pagination.limit)
