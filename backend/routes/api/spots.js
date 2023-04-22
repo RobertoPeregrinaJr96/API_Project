@@ -810,7 +810,7 @@ router.post('/:spotId/bookings', [requireAuth], async (req, res) => {
     }
     console.log('break ----------------------------------------------')
 
-    const testObj = {}
+    // const testObj = {}
 
     const testBook = await Booking.findAll({
         where: {
