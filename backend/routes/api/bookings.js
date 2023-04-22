@@ -6,15 +6,14 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { Booking, Spot, SpotImage, Review, ReviewImage, User } = require('../../db/models');
-const spot = require('../../db/models/spot');
-const { Op } = require('sequelize');
+
 
 
 const router = express.Router();
 
 
 // Get all of the Current User's Bookings
-router.get('/current', async (req, res) => {
+router.get('/current',requireAuth, async (req, res) => {
 
     const { user } = req
     // console.log('user', user)
@@ -26,7 +25,7 @@ router.get('/current', async (req, res) => {
         include: [
             {
                 model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'description', 'price'],
-                // include: { model: SpotImage, attributes: ['url', 'preview'] }
+                include: { model: SpotImage, attributes: ['url', 'preview'] }
             }
         ],
         where: {
@@ -34,45 +33,50 @@ router.get('/current', async (req, res) => {
         },
     })
 
-    // const bookingArr = []
-
-    // // currentBooking.forEach(booking => bookingArr.push(booking.toJSON()))
-
-    // // console.log(currentBooking)
-    // console.log('break 3 ----------')
-
-    // bookingArr.forEach(booking => {
-    //     console.log('booking', booking)
-
-    //     // THIS STILL NEEDS TO WORK FOR ORIGINAL RESPONSE
-    //     for (spot in booking.Spots) {
-    //         console.log('spot', spot)
-    //         console.log('break 4 ----------')
-
-    //         // spot.SpotImages.forEach(img => {
-    //         //    console.log('img',img)
-    //         //     if (img.preview === true || img.preview === 1) {
-    //         //         spot.previewImage = img.url
-    //         //         // console.log(spot.previewImage)
-    //         //     }
-    //         //     if (!spot.previewImage) {
-    //         //         spot.previewImage = 'no previewImage found'
-    //         //     }
-    //         // })
-    //         // delete spot.SpotImages
-    //     }
-    // });
-
-    // console.log('break 5 ----------')
+    // Bookings.dataValues.startDate = start.toISOString().split('T0')[0];
+    // Bookings.dataValues.endDate = end.toISOString().split('T0')[0];
 
 
+    const bookingArr = []
 
+    Bookings.forEach(booking => bookingArr.push(booking.toJSON()))
 
+    bookingArr[0].startDate = bookingArr[0].startDate.toISOString().split('T0')[0]
+    console.log(bookingArr[0].startDate)
+
+    bookingArr[0].endDate = bookingArr[0].endDate.toISOString().split('T0')[0]
+    console.log(bookingArr[0].endDate)
+
+    for (let i = 0; i < bookingArr.length; i++) {
+
+        const spot = bookingArr[i].Spot;
+        // console.log('spot', spot)
+
+        for (let j = 0; j < spot.SpotImages.length; j++) {
+
+            const img = spot.SpotImages[j];
+            console.log('img', img)
+
+            if (img.preview === true) {
+                spot.previewImage = img.url
+                console.log('previewImage', spot.previewImage)
+            }
+            console.log('break-------------------------------------')
+            if (!spot.previewImage) {
+                spot.previewImage = 'no previewImage found'
+                console.log('previewImage', spot.previewImage)
+            }
+        }
+
+        delete spot.SpotImages // it works??? but not saving in the outer obj
+        console.log('data', spot.SpotImages)
+    }
+    // console.log(currentBooking)
+    console.log('break 3 ----------')
 
     res.status(200)
-    res.json({ Bookings })
+    res.json({ Bookings: bookingArr })
 })
-
 
 // not Done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Edit a Booking
@@ -84,6 +88,8 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
     let { startDate, endDate } = req.body;
     console.log(req.body)
+
+    const { user } = req
 
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -103,7 +109,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
     console.log("break 2 -----------------------------")
 
-    if (testBook.userId !== id) {
+    if (testBook.userId !== user.id) {
         res.status(403)
         res.json({
             message: 'Forbidden'
@@ -134,9 +140,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
     const testObj = {}
 
     const testBooks = await Booking.findAll({
-        where: {
-            spotId: id,
-        }
+
     })
 
     console.log(testBook)
@@ -144,27 +148,46 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
     testBooks.forEach(booking => {
 
         // console.log(booking)
-        console.log(booking.startDate)
-        console.log('startDate', booking.startDate.getTime())
-        console.log('endDate', booking.endDate.getTime())
-        console.log('start', start.getTime())
-        console.log('end', end.getTime())
+        // console.log(booking.startDate)
+        // console.log('startDate', booking.startDate.getTime())
+        // console.log('endDate', booking.endDate.getTime())
+        // console.log('start', start.getTime())
+        // console.log('end', end.getTime())
 
         if (booking.startDate.getTime() <= start.getTime()
             && booking.endDate.getTime() >= start.getTime()) {
             testObj.startDate = 'Start date conflicts with an existing booking'
         }
-
+        /**
+         if the booking endDate is lesser than the new endDate
+         if the booking endDate is lesser than the new endDate
+         */
         if (booking.endDate.getTime() <= end.getTime()
             && booking.startDate.getTime() <= end.getTime()) {
             testObj.endDate = 'End date conflicts with an existing booking'
         }
+        console.log('boolean', testObj.startDate)
+        console.log('boolean', testObj.endDate)
     })
 
+    if (testObj.startDate && testObj.endDate) {
+        res.status(403)
+        res.json({
+            "message": "Sorry, this spot is already booked for the specified dates",
+            "errors": {
+                "startDate": "Start date conflicts with an existing booking",
+                "endDate": "End date conflicts with an existing booking"
+            }
+        })
+    }
     if (testObj.startDate || testObj.endDate) {
         res.status(403)
-        res.json(testObj)
+        res.json({
+            "message": "Sorry, this spot is already booked for the specified dates",
+            "errors": testObj
+        })
     }
+
 
 
     const now = new Date()
@@ -196,7 +219,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 })
 
 ///  done  // with error handling
-router.delete('/:bookingId', async (req, res) => {
+router.delete('/:bookingId',requireAuth, async (req, res) => {
 
     const id = req.params.bookingId;
     console.log(id);
@@ -264,50 +287,3 @@ router.delete('/:bookingId', async (req, res) => {
 
 
 module.exports = router
-
-// const id = req.params.bookingId;
-// console.log(id);
-
-// const bookingTest = await Booking.findByPk(id);
-// console.log(bookingTest);
-
-// // if the booking isnt found
-// if (!bookingTest) {
-//     res.status(404);
-//     res.json('Booking couldn\'t be found');
-// }
-
-// console.log('break 1 ---------------------------------------')
-
-// const { userId, spotId } = bookingTest
-// console.log('userId', userId)
-// console.log('spotId', spotId)
-
-// const { user } = req
-// console.log('user.id', user.id)
-
-// // if the user isnt the owner
-// if (userId !== user.id) {
-//     res.status(403);
-//     res.json({
-//         message: 'Forbidden'
-//     })
-// }
-
-// console.log('break 2 ---------------------------------------')
-
-//     const {startDate} = bookingTest
-//     console.log('startDate',startDate.toDateString())
-
-//     const start  = new Date(startDate)
-//     console.log(start)
-
-//     const date = new Date()
-//     console.log(date)
-
-// if (start > date) {
-//     res.status(403);
-//     res.json({
-//         message: 'Bookings that have been started can\'t be deleted'
-//     })
-// }

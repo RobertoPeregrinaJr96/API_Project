@@ -32,7 +32,7 @@ const validateReviewImage = [
 ]
 
 // GET all reviews of current User // No Error handling needed
-router.get('/current', async (req, res) => {
+router.get('/current', requireAuth, async (req, res) => {
 
     // grab the user that we will be using
     const { user } = req
@@ -49,87 +49,66 @@ router.get('/current', async (req, res) => {
     const { id } = user
     // console.log(id)
 
+    console.log('break 1 ===========================')
+
+    // for loop over reviewsList
+    // let spot = reviewsList[i].Spot
+    // for loop over spot.SpotImages (requires that you have include the SpotImage model in your query)
+    // 	let spotImage = spot.SpotImages[j]
+    // 	if spotImage.preview === true
+    // spot.previewImage = spotImage.url
+
     // we will find all the Reviews that that the userId equal to the user.id
-    const reviews = await Review.findAll({
+
+    const reviewList = await Review.findAll({
+        include: [
+            {
+                model: User, attributes: ['id', 'firstName', 'lastName']
+            },
+            {
+                model: Spot, include: { model: SpotImage },
+
+            }, {
+                model: ReviewImage
+            }
+        ],
         where: {
             userId: id
         }
     })
+    // console.log('reviewList', reviewList)
 
-    const arr = []
+    let arr = []
+    reviewList.forEach(spot => arr.push(spot.toJSON()))
 
-    reviews.forEach(review => arr.push(review.toJSON()))
-    //reviews has a array of objects that we can key into
-    // console.log('reviews', reviews[0].dataValues)
-    // reviews {
-    //     id: 10,
-    //     review: 'this is a review',
-    //     stars: 4,
-    //     userId: 8,
-    //     spotId: 5,
-    //     createdAt: 2023-04-20T13:25:38.177Z,
-    //     updatedAt: 2023-04-20T13:25:38.177Z
-    //   }
+    for (let i = 0; i < arr.length; i++) {
 
+        const spot = arr[i].Spot;
+        // console.log('spot', spot)
 
+        for (let j = 0; j < spot.SpotImages.length; j++) {
 
+            const img = spot.SpotImages[j];
+            console.log('img', img)
 
-    // we want to grab the users Info and only want the id , firstName and lastName
-    const userInfo = await User.findByPk(id, {
-        attributes: ['id', 'firstName', 'lastName']
-    })
-    // console.log('userInfo', userInfo.dataValues)
-    //userInfo {
-    //  id: 8,
-    //   firstName: 'demoFirstName8',
-    //    lastName: 'demoLastName8'
-    // }
-
-    // we need to grab the spots for each review that the user wrote
-
-
-    const spotInfo = await Spot.findAll({
-        // include: { model: SpotImage },
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
-        where: {
-            id: id //this needs to be review.spotId somehow
-        }
-    })
-    // console.log(spotInfo)
-
-    const spotArr = []
-    spotInfo.forEach(spot => spotArr.push(spot.toJSON()))
-    console.log(spotArr)
-
-    // spotArr.forEach(spot => {
-    //     spot.SpotImages.forEach(image => {
-    //         console.log(image)
-    //         if (image.preview === true || image.preview === 1) {
-    //             spot.previewImage = image.url
-    //             // console.log(spot.previewImage)
-    //         }
-    //         if (!spot.previewImage) {
-    //             spot.previewImage = 'no previewImage found'
-    //         }
-    //         delete spot.SpotImages
-    //     })
-    // });
-
-
-    arr.forEach(review => {
-        // assign review.user to the value of current user
-        review.user = userInfo.dataValues
-        // console.log('review.user',review.user)
-        // console.log('review', review)
-        spotInfo.forEach(spot => {
-            // if the value for review.spot is undefined then assign it to spot
-            if (!review.spot) {
-                review.spot = spot
+            if (img.preview === true) {
+                spot.previewImage = img.url
+                console.log('previewImage', spot.previewImage)
             }
+            console.log('break-------------------------------------')
+            if (!spot.previewImage) {
+                spot.previewImage = 'no previewImage found'
+                console.log('previewImage', spot.previewImage)
+            }
+        }
 
-        });
-    })
-    // console.log(arr)
+        delete spot.SpotImages // it works??? but not saving in the outer obj
+        console.log('data', spot.SpotImages)
+    }
+
+    console.log('break 2 ===========================')
+
+    console.log('reviewList', arr)
 
     res.json({ Reviews: arr })
 })
@@ -138,23 +117,18 @@ router.get('/current', async (req, res) => {
 router.post('/:reviewId/images', [requireAuth, validateReviewImage], async (req, res) => {
 
     const id = req.params.reviewId
-    // console.log(id)
+    console.log(id)
 
-    if (!id) {
+    const testReview = await Review.findByPk(id)
+
+    if (!testReview) {
         res.status(404)
         res.json({
             message: 'Review couldn\'t be found'
         })
     }
 
-    const testReview = await Review.findByPk(id)
-
-    if (!testReview) {
-        res.status(404);
-        res.json({
-            message: "Review couldn\'t be found"
-        })
-    }
+    console.log('break 1 ---------------------------')
 
     const { url } = req.body
     // console.log('url', url)
@@ -165,13 +139,15 @@ router.post('/:reviewId/images', [requireAuth, validateReviewImage], async (req,
         ]
     })
 
-    // console.log(review)
+    console.log(review)
     const { user } = req
 
-    if (review.id !== user.id) {
+    if (review.userId !== user.id) {
         res.status(403);
         res.json({ message: 'You don\'t have permission to add an image' })
     }
+
+    console.log('break 2 ------------------------------------')
 
     const imgCount = await ReviewImage.findAndCountAll({
         where: { reviewId: review.id }
@@ -187,7 +163,9 @@ router.post('/:reviewId/images', [requireAuth, validateReviewImage], async (req,
     //     count = arr.length
     // }
 
-    if (imgCount.count >= 9) {
+    console.log(imgCount.count)
+
+    if (imgCount.count > 9 ){
         res.status(403)
         res.json({
             message: 'Maximum number of images for this resource was reached'
@@ -209,12 +187,12 @@ router.post('/:reviewId/images', [requireAuth, validateReviewImage], async (req,
     }
 
     res.status(200);
-    res.json(safeImage)
+    res.json({ Reviews: reviewImg })
 
 })
 
 //edit a review
-router.put('/:reviewId',[requireAuth, validateReview], async (req, res) => {
+router.put('/:reviewId', [requireAuth, validateReview], async (req, res) => {
 
     const id = req.params.reviewId;
     console.log(id);
@@ -239,7 +217,7 @@ router.put('/:reviewId',[requireAuth, validateReview], async (req, res) => {
 
     const userId = user.dataValues.id
     console.log("userId", userId)
-    console.log('reviews.dataValues.id',reviews.dataValues.id)
+    console.log('reviews.dataValues.id', reviews.dataValues.id)
     console.log('break2')
 
     if (userId !== reviews.dataValues.id) {

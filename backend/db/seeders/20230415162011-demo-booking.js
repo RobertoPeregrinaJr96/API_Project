@@ -1,6 +1,6 @@
 'use strict';
 
-const { DATE } = require('sequelize');
+
 
 /** @type {import('sequelize-cli').Migration} */
 
