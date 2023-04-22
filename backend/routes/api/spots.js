@@ -439,7 +439,7 @@ router.post('/:spotId/images', [requireAuth], async (req, res) => {
     const { user } = req;
     console.log(user);
 
-    if (user.id !== id) {
+    if (user.id !== testSpot.ownerId) {
         res.status(403)
         res.json({
             "message": "Forbidden"
