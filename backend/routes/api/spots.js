@@ -721,23 +721,32 @@ router.post('/:spotId/bookings', async (req, res) => {
         }
     })
 
-    // console.log(testSpot)
+    console.log(testBook)
 
-    // testBook.forEach(booking => {
+    testBook.forEach(booking => {
 
-    //     // console.log(booking)
-    //     console.log(booking.startDate)
+        // console.log(booking)
+        console.log(booking.startDate)
+        console.log('startDate', booking.startDate.getTime())
+        console.log('endDate', booking.endDate.getTime())
+        console.log('start', start.getTime())
+        console.log('end', end.getTime())
 
+        if (booking.startDate.getTime() <= start.getTime()
+            && booking.endDate.getTime() >= start.getTime()) {
+            testObj.startDate = 'Start date conflicts with an existing booking'
+        }
 
-    //     if (booking.startDate == start && booking.startDate.getTime() > end.getTime()) testObj.startDate = 'Start date conflicts with an existing booking'
+        if (booking.endDate.getTime() <= end.getTime()
+            && booking.startDate.getTime() <= end.getTime()) {
+            testObj.endDate = 'End date conflicts with an existing booking'
+        }
+    })
 
-    //     if (booking.endDate == end) testObj.endDate = 'End date conflicts with an existing booking'
-    // })
-
-    // if (testObj.startDate || testObj.endDate) {
-    //     res.status(403)
-    //     res.json(testObj)
-    // }
+    if (testObj.startDate || testObj.endDate) {
+        res.status(403)
+        res.json(testObj)
+    }
 
 
     console.log("break ======================================================")

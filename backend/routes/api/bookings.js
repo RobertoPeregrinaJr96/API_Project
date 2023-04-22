@@ -114,8 +114,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
         where: {
             id: id
         },
-        // startDate: { [Op.lte]: endDate },
-        // endDate: { [Op.gte]: startDate }
+
     })
 
     console.log('book', book);
@@ -129,6 +128,44 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
             }
         })
     }
+
+    console.log('break --------------------------------------')
+
+    const testObj = {}
+
+    const testBooks = await Booking.findAll({
+        where: {
+            spotId: id,
+        }
+    })
+
+    console.log(testBook)
+
+    testBooks.forEach(booking => {
+
+        // console.log(booking)
+        console.log(booking.startDate)
+        console.log('startDate', booking.startDate.getTime())
+        console.log('endDate', booking.endDate.getTime())
+        console.log('start', start.getTime())
+        console.log('end', end.getTime())
+
+        if (booking.startDate.getTime() <= start.getTime()
+            && booking.endDate.getTime() >= start.getTime()) {
+            testObj.startDate = 'Start date conflicts with an existing booking'
+        }
+
+        if (booking.endDate.getTime() <= end.getTime()
+            && booking.startDate.getTime() <= end.getTime()) {
+            testObj.endDate = 'End date conflicts with an existing booking'
+        }
+    })
+
+    if (testObj.startDate || testObj.endDate) {
+        res.status(403)
+        res.json(testObj)
+    }
+
 
     const now = new Date()
     console.log(now)

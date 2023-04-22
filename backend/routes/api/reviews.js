@@ -97,11 +97,11 @@ router.get('/current', async (req, res) => {
     })
     // console.log(spotInfo)
 
-    // const spotArr = []
-    // spotInfo.forEach(spot => spotArr.push(spot.toJSON()))
-    // console.log(spotArr)
+    const spotArr = []
+    spotInfo.forEach(spot => spotArr.push(spot.toJSON()))
+    console.log(spotArr)
 
-    // spotInfo.forEach(spot => {
+    // spotArr.forEach(spot => {
     //     spot.SpotImages.forEach(image => {
     //         console.log(image)
     //         if (image.preview === true || image.preview === 1) {
@@ -114,6 +114,7 @@ router.get('/current', async (req, res) => {
     //         delete spot.SpotImages
     //     })
     // });
+
 
     arr.forEach(review => {
         // assign review.user to the value of current user
