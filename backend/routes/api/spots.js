@@ -146,10 +146,10 @@ router.get('/', async (req, res) => {
     const error = {}
 
     if (isNaN(page) || !Number.isInteger(page) || page < 1 || page > 10) {
-        error.page = "Page must be greater than or equal to 1 with a maximum of 10"
+        error.page = "Page must be greater than or equal to 1 "
     }
     else if (isNaN(size) || !Number.isInteger(size) || size < 1 || size > 20) {
-        error.size = "Size must be an integer greater than or equal to 1 with a maximum of 20"
+        error.size = "Size must be an integer greater than or equal to 1"
     }
     if (maxLat && (maxLat - Math.floor(maxLat)) === 0 || maxLat && isNaN(maxLat)) {
         error.maxLat = 'Maximum latitude is invalid'
@@ -422,7 +422,7 @@ router.post('/', [requireAuth, validateCreateSpot], async (req, res) => {
 
 
 // Add an Image to a Spot based on the Spot's id
-router.post('/:spotId/images', [requireAuth ], async (req, res) => {
+router.post('/:spotId/images', [requireAuth], async (req, res) => {
     // grab the id from the endpoint
     const id = req.params.spotId;
     // console.log(id)
@@ -902,7 +902,7 @@ router.post('/:spotId/bookings', [requireAuth], async (req, res) => {
 
 
     if (user.id === spot.ownerId) {
-        res.status(403).json({message:'Forbidden'})
+        res.status(403).json({ message: 'Forbidden' })
     }
 
 })
