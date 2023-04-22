@@ -789,7 +789,9 @@ router.post('/:spotId/bookings', [requireAuth], async (req, res) => {
     const { user } = req;
     // console.log(user.id);
 
-    const spot = await Spot.findByPk(id);
+    const spot = await Spot.findByPk(id,{
+        exclude:['SpotId','UserId']
+    });
     // console.log(spot.ownerId);
 
     if (!spot) {
