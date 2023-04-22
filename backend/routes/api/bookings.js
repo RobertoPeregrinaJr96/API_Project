@@ -78,7 +78,6 @@ router.get('/current',requireAuth, async (req, res) => {
     res.json({ Bookings: bookingArr })
 })
 
-// not Done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Edit a Booking
 router.put('/:bookingId', requireAuth, async (req, res) => {
 
@@ -156,7 +155,13 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
         if (booking.startDate.getTime() <= start.getTime()
             && booking.endDate.getTime() >= start.getTime()) {
-            testObj.startDate = 'Start date conflicts with an existing booking'
+            testObj.startDate = {
+                "message": "Sorry, this spot is already booked for the specified dates",
+                "errors": {
+                    "startDate": "Start date conflicts with an existing booking",
+                    "endDate": "End date conflicts with an existing booking"
+                }
+            }
         }
         /**
          if the booking endDate is lesser than the new endDate
@@ -164,7 +169,13 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
          */
         if (booking.endDate.getTime() <= end.getTime()
             && booking.startDate.getTime() <= end.getTime()) {
-            testObj.endDate = 'End date conflicts with an existing booking'
+            testObj.endDate = {
+                "message": "Sorry, this spot is already booked for the specified dates",
+                "errors": {
+                    "startDate": "Start date conflicts with an existing booking",
+                    "endDate": "End date conflicts with an existing booking"
+                }
+            }
         }
         console.log('boolean', testObj.startDate)
         console.log('boolean', testObj.endDate)
