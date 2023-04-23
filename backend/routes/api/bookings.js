@@ -81,6 +81,75 @@ router.get('/current', requireAuth, async (req, res) => {
 // Edit a Booking
 router.put('/:bookingId', requireAuth, async (req, res) => {
 
+    // let get all of the data from the request
+    const { user } = req;
+    const idOfUser = user.id;
+    const idOfBooking = req.params.bookingId;
+    const testBooking = await Booking.findByPk(idOfBooking);
+    const { startDate, endDate } = req.body;
+    const start = new Date(startDate)
+    const end = new Date(endDate)
+    const now = new Date()
+    // let see if the endpoint is valid
+    if (!testBooking) return res.status(404).json({ "message": "Booking couldn't be found" });
+    // let see if we own this booking slot??/ idk words
+    if (idOfUser !== testBooking.userId) return res.status(403).json({ "message": "Forbidden" });
+    // lets see if the data from the body is valid
+    if (start.getTime() >= end.getTime()) return res.status(400).json({
+        "message": "Bad Request",
+        "errors": {
+            "endDate": "endDate cannot come before startDate"
+        }
+    })
+    // lets check if the original endDate has already pasted
+    if (now.getTime() > end.getTime()) {
+        return res.status(403).json({ "message": "Past bookings can't be modified" })
+    }
+    // we need to make sure there are no conflicts between any already booked dates
+    const bookingConflict = await Booking.findAll({
+        where: {
+            id: idOfBooking
+        },
+    })
+    //let iterate the array we get back from findAll and make comparisons and make a object to keep track of if there is a conflict
+    const conflictObject = {};
+    bookingConflict.forEach(booking => {
+        console.log("booking", booking)
+        // if the start is lesser than or equal to startDate AND end is greater than or equal to endDate
+        if (start <= booking.startDate.getTime() && end >= booking.endDate.getTime()) {
+            conflictObject.conflict = true
+        };
+        // if end is greater than the startDate AND end id lesser than or equal to endDate // we care comparing them as those long integers
+        if (end > booking.startDate.getTime() && end <= booking.endDate.getTime() || start >= booking.startDate.getTime() && start < booking.endDate.getTime()) {
+            conflictObject.conflict = true
+        };
+        if (conflictObject.conflict === true) return res.status(403).json({
+            "message": "Sorry, this spot is already booked for the specified dates",
+            "errors": {
+                "startDate": "Start date conflicts with an existing booking",
+                "endDate": "End date conflicts with an existing booking"
+            }
+        })
+    })
+    // lets edit the existing booking
+    const editBooking = await Booking.findByPk(idOfBooking)
+    editBooking.startDate = startDate;
+    editBooking.endDate = endDate;
+    // lets make a safe response
+    const safeBooking = {
+        "id": editBooking.id,
+        "spotId": editBooking.spotId,
+        "userId": editBooking.userId,
+        "startDate": editBooking.startDate,
+        "endDate": editBooking.endDate,
+        "createdAt": editBooking.createdAt,
+        "updatedAt": editBooking.updatedAt
+    }
+    // lets save it to the database
+    await editBooking.save()
+    return res.status(200).json(safeBooking)
+    /*
+
 
     const id = req.params.bookingId;
     // console.log('id', id);
@@ -212,6 +281,8 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
     res.status(200);
     res.json(testBook)
+
+    */
 
 })
 
