@@ -13,7 +13,7 @@ const router = express.Router();
 
 
 // Get all of the Current User's Bookings
-router.get('/current',requireAuth, async (req, res) => {
+router.get('/current', requireAuth, async (req, res) => {
 
     const { user } = req
     // console.log('user', user)
@@ -136,68 +136,54 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
     console.log('break --------------------------------------')
 
-    const testObj = {}
+    let test1 = false
+    let test2 = false
 
-    const testBooks = await Booking.findAll({
-
-    })
-
+    const testBooks = await Booking.findAll()
     console.log(testBook)
 
     testBooks.forEach(booking => {
+        console.log('booking', booking)
+        console.log('start.getTime()', start.getTime())
+        console.log('booking.startDate.getTime()', booking.startDate.getTime())
+        console.log('end.getTime()', end.getTime())
+        console.log('booking.endDate.getTime()', booking.endDate.getTime())
 
-        // console.log(booking)
-        // console.log(booking.startDate)
-        // console.log('startDate', booking.startDate.getTime())
-        // console.log('endDate', booking.endDate.getTime())
-        // console.log('start', start.getTime())
-        // console.log('end', end.getTime())
+        if (start.getTime() <= booking.startDate.getTime() && start.getTime() <= booking.endDate.getTime()) {
+            test1 = true
+        }
 
-        if (booking.startDate.getTime() <= start.getTime()
-            && booking.endDate.getTime() >= start.getTime()) {
-            testObj.startDate = {
+        if (end.getTime() <= booking.endDate.getTime()) {
+            test2 = true
+        }
+
+        console.log('boolean', test1)
+        console.log('boolean', test2)
+
+        console.log('break ----------------------------------------')
+
+        if (test1 && test2) {
+            res.status(403)
+            res.json({
                 "message": "Sorry, this spot is already booked for the specified dates",
                 "errors": {
                     "startDate": "Start date conflicts with an existing booking",
                     "endDate": "End date conflicts with an existing booking"
                 }
-            }
+            })
         }
-        /**
-         if the booking endDate is lesser than the new endDate
-         if the booking endDate is lesser than the new endDate
-         */
-        if (booking.endDate.getTime() <= end.getTime()
-            && booking.startDate.getTime() <= end.getTime()) {
-            testObj.endDate = {
+        if (test1 || test2) {
+            res.status(403)
+            res.json({
                 "message": "Sorry, this spot is already booked for the specified dates",
                 "errors": {
                     "startDate": "Start date conflicts with an existing booking",
                     "endDate": "End date conflicts with an existing booking"
                 }
-            }
+            })
         }
-        console.log('boolean', testObj.startDate)
-        console.log('boolean', testObj.endDate)
     })
 
-    if (testObj.startDate && testObj.endDate) {
-        res.status(403)
-        res.json({
-            "message": "Sorry, this spot is already booked for the specified dates",
-            "errors": {
-                "startDate": "Start date conflicts with an existing booking",
-                "endDate": "End date conflicts with an existing booking"
-            }
-        })
-    }
-    if (testObj.startDate || testObj.endDate) {
-        res.status(403)
-        res.json({
-            "message": "Sorry, this spot is already booked for the specified dates",
-            "errors": testObj
-        })
-    }
 
 
 
@@ -230,7 +216,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 })
 
 ///  done  // with error handling
-router.delete('/:bookingId',requireAuth, async (req, res) => {
+router.delete('/:bookingId', requireAuth, async (req, res) => {
 
     const id = req.params.bookingId;
     console.log(id);
