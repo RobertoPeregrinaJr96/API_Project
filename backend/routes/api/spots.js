@@ -100,127 +100,236 @@ const validateReview = [
 // Get all Spots
 router.get('/', async (req, res) => {
 
-    const spotTest = await Spot.findAll()
-    // console.log(spots)
-
-    if (!spotTest) {
-        res.status(404)
-        res.json({
-            message: 'Cannot find any Spots'
-        })
-    }
-
-    console.log('break ============================================')
-
+    // are there any spots?
+    const allSpots = await Spot.findAll();
+    if (!allSpots) return res.status(404).json({ "message": "Cannot find any Spots" });
+    // let grab everything ing the query if there is anything there
     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
-    page = parseInt(page);
-    console.log('page', page)
-
-    size = parseInt(size);
-    console.log('size', size)
-
-    // console.log(minLat)
-    // console.log(maxLat)
-    // console.log(minLng)
-    // console.log(maxLng)
-    // console.log(minPrice)
-    // console.log(maxPrice)
-
-    console.log('break -------------------------------------')
-
+    // let change the data from the query to valid integers
+    const newPage = Number(page);
+    const newSize = Number(size);
+    const newMinLat = Number(minLat);
+    const newMaxLat = Number(maxLat);
+    const newMinLng = Number(maxLng);
+    const newMaxLng = Number(maxLng);
+    const newMinPrice = Number(minPrice);
+    const newMaxPrice = Number(maxPrice)
+    // let now set the pagination to default if the page OR size in NAN
     const pagination = {};
-
     if (isNaN(page)) page = 1;
     if (isNaN(size)) size = 20;
-
     if (page && size) {
-
         pagination.limit = size;
-        console.log('limit', pagination.limit)
-
         pagination.offset = size * (page - 1);
-        console.log('offset', pagination.offset)
-
-    }
-
-    const error = {}
-
+    };
+    // let check if any are invalid and if so then gather all the error at the end and send it in the response
+    const error = {};
     if (isNaN(page) || !Number.isInteger(page) || page < 1 || page > 10) {
         error.page = "Page must be greater than or equal to 1 "
-    }
-    else if (isNaN(size) || !Number.isInteger(size) || size < 1 || size > 20) {
+    };
+    if (isNaN(size) || !Number.isInteger(size) || size < 1 || size > 20) {
         error.size = "Size must be an integer greater than or equal to 1"
-    }
+    };
     if (maxLat && (maxLat - Math.floor(maxLat)) === 0 || maxLat && isNaN(maxLat)) {
         error.maxLat = 'Maximum latitude is invalid'
-    }
+    };
     if (minLat && (minLat - Math.floor(minLat)) === 0 || minLat && isNaN(minLat)) {
         error.minLat = 'Minimum latitude is invalid'
-    }
+    };
     if (minLng && (minLng - Math.floor(minLng)) === 0 || minLng && isNaN(minLng)) {
         error.minLng = 'Maximum longitude is invalid'
-    }
+    };
     if (maxLng && (maxLng - Math.floor(maxLng)) === 0 || maxLng && isNaN(maxLng)) {
         error.maxLng = 'Minimum longitude is invalid'
-    }
+    };
     if (minPrice && (minPrice - Math.floor(minPrice)) === 0 || minPrice && isNaN(minPrice) || minPrice >= 0) {
         error.minPrice = 'Minimum price must be greater than or equal to 0'
-    }
+    };
     if (maxPrice && (maxPrice - Math.floor(maxPrice)) === 0 || maxPrice && isNaN(minPrice) || maxPrice >= 0) {
         error.maxPrice = 'Maximum price must be greater than or equal to 0'
-    }
-
-    console.log(error)
-
-    console.log(Object.entries(error).length !== 0)
-
+    };
     if (Object.entries(error).length !== 0) {
         res.status(400).json({ "message": "Bad Request", errors: error })
+    };
+    // now let make the query do something by inputting them into a object where we can just throw in the sequelize query
+    const where = {}
+    if (newMaxLat) {
+        where.lat = { [Op.lte]: newMaxLat }
+    }
+    if (newMinLat) {
+        where.lat = { [Op.gte]: newMinLat }
+    }
+    if (newMaxLng) {
+        where.lng = { [Op.lte]: newMaxLng }
+    }
+    if (newMinLng) {
+        where.lng = { [Op.gte]: newMinLng }
+    }
+    if (newMinPrice) {
+        where.price = { [Op.gte]: newMinPrice }
+    }
+    if (newMaxPrice) {
+        where.price = { [Op.lte]: newMaxPrice }
     }
 
-
+    // lets throw the pagination to the query to make sure the user has the page and size the wanted
     const spots = await Spot.findAll({
-        include: [
-            { model: Review },
-            { model: SpotImage, }
-        ],
+        include: [{ model: Review }, { model: SpotImage, }],
+        where,
         ...pagination
     });
-
-    let arr = []
-    spots.forEach(spot => arr.push(spot.toJSON()))
-    // console.log('arr',arr)
-
-    let count = 0;
-    arr.forEach(spot => {
-        spot.Reviews.forEach(review => {
-            count += review.stars
-        })
-    })
-
-    let aveStarRating = (count / arr.length)
-    arr.forEach(spot => {
-        spot.aveRating = Number(aveStarRating.toFixed(1))
-        delete spot.Reviews
-    })
+    // let make a new key:value pair that holds the avg
+    let arr = [];
+    spots.forEach(spot => arr.push(spot.toJSON()));
     arr.forEach(spot => {
         spot.SpotImages.forEach(image => {
-            // console.log(image)
-            if (image.preview === true || image.preview === 1) {
-                spot.previewImage = image.url
-                // console.log(spot.previewImage)
-            }
-            if (!spot.previewImage) {
-                spot.previewImage = 'no previewImage found'
-            }
-            delete spot.SpotImages
-            // console.log(spot.previewImage)
+            // while we have the spots available to us ,lets also add the avg star rating for each spot using the reviews that each spot has
+            let totalStars = 0;
+            let totalReviews = 0;
+            spot.Reviews.forEach(review => {
+                totalReviews += 1
+                totalStars += Number(review.stars)
+            });
+            if (totalReviews == 0) totalReviews = 1;
+            if (totalStars == 0) totalStars = 1;
+            const aveStarRating = Number(totalStars / totalReviews)
+            spot.aveRating = Number(aveStarRating.toFixed(1))
+            delete spot.Reviews
+            // let see if there is a truthly preview and if so lets assign it to the preview image
+            if (image.preview === true) spot.previewImage = image.url;
+            if (!spot.previewImage) spot.previewImage = 'no previewImage found';
+            delete spot.SpotImages;
         })
     })
 
-    res.status(200)
-    res.json({ Spots: arr, page: page, size: size })
 
+    res.status(200)
+    res.json({ "Spots": arr, page: page, size: size })
+    /*
+
+      const spotTest = await Spot.findAll()
+      // console.log(spots)
+
+      if (!spotTest) {
+          res.status(404)
+          res.json({
+              message: 'Cannot find any Spots'
+          })
+      }
+
+      console.log('break ============================================')
+
+      let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+      page = parseInt(page);
+      console.log('page', page)
+
+      size = parseInt(size);
+      console.log('size', size)
+
+      // console.log(minLat)
+      // console.log(maxLat)
+      // console.log(minLng)
+      // console.log(maxLng)
+      // console.log(minPrice)
+      // console.log(maxPrice)
+
+      console.log('break -------------------------------------')
+
+      const pagination = {};
+
+      if (isNaN(page)) page = 1;
+      if (isNaN(size)) size = 20;
+
+      if (page && size) {
+
+          pagination.limit = size;
+          console.log('limit', pagination.limit)
+
+          pagination.offset = size * (page - 1);
+          console.log('offset', pagination.offset)
+
+      }
+
+      const error = {}
+
+      if (isNaN(page) || !Number.isInteger(page) || page < 1 || page > 10) {
+          error.page = "Page must be greater than or equal to 1 "
+      }
+      else if (isNaN(size) || !Number.isInteger(size) || size < 1 || size > 20) {
+          error.size = "Size must be an integer greater than or equal to 1"
+      }
+      if (maxLat && (maxLat - Math.floor(maxLat)) === 0 || maxLat && isNaN(maxLat)) {
+          error.maxLat = 'Maximum latitude is invalid'
+      }
+      if (minLat && (minLat - Math.floor(minLat)) === 0 || minLat && isNaN(minLat)) {
+          error.minLat = 'Minimum latitude is invalid'
+      }
+      if (minLng && (minLng - Math.floor(minLng)) === 0 || minLng && isNaN(minLng)) {
+          error.minLng = 'Maximum longitude is invalid'
+      }
+      if (maxLng && (maxLng - Math.floor(maxLng)) === 0 || maxLng && isNaN(maxLng)) {
+          error.maxLng = 'Minimum longitude is invalid'
+      }
+      if (minPrice && (minPrice - Math.floor(minPrice)) === 0 || minPrice && isNaN(minPrice) || minPrice >= 0) {
+          error.minPrice = 'Minimum price must be greater than or equal to 0'
+      }
+      if (maxPrice && (maxPrice - Math.floor(maxPrice)) === 0 || maxPrice && isNaN(minPrice) || maxPrice >= 0) {
+          error.maxPrice = 'Maximum price must be greater than or equal to 0'
+      }
+
+      console.log(error)
+
+      console.log(Object.entries(error).length !== 0)
+
+      if (Object.entries(error).length !== 0) {
+          res.status(400).json({ "message": "Bad Request", errors: error })
+      }
+
+
+      const spots = await Spot.findAll({
+          include: [
+              { model: Review },
+              { model: SpotImage, }
+          ],
+          ...pagination
+      });
+
+      let arr = []
+      spots.forEach(spot => arr.push(spot.toJSON()))
+      // console.log('arr',arr)
+
+      let count = 0;
+      arr.forEach(spot => {
+          spot.Reviews.forEach(review => {
+              count += review.stars
+          })
+      })
+
+
+
+      let aveStarRating = (count / arr.length)
+      arr.forEach(spot => {
+          spot.aveRating = Number(aveStarRating.toFixed(1))
+          delete spot.Reviews
+      })
+      arr.forEach(spot => {
+          spot.SpotImages.forEach(image => {
+              // console.log(image)
+              if (image.preview === true || image.preview === 1) {
+                  spot.previewImage = image.url
+                  // console.log(spot.previewImage)
+              }
+              if (!spot.previewImage) {
+                  spot.previewImage = 'no previewImage found'
+              }
+              delete spot.SpotImages
+              // console.log(spot.previewImage)
+          })
+      })
+
+      res.status(200)
+      res.json({ Spots: arr, page: page, size: size })
+    */
 })
 
 // Get all Spots owned by the Current User
@@ -294,6 +403,8 @@ router.get('/current', [requireAuth], async (req, res) => {
 
     res.status(200)
     res.json({ "Spots": arr })
+
+
 })
 
 
