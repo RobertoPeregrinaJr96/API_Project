@@ -989,11 +989,16 @@ router.post('/:spotId/bookings', [requireAuth], async (req, res) => {
     bookingConflict.forEach(booking => {
         console.log("booking", booking)
         // if the start is lesser than or equal to startDate AND end is greater than or equal to endDate
-        if (start <= booking.startDate.getTime() && end >= booking.endDate.getTime()) {
+        console.log(start)
+        console.log(end)
+        console.log(new Date(startDate).getTime())
+        console.log(new Date(endDate).getTime())
+
+        if (start <= new Date(booking.startDate).getTime() && end >= new Date(booking.endDate).getTime()) {
             conflictObject.conflict = true
         };
         // if end is greater than the startDate AND end id lesser than or equal to endDate // we care comparing them as those long integers
-        if (end > booking.startDate.getTime() && end <= booking.endDate.getTime() || start >= booking.startDate.getTime() && start < booking.endDate.getTime()) {
+        if (end > new Date(booking.startDate).getTime() && end <= new Date(booking.endDate).getTime() || start >= new Date(booking.startDate).getTime() && start < new Date(booking.endDate).getTime()) {
             conflictObject.conflict = true
         };
         if (conflictObject.conflict === true) return res.status(403).json({
@@ -1006,16 +1011,16 @@ router.post('/:spotId/bookings', [requireAuth], async (req, res) => {
     })
     // let make a new booking
     const newBooking = await Booking.create({
-        "spotId": idOfSpot,
-        "userId": idOfUser,
+        "spotId": Number(idOfSpot),
+        "userId": Number(idOfUser),
         "startDate": startDate,
         "endDate": endDate
     })
     // let make a safe response to send back
     const safeBooking = {
         "id": Number(newBooking.id),
-        "spotId": idOfSpot,
-        "userId": idOfUser,
+        "spotId": Number(idOfSpot),
+        "userId": Number(idOfUser),
         "startDate": startDate,
         "endDate": endDate,
         "createdAt": newBooking.createdAt,
