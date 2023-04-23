@@ -63,6 +63,12 @@ const demoReviews = [
     userId: 3,
     spotId: 9,
   },
+  {
+    review: 'this was NOT a GREAT place to stay',
+    stars: 1,
+    userId: 3,
+    spotId: 9,
+  },
 ]
 
 module.exports = {

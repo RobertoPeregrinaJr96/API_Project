@@ -67,7 +67,7 @@ const demoBookings = [
     startDate: new Date("2023-11-19"),
     endDate: new Date("2023-11-20"),
     userId: 1,
-    spotId: 1,
+    spotId: 10,
   }
 ]
 

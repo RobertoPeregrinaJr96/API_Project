@@ -452,7 +452,6 @@ router.get('/current', [requireAuth], async (req, res) => {
     */
 })
 
-
 // Get details of a Spot from an id  // Error handling is Done
 router.get('/:spotId', async (req, res) => {
 
@@ -529,7 +528,6 @@ router.get('/:spotId', async (req, res) => {
     res.json(safeSpot)
 })
 
-
 // Create a Spot
 router.post('/', [requireAuth, validateCreateSpot], async (req, res) => {
 
@@ -575,7 +573,6 @@ router.post('/', [requireAuth, validateCreateSpot], async (req, res) => {
     res.status(201)
     res.json(safeSpot)
 })
-
 
 // Add an Image to a Spot based on the Spot's id
 router.post('/:spotId/images', [requireAuth], async (req, res) => {
