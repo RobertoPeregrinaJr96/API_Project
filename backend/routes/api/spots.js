@@ -495,8 +495,8 @@ router.get('/:spotId', async (req, res) => {
         "city": spot.city,
         "state": spot.state,
         "country": spot.country,
-        "lat": spot.lat,
-        "lng": spot.lng,
+        "lat": Number(spot.lat),
+        "lng": Number(spot.lng),
         "name": spot.name,
         "description": spot.description,
         "price": spot.price,
@@ -946,7 +946,7 @@ router.post('/:spotId/bookings', [requireAuth], async (req, res) => {
     //!!!!!!!!!!!!!!!Add validation for req.body
     const bodyError = {};
     if (!startDate) bodyError.startDate = "startDate value is invalid";
-    if (!endDate) endError.startDate = "endDate value is invalid";
+    if (!endDate) bodyError.endDate = "endDate value is invalid";
     if (Object.entries(bodyError).length !== 0) return res.status(400).json({ "errors": bodyError })
     // let see if the data from the body is valid
     if (start >= end) return res.status(400).json({
