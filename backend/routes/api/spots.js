@@ -182,24 +182,25 @@ router.get('/', async (req, res) => {
     let arr = [];
     spots.forEach(spot => arr.push(spot.toJSON()));
     arr.forEach(spot => {
+        // while we have the spots available to us ,lets also add the avg star rating for each spot using the reviews that each spot has
+        let totalStars = 0;
+        let totalReviews = 0;
+        spot.Reviews.forEach(review => {
+            totalReviews += 1
+            totalStars += Number(review.stars)
+        });
+        if (totalReviews == 0) totalReviews = 1;
+        if (totalStars == 0) totalStars = 1;
+        const aveStarRating = Number(totalStars / totalReviews)
+        spot.aveRating = Number(aveStarRating.toFixed(1))
+        delete spot.Reviews
+        // let see if the review has images and if so lets check if one is allowed to be shown
         spot.SpotImages.forEach(image => {
-            // while we have the spots available to us ,lets also add the avg star rating for each spot using the reviews that each spot has
-            let totalStars = 0;
-            let totalReviews = 0;
-            spot.Reviews.forEach(review => {
-                totalReviews += 1
-                totalStars += Number(review.stars)
-            });
-            if (totalReviews == 0) totalReviews = 1;
-            if (totalStars == 0) totalStars = 1;
-            const aveStarRating = Number(totalStars / totalReviews)
-            spot.aveRating = Number(aveStarRating.toFixed(1))
-            delete spot.Reviews
-            // let see if there is a truthly preview and if so lets assign it to the preview image
             if (image.preview === true) spot.previewImage = image.url;
             if (!spot.previewImage) spot.previewImage = 'no previewImage found';
             delete spot.SpotImages;
         })
+
     })
 
 
@@ -403,7 +404,6 @@ router.get('/current', [requireAuth], async (req, res) => {
 
     res.status(200)
     res.json({ "Spots": arr })
-
 
 })
 
