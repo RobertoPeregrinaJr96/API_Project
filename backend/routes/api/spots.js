@@ -810,6 +810,11 @@ router.get('/:spotId/bookings', [requireAuth], async (req, res) => {
 
     res.status(200);
     res.json({ Booking: bookingArr })
+
+
+    /*
+
+    */
 })
 
 // Create a Booking from a Spot based on the Spot's id
@@ -879,7 +884,7 @@ router.post('/:spotId/bookings', [requireAuth], async (req, res) => {
         "createdAt": newBooking.createdAt,
         "updatedAt": newBooking.updatedAt
     }
-    return res.status(201).json({ safeBooking })
+    return res.status(201).json(safeBooking)
     /*
 
 
