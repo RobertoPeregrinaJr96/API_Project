@@ -200,6 +200,10 @@ router.get('/', async (req, res) => {
             if (!spot.previewImage) spot.previewImage = 'no previewImage found';
             delete spot.SpotImages;
         })
+        // turn strings into integers
+        spot.lat = Number(spot.lat)
+        spot.lng = Number(spot.lng)
+        spot.price = Number(spot.price)
 
     })
 
@@ -399,6 +403,10 @@ router.get('/current', [requireAuth], async (req, res) => {
             // console.log(spot.previewImage)
         })
         delete spot.SpotImages
+           // turn strings into integers
+           spot.lat = Number(spot.lat)
+           spot.lng = Number(spot.lng)
+           spot.price = Number(spot.price)
     })
     // console.log(userSpots)
 
