@@ -102,7 +102,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
         }
     })
     // lets check if the original endDate has already pasted
-    if (start.getTime() <= now.getTime()) {
+    if (end.getTime() <= now.getTime()) {
         return res.status(403).json({ "message": "Past bookings can't be modified" })
     }
     // we need to make sure there are no conflicts between any already booked dates

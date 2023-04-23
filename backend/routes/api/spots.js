@@ -56,7 +56,7 @@ const validateCreateSpot = [
     check('name')
         .not()
         .isInt()
-        .withMessage('Name must be less than 50 characters and no numbers'),
+        .withMessage('Name must be less than 50 characters  '),
     check('description')
         .exists({ checkFalsy: true })
         .isString()
@@ -68,7 +68,7 @@ const validateCreateSpot = [
     check('price')
         .not()
         .isString()
-        .withMessage('Price per day is required and is a Valid number'),
+        .withMessage('Price per day is required  '),
     handleValidationErrors
 ]
 
@@ -871,54 +871,40 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) 
 // Get all Bookings for a Spot based on the Spot's id
 router.get('/:spotId/bookings', [requireAuth], async (req, res) => {
 
-    const id = req.params.spotId;
-    console.log(id)
-
+    const idOfSpot = req.params.spotId;
     const { user } = req;
-    // console.log(user)
-
-    const testSpot = await Spot.findByPk(id, {
-        include: [
-            { model: Booking }
-        ],
-    })
-
+    const idOfUser = user.id;
+    const testSpot = await Spot.findByPk(idOfSpot, {
+        include: [{ model: Booking }],
+    });
+    // test the spot to see if its valid
     if (!testSpot) {
-        res.status(404);
-        res.json({
-            message: 'Spot could\'t be found'
-        })
+        return res.status(404).json({ "message": "Spot couldn't be found" })
     }
-
     // what the guest see's
-    if (testSpot.ownerId !== user.id) {
-
+    if (testSpot.ownerId !== idOfUser) {
         const guestBooking = await Booking.findAll({
             attributes: ['spotId', 'startDate', 'endDate'],
-            where: {
-                spotId: testSpot.id
-            }
+            where: { "spotId": idOfSpot }
         })
-
+        // console.log(guestBooking)
         const bookingArr = []
-
         guestBooking.forEach(spot => bookingArr.push(spot.toJSON()))
-
-        for (let i = 0; i < bookingArr.length; i++) {
-
+        console.log(bookingArr)
+        for (let i = 0; i < bookingArr.length - 1; i++) {
+            console.log(bookingArr[i])
+            console.log(bookingArr[0].startDate)
             bookingArr[i].startDate = bookingArr[i].startDate.toISOString().split('T0')[0]
             console.log(bookingArr[0].startDate)
 
-            console.log('break ==============================')
-
+            console.log(bookingArr[0].endDate)
             bookingArr[i].endDate = bookingArr[i].endDate.toISOString().split('T0')[0]
             console.log(bookingArr[0].endDate)
 
+            console.log('break ==============================')
         }
-
         res.status(200)
         res.json({ Bookings: bookingArr })
-
     }
     // what the owner of the spot sees
     const confirmedBooking = await Booking.findAll({
@@ -927,28 +913,17 @@ router.get('/:spotId/bookings', [requireAuth], async (req, res) => {
         ],
         where: { spotId: testSpot.id }
     })
-
     const bookingArr = []
-
     confirmedBooking.forEach(spot => bookingArr.push(spot.toJSON()))
-
     for (let i = 0; i < bookingArr.length; i++) {
-
         bookingArr[i].startDate = bookingArr[i].startDate.toISOString().split('T0')[0]
         console.log(bookingArr[0].startDate)
-
         console.log('break ==============================')
-
         bookingArr[i].endDate = bookingArr[i].endDate.toISOString().split('T0')[0]
         console.log(bookingArr[0].endDate)
-
     }
-
-
     res.status(200);
     res.json({ Booking: bookingArr })
-
-
     /*
 
     */
@@ -962,11 +937,17 @@ router.post('/:spotId/bookings', [requireAuth], async (req, res) => {
     const idOfUser = user.id;
     const idOfSpot = req.params.spotId;
     const { startDate, endDate } = req.body;
+
     const testSpot = await Spot.findByPk(idOfSpot);
     const start = new Date(startDate).getTime();
     const end = new Date(endDate).getTime();
     // let see if the endpoint is a valid spot
     if (!testSpot) return res.status(404).json({ "message": "Spot couldn't be found" });
+    //!!!!!!!!!!!!!!!Add validation for req.body
+    const bodyError = {};
+    if (!startDate) bodyError.startDate = "startDate value is invalid";
+    if (!endDate) endError.startDate = "endDate value is invalid";
+    if (Object.entries(bodyError).length !== 0) return res.status(400).json({ "errors": bodyError })
     // let see if the data from the body is valid
     if (start >= end) return res.status(400).json({
         "message": "Bad Request",
