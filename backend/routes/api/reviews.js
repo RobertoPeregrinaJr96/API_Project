@@ -17,8 +17,7 @@ const validateReview = [
         .withMessage('Review text is required'),
     check('stars')
         .exists()
-        .isInt()
-        .isLength({ min: 1, max: 5 })
+        .isInt({ min: 1, max: 5 })
         .withMessage('Stars must be an integer from 1 to 5'),
     handleValidationErrors
 ]
@@ -114,87 +113,127 @@ router.get('/current', requireAuth, async (req, res) => {
 })
 
 // Add an Image to a Review based on the Review's Id
-router.post('/:reviewId/images', [requireAuth, validateReviewImage], async (req, res) => {
+router.post('/:reviewId/images', [requireAuth], async (req, res) => {
 
-    const id = req.params.reviewId
-    console.log(id)
+    // let get the data from the request
+    const { user } = req;
+    const idOfUser = user.id
+    const idOfReview = req.params.reviewId;
+    const reviewTest = await Review.findByPk(idOfReview);
+    const { url } = req.body;
+    // check if the review is valid and if not the return a error
+    if (!reviewTest) return res.status(404).json({ "message": "Review couldn't be found" });
+    //check if the user owns the review so it has authorization
+    if (idOfUser !== reviewTest.userId) return res.status(403).json({ "message": "Forbidden" });
+    // let check if the maximum number of images has been add to the review
+    const allImages = await ReviewImage.findAndCountAll({ where: { reviewId: idOfReview } })
+    const { count, rows } = allImages;
+    if (count > 9) return res.status(403).json({ "message": "Maximum number of images for this resource was reached" });
+    // lets add a img to the review
+    const newReviewImage = await ReviewImage.create({ "url": url, "reviewId": idOfReview })
+    return res.status(200).json({ "id": newReviewImage.id, "url": newReviewImage.url })
 
-    const testReview = await Review.findByPk(id)
+    /*
+      const id = req.params.reviewId
+        console.log(id)
 
-    if (!testReview) {
-        res.status(404)
-        res.json({
-            message: 'Review couldn\'t be found'
+        const testReview = await Review.findByPk(id)
+
+        if (!testReview) {
+            res.status(404)
+            res.json({
+                message: 'Review couldn\'t be found'
+            })
+        }
+
+        console.log('break 1 ---------------------------')
+
+        const { url } = req.body
+        // console.log('url', url)
+
+        const review = await Review.findByPk(id, {
+            include: [
+                { model: ReviewImage }
+            ]
         })
-    }
 
-    console.log('break 1 ---------------------------')
+        console.log(review)
+        const { user } = req
 
-    const { url } = req.body
-    // console.log('url', url)
+        if (review.userId !== user.id) {
+            res.status(403);
+            res.json({ message: 'You don\'t have permission to add an image' })
+        }
 
-    const review = await Review.findByPk(id, {
-        include: [
-            { model: ReviewImage }
-        ]
-    })
+        console.log('break 2 ------------------------------------')
 
-    console.log(review)
-    const { user } = req
-
-    if (review.userId !== user.id) {
-        res.status(403);
-        res.json({ message: 'You don\'t have permission to add an image' })
-    }
-
-    console.log('break 2 ------------------------------------')
-
-    const imgCount = await ReviewImage.findAndCountAll({
-        where: { reviewId: review.id }
-    })
-    console.log(imgCount)
-
-    // let count;
-
-    // const arr = review.ReviewImages
-    // console.log(arr.length)
-
-    // if (arr.length) {
-    //     count = arr.length
-    // }
-
-    console.log(imgCount.count)
-
-    if (imgCount.count > 9 ){
-        res.status(403)
-        res.json({
-            message: 'Maximum number of images for this resource was reached'
+        const imgCount = await ReviewImage.findAndCountAll({
+            where: { reviewId: review.id }
         })
-    }
+        console.log(imgCount)
 
-    const reviewImg = ReviewImage.build({
-        url,
-        reviewId: id
-    })
+        // let count;
 
-    // console.log(reviewImg)
+        // const arr = review.ReviewImages
+        // console.log(arr.length)
 
-    await reviewImg.save()
+        // if (arr.length) {
+        //     count = arr.length
+        // }
 
-    const safeImage = {
-        reviewId: reviewImg.id,
-        url: reviewImg.url
-    }
+        console.log(imgCount.count)
 
-    res.status(200);
-    res.json({ Reviews: reviewImg })
+        if (imgCount.count > 9) {
+            res.status(403)
+            res.json({
+                message: 'Maximum number of images for this resource was reached'
+            })
+        }
 
+        const reviewImg = ReviewImage.build({
+            url,
+            reviewId: id
+        })
+
+        // console.log(reviewImg)
+
+        await reviewImg.save()
+
+        const safeImage = {
+            reviewId: reviewImg.id,
+            url: reviewImg.url
+        }
+
+        res.status(200);
+        res.json({ Reviews: reviewImg })
+    */
 })
 
 //edit a review
 router.put('/:reviewId', [requireAuth, validateReview], async (req, res) => {
 
-    const id = req.params.reviewId;
+    const { user } = req;
+    const idOfUser = user.id
+    // check if the endpoint is valid
+    const idOfReview = req.params.reviewId;
+    const reviewTest = await Review.findByPk(idOfReview);
+    if (!reviewTest) return res.status(404).json({ "message": "Review couldn't be found" })
+    // see if the content of the body is valid
+    const { review, stars } = req.body;
+    const bodyError = {};
+    if (!review) bodyError.review = "Review text is required"
+    if (!stars || stars > 5 || stars <= 0) bodyError.stars = "Stars must be an integer from 1 to 5"
+    if (Object.entries(bodyError).length) return res.status(400).json({ "message": "Bad Request", "errors": bodyError });
+    // now make sure that the sure owns the review
+    if (idOfUser !== reviewTest.userId) return res.status(403).json({ "message": "Forbidden" });
+    // now make the edit
+    reviewTest.review = review;
+    reviewTest.stars = stars;
+    await reviewTest.save();
+    return res.status(200).json({ reviewTest });
+
+    /*
+  const id = req.params.reviewId;
     console.log(id);
 
     const { user } = req
@@ -215,14 +254,16 @@ router.put('/:reviewId', [requireAuth, validateReview], async (req, res) => {
         })
     }
 
+    console.log('break --------------------------------------')
+
     const userId = user.dataValues.id
     console.log("userId", userId)
     console.log('reviews.dataValues.id', reviews.dataValues.id)
     console.log('break2')
 
-    if (userId !== reviews.dataValues.id) {
+    if (userId !== reviews.dataValues.userId) {
         res.status(403);
-        res.json({ message: 'You do not have permission to delete this review' })
+        res.json({ message: 'Forbidden' })
     }
 
     reviews.review = review;
@@ -232,51 +273,65 @@ router.put('/:reviewId', [requireAuth, validateReview], async (req, res) => {
 
     res.status(200);
     res.json(reviews)
-
+*/
 })
 
 // Delete an existing review
 router.delete('/:reviewId', [requireAuth], async (req, res) => {
 
-    const id = req.params.reviewId;
-    console.log('id', id);
+    // let get all the data from the request
+    const { user } = req;
+    const idOfUser = user.id;
+    const idOfReview = req.params.reviewId;
+    const reviewTest = await Review.findByPk(idOfReview);
+    // let check if the review is valid
+    if (!reviewTest) return res.status(404).json({ "message": "Review couldn't be found" });
+    // let check if this review belongs to the user and if not the return an error
+    if (idOfUser !== reviewTest.userId) return res.status(403).json({ "message": "Forbidden" });
+    // if we are the owner the we are allowed to delete
+    await reviewTest.destroy();
+    return res.status(200).json({ "message": "Successfully deleted" })
 
-    const { user } = req
-    console.log(user.dataValues.id)
-    console.log('user.id', user.id)
-    console.log('break1')
+    /*
+      const id = req.params.reviewId;
+        console.log('id', id);
 
-    const review = await Review.findByPk(id)
-    // console.log('review.userId', review.userId)
+        const { user } = req
+        console.log(user.dataValues.id)
+        console.log('user.id', user.id)
+        console.log('break1')
 
-    if (!review) {
-        res.status(404);
-        res.json({ message: "Review couldn't be found" })
-    }
-    console.log('break2')
-    // console.log('review.Review.id',review.Review.id)
+        const review = await Review.findByPk(id)
+        // console.log('review.userId', review.userId)
 
-    const userId = user.dataValues.id
-    console.log("userId", userId)
-    console.log('break3')
+        if (!review) {
+            res.status(404);
+            res.json({ message: "Review couldn't be found" })
+        }
+        console.log('break2')
+        // console.log('review.Review.id',review.Review.id)
 
-    if (userId !== review.dataValues.id) {
-        res.status(403);
-        res.json({ "message": "Forbidden" })
-    }
-    console.log('break4 ---------------------------------------')
-    console.log(review)
+        const userId = user.dataValues.id
+        console.log("userId", userId)
+        console.log('break3')
 
-    console.log('break 5 ------------------------------------')
-    await review.destroy();
-    const reviewTest = await Review.findByPk(id)
-    console.log(reviewTest)
+        if (userId !== review.dataValues.id) {
+            res.status(403);
+            res.json({ "message": "Forbidden" })
+        }
+        console.log('break4 ---------------------------------------')
+        console.log(review)
 
-    res.status(200);
-    res.json({
-        message: 'Successfully deleted'
-    })
+        console.log('break 5 ------------------------------------')
+        await review.destroy();
+        const reviewTest = await Review.findByPk(id)
+        console.log(reviewTest)
 
+        res.status(200);
+        res.json({
+            message: 'Successfully deleted'
+        })
+    */
 })
 
 module.exports = router
