@@ -454,56 +454,40 @@ router.get('/current', [requireAuth], async (req, res) => {
 
 // Get details of a Spot from an id  // Error handling is Done
 router.get('/:spotId', async (req, res) => {
-
-    const id = req.params.spotId;
-    // console.log(id);
-
-    if (!id) {
-        res.status(404);
-        res.json({
-            message: 'Not a Valid Id'
-        })
-    }
-
-    const spot = await Spot.findByPk(id, {
-        // attributes: { exclude: ['createdAt', 'updatedAt'] },
+    // lets grab the data from the request
+    const { user } = req;
+    const idOfUser = user.id;
+    const idOfSpot = req.params.spotId;
+    // let check if the idOfSpot is a valid spot in the database
+    const spotTest = await Spot.findByPk(idOfSpot);
+    if (!spotTest) return res.status(404).json({ "message": "Spot couldn't be found" })
+    // lets
+    const spot = await Spot.findByPk(idOfSpot, {
         include: {
-            model: SpotImage,
-            attributes: { exclude: ['createdAt', 'updatedAt', 'spotId'] },
+            "model": SpotImage,
+            "attributes": { exclude: ['createdAt', 'updatedAt', 'spotId'] },
         },
     })
-    if (!spot) {
-        res.status(404);
-        res.json({
-            message: 'Spot couldn\'t be found'
-        })
-    }
+
     const spotOwner = await User.findByPk(spot.ownerId, {
         attributes: ['id', 'firstName', 'lastName']
     })
     console.log(spotOwner)
 
-
-    const { count, rows } = await Review.findAndCountAll({
-        where: {
-            spotId: id
-        }
-    })
-    // console.log(count)
-    // console.log(rows)
-
-    let aveRating = 0;
-
-    for (let i = 0; i < rows.length; i++) {
-        // console.log(rows[i].stars)
-
-        aveRating += rows[i].stars
-        // console.log(aveRating)
-    }
-
-    let avgStarRating = (aveRating / count).toFixed(1)
-    console.log(avgStarRating)
-
+    // let find the average star rating for this spot
+    const allSpotReview = await Review.findAll({ where: { spotId: idOfSpot } })
+    let totalReviews = 1;
+    let totalStars = 1
+    allSpotReview.forEach(review => {
+        totalReviews += 1
+        totalStars += Number(review.stars)
+    });
+    if (totalReviews == 0) totalReviews = 1;
+    if (totalStars == 0) totalStars = 1;
+    const avgStarRating = Number(totalStars / totalReviews)
+    spot.avgRating = Number(avgStarRating.toFixed(1))
+    delete spot.Reviews
+    // lets send the response in a object we structured
     const safeSpot = {
         "id": spot.id,
         "ownerId": spot.ownerId,
@@ -518,7 +502,7 @@ router.get('/:spotId', async (req, res) => {
         "price": spot.price,
         "createdAt": spot.createdAt,
         "updatedAt": spot.updatedAt,
-        "numReviews": count,
+        "numReviews": totalReviews - 1,
         "avgStarRating": avgStarRating,
         "SpotImages": spot.SpotImages,
         'Owner': spotOwner
