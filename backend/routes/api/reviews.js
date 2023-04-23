@@ -66,9 +66,11 @@ router.get('/current', requireAuth, async (req, res) => {
             },
             {
                 model: Spot, include: { model: SpotImage },
+                attributes:{exclude:['createdAt','updatedAt']}
 
             }, {
-                model: ReviewImage
+                model: ReviewImage,
+                attributes:{exclude:['reviewId','createdAt','updatedAt']}
             }
         ],
         where: {
@@ -230,7 +232,7 @@ router.put('/:reviewId', [requireAuth, validateReview], async (req, res) => {
     reviewTest.review = review;
     reviewTest.stars = stars;
     await reviewTest.save();
-    return res.status(200).json({ reviewTest });
+    return res.status(200).json( reviewTest );
 
     /*
   const id = req.params.reviewId;
