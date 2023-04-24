@@ -189,8 +189,8 @@ router.get('/', async (req, res) => {
             totalReviews += 1
             totalStars += Number(review.stars)
         });
-        if (totalReviews == 0) totalReviews = 1;
-        if (totalStars == 0) totalStars = 1;
+        if (totalReviews == 0) totalReviews = null;
+        if (totalStars == 0) totalStars = null;
         const aveStarRating = Number(totalStars / totalReviews)
         spot.avgRating = Number(aveStarRating.toFixed(1))
         delete spot.Reviews
@@ -775,7 +775,7 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) 
     // checking if we are getting a valid spot back
     if (!spotTest) {
         return res.status(404).json({
-            "message": "Review couldn't be found"
+            "message": "Spot couldn't be found"
         })
     }
     // check if you are getting valid data from the request to use
