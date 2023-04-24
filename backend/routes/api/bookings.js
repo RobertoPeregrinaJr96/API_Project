@@ -72,7 +72,7 @@ router.get('/current', [requireAuth], async (req, res) => {
                 console.log('previewImage', spot.previewImage)
             }
         }
-        // delete spot.SpotImages
+        delete spot.SpotImages
         console.log('data', spot.SpotImages)
     }
 
