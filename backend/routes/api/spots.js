@@ -51,13 +51,12 @@ const validateCreateSpot = [
     check('name')
         .exists({ checkFalsy: true })
         .isString()
-        .not()
-        .isInt()
         .isLength({ max: 49 })
         .withMessage('Name must be less than 50 characters'),
-    // check('name')
-
-    //     .withMessage('Name must be less than 50 characters  '),
+    check('name')
+        .not()
+        .isInt()
+        .withMessage('Name must be less than 50 characters  '),
     check('description')
         .exists({ checkFalsy: true })
         .isString()
@@ -724,7 +723,7 @@ router.get('/:spotId/reviews', async (req, res) => {
 
     console.log('break 1 -----------------------------------')
 
-    // const { user } = req
+    const { user } = req
 
     // if (!user) {
     //     res.status(403);
