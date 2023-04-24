@@ -51,12 +51,13 @@ const validateCreateSpot = [
     check('name')
         .exists({ checkFalsy: true })
         .isString()
-        .isLength({ max: 49 })
-        .withMessage('Name must be less than 50 characters'),
-    check('name')
         .not()
         .isInt()
-        .withMessage('Name must be less than 50 characters  '),
+        .isLength({ max: 49 })
+        .withMessage('Name must be less than 50 characters'),
+    // check('name')
+
+    //     .withMessage('Name must be less than 50 characters  '),
     check('description')
         .exists({ checkFalsy: true })
         .isString()
