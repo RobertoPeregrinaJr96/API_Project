@@ -101,11 +101,11 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
             "endDate": "endDate cannot come before startDate"
         }
     })
-    //!!!!!!!!!!!!!!!Add validation for req.body
-    const bodyError = {};
-    if (!startDate) bodyError.startDate = "startDate value is invalid";
-    if (!endDate) bodyError.endDate = "endDate value is invalid";
-    if (Object.entries(bodyError).length !== 0) return res.status(400).json({ "errors": bodyError })
+        //!!!!!!!!!!!!!!!Add validation for req.body
+        const bodyError = {};
+        if (!startDate) bodyError.startDate = "startDate value is invalid";
+        if (!endDate) bodyError.endDate = "endDate value is invalid";
+        if (Object.entries(bodyError).length !== 0) return res.status(400).json({ "errors": bodyError });
     // lets check if the original endDate has already pasted
     if (end.getTime() <= now.getTime()) {
         return res.status(403).json({ "message": "Past bookings can't be modified" })

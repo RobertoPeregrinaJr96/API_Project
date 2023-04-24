@@ -901,9 +901,6 @@ router.get('/:spotId/bookings', [requireAuth], async (req, res) => {
             bookingArr[i].endDate = bookingArr[i].endDate.toISOString().split('T0')[0]
             console.log(bookingArr[0].endDate)
 
-            bookingArr[i].lat = Number(bookingArr[i].lat);
-            bookingArr[i].lng = Number(bookingArr[i].lng);
-            bookingArr[i].price = Number(bookingArr[i].price);
             console.log('break ==============================')
         }
         res.status(200)
