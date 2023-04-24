@@ -747,7 +747,7 @@ router.get('/:spotId/reviews', async (req, res) => {
         include: [
             {
                 model: User,
-                attributes: ['id', 'email', 'username']
+                attributes: ['id', 'firstName', 'lastName']
             },
             {
                 model: ReviewImage,
