@@ -358,8 +358,8 @@ router.get('/current', [requireAuth], async (req, res) => {
             totalReviews += 1
             totalStars += Number(review.stars)
         });
-        if (totalReviews == 0) totalReviews = 1;
-        if (totalStars == 0) totalStars = 1;
+        if (totalReviews == 0) totalReviews = 0;
+        if (totalStars == 0) totalStars = 0;
         const aveStarRating = Number(totalStars / totalReviews)
         spot.avgRating = Number(aveStarRating.toFixed(1))
         delete spot.Reviews
@@ -456,7 +456,8 @@ router.get('/current', [requireAuth], async (req, res) => {
 router.get('/:spotId', async (req, res) => {
     // lets grab the data from the request
     const { user } = req;
-    const idOfUser = user.id;
+    let idOfUser;
+    if (user) idOfUser = user.id;
     const idOfSpot = req.params.spotId;
     // let check if the idOfSpot is a valid spot in the database
     const spotTest = await Spot.findByPk(idOfSpot);
@@ -482,8 +483,8 @@ router.get('/:spotId', async (req, res) => {
         totalReviews += 1
         totalStars += Number(review.stars)
     });
-    if (totalReviews == 0) totalReviews = 1;
-    if (totalStars == 0) totalStars = 1;
+    if (totalReviews == 0) totalReviews = 0;
+    if (totalStars == 0) totalStars = 0;
     const avgStarRating = Number(totalStars / totalReviews)
     spot.avgRating = Number(avgStarRating.toFixed(1))
     delete spot.Reviews
@@ -722,14 +723,14 @@ router.get('/:spotId/reviews', async (req, res) => {
 
     console.log('break 1 -----------------------------------')
 
-    const { user } = req
+    // const { user } = req
 
-    if (!user) {
-        res.status(404);
-        res.json({
-            message: 'Please login'
-        });
-    }
+    // if (!user) {
+    //     res.status(403);
+    //     res.json({
+    //         "message": "Forbidden"
+    //     });
+    // }
 
     const spot = await Spot.findByPk(id, {
         include: [
@@ -891,7 +892,7 @@ router.get('/:spotId/bookings', [requireAuth], async (req, res) => {
         const bookingArr = []
         guestBooking.forEach(spot => bookingArr.push(spot.toJSON()))
         console.log(bookingArr)
-        for (let i = 0; i < bookingArr.length ; i++) {
+        for (let i = 0; i < bookingArr.length; i++) {
             console.log(bookingArr[i])
             console.log(bookingArr[0].startDate)
             bookingArr[i].startDate = bookingArr[i].startDate.toISOString().split('T0')[0]

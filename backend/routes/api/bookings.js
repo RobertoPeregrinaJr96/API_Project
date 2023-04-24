@@ -344,7 +344,7 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
     console.log('date', date)
 
     // if the current  time is lesser then the startDate and the current time is greater than the endDates
-    if (end > date && start < date) {
+    if (start < date) {
         res.status(403);
         res.json({
             message: 'Bookings that have been started can\'t be deleted'
