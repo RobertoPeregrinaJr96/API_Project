@@ -891,7 +891,7 @@ router.get('/:spotId/bookings', [requireAuth], async (req, res) => {
         const bookingArr = []
         guestBooking.forEach(spot => bookingArr.push(spot.toJSON()))
         console.log(bookingArr)
-        for (let i = 0; i < bookingArr.length - 1; i++) {
+        for (let i = 0; i < bookingArr.length ; i++) {
             console.log(bookingArr[i])
             console.log(bookingArr[0].startDate)
             bookingArr[i].startDate = bookingArr[i].startDate.toISOString().split('T0')[0]

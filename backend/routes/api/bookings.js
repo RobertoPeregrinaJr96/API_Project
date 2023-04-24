@@ -13,14 +13,15 @@ const router = express.Router();
 
 
 // Get all of the Current User's Bookings
-router.get('/current', requireAuth, async (req, res) => {
+router.get('/current', [requireAuth], async (req, res) => {
 
     const { user } = req
-    // console.log('user', user)
-
-    console.log('break 1 ----------')
+    const idOfUser = user.id
 
     const Bookings = await Booking.findAll({
+        where: {
+            userId: idOfUser
+        },
         attributes: ['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt'],
         include: [
             {
@@ -28,10 +29,14 @@ router.get('/current', requireAuth, async (req, res) => {
                 include: { model: SpotImage, attributes: ['url', 'preview'] }
             }
         ],
-        where: {
-            userId: user.id
-        },
     })
+    console.log("Bookings",Bookings)
+    console.log("Bookings",Bookings.length)
+
+    if (Bookings.length == 0) {
+        return res.status(200).json({ "Bookings": [] })
+    }
+    console.log('break 1 ----------')
 
     // Bookings.dataValues.startDate = start.toISOString().split('T0')[0];
     // Bookings.dataValues.endDate = end.toISOString().split('T0')[0];
@@ -50,7 +55,7 @@ router.get('/current', requireAuth, async (req, res) => {
     for (let i = 0; i < bookingArr.length; i++) {
 
         const spot = bookingArr[i].Spot;
-        // console.log('spot', spot)
+        console.log('spot', spot)
 
         for (let j = 0; j < spot.SpotImages.length; j++) {
 
@@ -67,15 +72,17 @@ router.get('/current', requireAuth, async (req, res) => {
                 console.log('previewImage', spot.previewImage)
             }
         }
-
-        delete spot.SpotImages // it works??? but not saving in the outer obj
+        // delete spot.SpotImages
         console.log('data', spot.SpotImages)
     }
-    // console.log(currentBooking)
-    console.log('break 3 ----------')
+
 
     res.status(200)
     res.json({ Bookings: bookingArr })
+
+    /*
+
+    */
 })
 
 // Edit a Booking
@@ -101,11 +108,11 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
             "endDate": "endDate cannot come before startDate"
         }
     })
-        //!!!!!!!!!!!!!!!Add validation for req.body
-        const bodyError = {};
-        if (!startDate) bodyError.startDate = "startDate value is invalid";
-        if (!endDate) bodyError.endDate = "endDate value is invalid";
-        if (Object.entries(bodyError).length !== 0) return res.status(400).json({ "errors": bodyError });
+    //!!!!!!!!!!!!!!!Add validation for req.body
+    const bodyError = {};
+    if (!startDate) bodyError.startDate = "startDate value is invalid";
+    if (!endDate) bodyError.endDate = "endDate value is invalid";
+    if (Object.entries(bodyError).length !== 0) return res.status(400).json({ "errors": bodyError });
     // lets check if the original endDate has already pasted
     if (end.getTime() <= now.getTime()) {
         return res.status(403).json({ "message": "Past bookings can't be modified" })
