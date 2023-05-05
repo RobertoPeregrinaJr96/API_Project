@@ -207,7 +207,7 @@ router.get('/', async (req, res) => {
 
     })
     res.status(200)
-    res.json({ "Spots": arr, page: page, size: size })
+    res.json({ "Spots": arr, "page": page, "size": size })
     /*
 
       const spotTest = await Spot.findAll()
