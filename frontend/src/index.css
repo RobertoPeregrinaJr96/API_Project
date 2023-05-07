@@ -1,1 +1,29 @@
 /* TODO Add site wide styles */
+/* apply to everything */
+
+
+/* Nav */
+.nav-list {
+  list-style: none;
+}
+
+/* Landing Page */
+.spots-ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 5rem 5rem 5rem 5rem;
+}
+
+.spot-list {
+  list-style: none;
+  color: black;
+}
+
+.spot-Link {
+  text-decoration: none;
+}
+
+.nav-landingPage {
+  display: flex;
+  justify-content: right;
+}
