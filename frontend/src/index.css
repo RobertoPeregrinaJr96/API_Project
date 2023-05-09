@@ -1,6 +1,11 @@
 /* TODO Add site wide styles */
 /* apply to everything */
 
+* {
+  list-style: none;
+  text-decoration: none;
+  color: black;
+}
 
 /* Nav */
 .nav-list {
@@ -11,12 +16,22 @@
 .spots-ul {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 5rem 5rem 5rem 5rem;
+  grid-template-rows: 8rem 8rem 8em 8rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.spot-list-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .spot-list {
   list-style: none;
   color: black;
+  justify-content: center;
+  align-items: center;
 }
 
 .spot-Link {
@@ -26,4 +41,62 @@
 .nav-landingPage {
   display: flex;
   justify-content: right;
+}
+
+.spot-review-stars {
+  list-style: none;
+  display: inline-flex;
+}
+
+img {
+  width: 10rem;
+  height: 5rem;
+}
+
+/* detailed spot */
+
+.spot-images-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "a a a b c"
+    "a a a c d"
+    "a a a c d";
+}
+
+.spot-image-1 {
+  grid-area: "a";
+}
+.spot-image-2 {
+  grid-area: "b";
+}
+.spot-image-3 {
+  grid-area: "c";
+}
+.spot-image-4 {
+  grid-area: "d";
+}
+.spot-image-5 {
+  grid-area: "e";
+}
+
+/* current spot */
+
+.current-ul {
+  display: flex;
+  justify-content: space-around;
+}
+
+/* Update spot */
+
+.update-inputBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.update-p-title {
+  font-size: 1.2rem;
+  font-weight: bold;
 }

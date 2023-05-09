@@ -6,6 +6,11 @@ import Navigation from "./components/Navigation";
 
 // my components
 import SpotIndex from './components/Spots/LandingPage/SpotIndex'
+import CurrentSpot from './components/Spots/ManageSpots/CurrentSpot'
+import ReviewIndex from './components/Reviews/ReviewIndex'
+import CreateNewSpot from './components/Spots/ManageSpots/Create_Spot/CreateNewSpot'
+import SpotById from './components/Spots/SpotDetails/SpotById'
+import SpotEdit from './components/Spots/ManageSpots/Update_Spot/SpotEdit'
 
 
 function App() {
@@ -19,8 +24,12 @@ function App() {
     <>
       <Navigation isLoaded={isLoaded} />
       {isLoaded && <Switch>
+        <Route exact path='/spots/current' component={CurrentSpot} />
+        <Route exact path='/reviews/current' component={ReviewIndex} />
+        <Route exact path='/spots/new' component={CreateNewSpot} />
+        <Route exact path='/spots/:id' component={SpotById} />
+        <Route exact path='/spots/:id/edit' component={SpotEdit} />
         <Route exact path='/' component={SpotIndex} />
-
       </Switch>}
     </>
   );
@@ -32,15 +41,6 @@ export default App;
 /* For later */
 
 /*
-// import CurrentSpot from './components/Spots/ManageSpots/CurrentSpot'
-// import ReviewIndex from './components/Reviews/ReviewIndex'
-// import SpotEdit from './components/Spots/SpotEdit'
-// import NewSpot from './components/Spots/NewSpot/NewSpot'
-// import SpotById from './components/Spots/SpotDetails/SpotById'
 
-        <Route exact path='/spots/:id' component={SpotById}/>
-          <Route exact path='/spots/new' component={NewSpot}/>
-          <Route exact path='/spots/current' component={CurrentSpot}/>
-          <Route exact path='/spots/:id/edit' component={SpotEdit} />
-          <Route exact path='/reviews/current' component={ReviewIndex} />
+
  */

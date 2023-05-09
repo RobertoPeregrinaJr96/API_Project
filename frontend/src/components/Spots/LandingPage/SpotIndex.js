@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import SpotIndexItem from './SpotIndexItem';
 import { fetchSpotsThunk } from '../../../store/spotReducer';
-import { Link } from 'react-router-dom';
 
 
 const SpotIndex = () => {
@@ -19,6 +18,8 @@ const SpotIndex = () => {
     useEffect(() => {
         dispatch(fetchSpotsThunk())
     }, [dispatch])
+
+
 
     if (!spotsObj) return null
     return (
