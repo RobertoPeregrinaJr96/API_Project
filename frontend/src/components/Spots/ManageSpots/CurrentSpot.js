@@ -3,8 +3,6 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
 
-// import DeleteSpot from "./Delete_Spot/DeleteSpot";
-
 
 import { fetchSpotsThunk } from '../../../store/spotReducer';
 

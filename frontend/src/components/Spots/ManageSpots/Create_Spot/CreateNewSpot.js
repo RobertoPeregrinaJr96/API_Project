@@ -14,21 +14,15 @@ const CreateNewSpot = () => {
     const [price, setPrice] = useState('');
     const [lat, setLat] = useState(-75.67382)
     const [lng, setLng] = useState(-132.31456)
-    const [images, setImages] = useState([])
+    const [images, setImages] = useState('')
     const [errors, setErrors] = useState({})
 
     const user = useSelector(state => state.session.user)
-    // console.log('user ===>', user)
-    // console.log('address', address)
-    // console.log('city', city)
-    // console.log('state', state)
-    // console.log('country', country)
-    // console.log('describe', describe)
-    // console.log('name', name)
-    // console.log('price', price)
+
 
     const dispatch = useDispatch();
     const history = useHistory()
+
 
     const newSpot = {
         'address': address,
@@ -41,10 +35,12 @@ const CreateNewSpot = () => {
         'ownerId': user.id,
         'lat': lat,
         'lng': lng,
+        'previewImage': images
     }
 
 
     const onsubmit = async (e) => {
+        const imgObj = [{ url: images, preview: true }]
         e.preventDefault()
         console.log('new spot ===>', newSpot)
 
@@ -55,25 +51,20 @@ const CreateNewSpot = () => {
         if (!state.length) err.state = 'State is required'
         if (description.length < 30) err.description = 'Description needs a minimum of 30 characters'
         if (!name.length) err.name = 'Name is required'
-        if (!price.length) err.price = 'Price is required'
-        if (images.length) err.images = 'Preview image is required.'
-        if (images[1] && !images[1].endsWith('.png') && !images[1].endsWith('.jpg') && !images[1].endsWith('.jpeg')) {
-            errors.images = "Image URL 1 must end in .png, .jpg, or .jpeg"
-            setErrors(err)
-
-            if (Object.values(err).length > 0) {
-                const spot = await dispatch(createSpot(newSpot,images))
-                console.log("BRAND NEW ====>", spot)
-                history.push('/spots/current')
-            }
-            return;
-        }
-        // console.log(errors)
-
-        // const spot = useSelector(state => state)
-        // console.log(spot)
-        // if (spot.errors) {
+        if (!price || price < 0) err.price = 'Price is required'
+        if (!images.length) err.images = 'Preview image is required.'
+        // if (images[1] && !images[1].endsWith('.png') && !images[1].endsWith('.jpg') && !images[1].endsWith('.jpeg')) {
+        //     errors.images = "Image URL 1 must end in .png, .jpg, or .jpeg"
         // }
+        setErrors(err)
+
+        if (Object.values(err).length === 0) {
+            const spot = await dispatch(createSpot(newSpot, imgObj))
+            console.log("BRAND NEW ====>", spot)
+            history.push(`/spots/${spot.id}`)
+        }
+        return;
+
     }
     return (
         <div className='create-inputBox'>

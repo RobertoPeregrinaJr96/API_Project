@@ -61,7 +61,7 @@ function ProfileButton({ user }) {
             <li>{user.firstName} {user.lastName}</li>
             <li>{user.email}</li>
             <li>
-              <Link to={'/spots/current'}>Manage Spots</Link>
+              <Link to={'/spots/current'} className='nav-manager-link'>Manage Spots</Link>
             </li>
             <li>
               <button onClick={logout}>Log Out</button>
@@ -79,7 +79,7 @@ function ProfileButton({ user }) {
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}
             />
-            <button>Demo User</button>
+            {/* <Link to={}></Link> */}
           </>
         )}
       </ul>

@@ -14,17 +14,18 @@ const SpotIndexItem = ({ spot }) => {
         // console.log('stars ===>', stars)
         return arr
     }
-    console.log(stars)
-    const url = () => {
-        if (spot.previewImage) return spot.previewImage
-        return 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537828399628411/images_7.jpg'
-    }
 
+//     const url = () => {
+//         console.log(spot.previewImage)
+//         if (spot.previewImage) return spot.previewImage
+//         return 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537828399628411/images_7.jpg'
+//     }
+// console.log(spot.previewImage)
     return (
         <li key={spot.id} className='spot-list'>
             <div className='spot-list-block'>
                 <Link to={`/spots/${spot.id}`} className={'spot-Link'}>
-                    <img src={url()} alt='di' className='spots-landingPage-img'></img><br></br>
+                    <img src={spot.previewImage} alt='di' className='spots-landingPage-img'></img><br></br>
                     {/* {spot.name},{'  '} */}
                     {spot.city},{'  '}
                     {spot.state}<br></br>

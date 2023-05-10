@@ -66,9 +66,9 @@ export const deleteSpot = (spotId) => async (dispatch) => {
     }
 };
 // create a spot
-export const createSpot = (spot,image) => async (dispatch) => {
-    console.log("spot ===>",spot)
-    console.log("image ===>",image)
+export const createSpot = (spot, image) => async (dispatch) => {
+    console.log("spot ===>", spot)
+    console.log("image ===>", image)
 
     const res = await csrfFetch('/api/spots', {
         method: 'POST',
@@ -77,16 +77,35 @@ export const createSpot = (spot,image) => async (dispatch) => {
     });
     console.log('Response ===>', res)
     if (res.ok) {
-        const newReport = await res.json();
-        console.log('newReport ===>', newReport)
-        dispatch(receiveSpot(spot));
-        return newReport;
-    } else {
-        const errors = await res.json();
-        console.log("Errors ===>", errors)
-        return errors;
+        const newSpot = await res.json();
+        spot.avgStarRating = 0;
+        console.log('newSpot ===>', newSpot)
+        for (let i of image) {
+            // for the images // preview image
+            console.log('i ===>', i)
+            let img = await csrfFetch(`/api/spots/${newSpot.id}/images`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(i),
+            })
+            console.log('img ===>', img)
+            const images = await img.json();
+            console.log('images ===>', images)
+            if (images) {
+                spot.SpotImages = [images];
+                console.log('spot.SpotImages ==>', spot.SpotImages)
+                dispatch(receiveSpot(spot));
+                return newSpot;
+            }
+            else {
+                const errors = await res.json();
+                console.log("Errors ===>", errors)
+                return errors;
+            }
+
+        };
     }
-};
+}
 // update a spot
 export const updateSpot = (spot) => async (dispatch) => {
     const res = await csrfFetch(`/api/spots/${spot.id}`, {

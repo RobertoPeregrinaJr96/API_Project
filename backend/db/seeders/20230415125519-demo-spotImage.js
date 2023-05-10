@@ -68,6 +68,11 @@ const demoSpotImages = [
     preview: true,
     spotId: 9,
   },
+  {
+    url: 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537916236742707/download_4.jpg',
+    preview: true,
+    spotId: 10,
+  },
 
 ]
 

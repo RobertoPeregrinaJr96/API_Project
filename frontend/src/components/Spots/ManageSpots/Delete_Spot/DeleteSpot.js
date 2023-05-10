@@ -1,18 +1,13 @@
+import OpenModalButton from '../../../OpenModalButton/index'
+import DeleteSpotModel from './DeleteSpotModal'
 
-
-
-const DeleteSpot = () => {
+const DeleteSpot = ({ spot }) => {
     console.log('DELETE THIS SPOT')
-    return (
-        <div className="delete-div-block">
-            <h1>Confirm Delete</h1>
-            <p>Are you sure you want to remove this spot
-                from the listings?
-            </p>
-            <button>Yes (DELETE SPOT)</button>
-            <button>No (Keep Spot)</button>
+    // console.log('spot ===>', spot)
 
-        </div>
+    return (
+        <OpenModalButton buttonText={'Delete'} modalComponent={<DeleteSpotModel spot={spot} />}></OpenModalButton>
+
     )
 }
 

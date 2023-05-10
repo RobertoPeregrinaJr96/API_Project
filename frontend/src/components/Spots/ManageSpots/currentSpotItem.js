@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 // import { useModal } from "../../../context/Modal";
 import { deleteSpot } from "../../../store/spotReducer";
 import { useDispatch } from 'react-redux';
-
+import DeleteSpot from './Delete_Spot/DeleteSpot'
 
 const CurrentSpotItems = (spot) => {
     const history = useHistory()
@@ -30,9 +30,9 @@ const CurrentSpotItems = (spot) => {
     }
 
     const onDelete = (e) => {
-        // <DeleteSpot />
+        <DeleteSpot spot={spot.spot} />
 
-        dispatch(deleteSpot(spot.spot.id))
+        // dispatch(deleteSpot(spot.spot.id))
 
         history.push('/spots/current')
     };
@@ -41,7 +41,7 @@ const CurrentSpotItems = (spot) => {
     return (
         <li key={spot.spot.id} className='current-spot-list'>
             <div className='current-spot-list-block'>
-                <img src={'https://cdn.discordapp.com/attachments/1088906268485357618/1105152225992507502/gettyimages-1269776313-612x612.jpg'} alt='di'></img>
+                <img src={spot.spot.previewImage} alt='di'></img>
                 <br></br>
                 {spot.spot.name}{'  '}
                 {spot.spot.city}{'  '}
@@ -50,7 +50,8 @@ const CurrentSpotItems = (spot) => {
                 <ul className='spot-review-stars'>{stars()}</ul>
                 <div>
                     <button onClick={onUpdate}>Update</button>
-                    <button onClick={onDelete}>Delete</button>
+                    <DeleteSpot spot={spot.spot} />
+
                 </div>
             </div>
         </li >
