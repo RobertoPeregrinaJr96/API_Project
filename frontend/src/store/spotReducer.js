@@ -69,7 +69,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 export const createSpot = (spot, image) => async (dispatch) => {
     console.log("spot ===>", spot)
     console.log("image ===>", image)
-    // for the spot
+
     const res = await csrfFetch('/api/spots', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -78,31 +78,33 @@ export const createSpot = (spot, image) => async (dispatch) => {
     console.log('Response ===>', res)
     if (res.ok) {
         const newSpot = await res.json();
-        newSpot.avgStarRating = 0;
+        spot.avgStarRating = 0;
         console.log('newSpot ===>', newSpot)
         for (let i of image) {
             // for the images // preview image
-            console.log('i ===>',i)
+            console.log('i ===>', i)
             let img = await csrfFetch(`/api/spots/${newSpot.id}/images`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(i),
             })
-            console.log('img ===>',img)
+            console.log('img ===>', img)
             const images = await img.json();
-            console.log('images ===>',images)
+            console.log('images ===>', images)
             if (images) {
                 spot.SpotImages = [images];
-                console.log('spot.SpotImages ==>',spot.SpotImages)
+                console.log('spot.SpotImages ==>', spot.SpotImages)
                 dispatch(receiveSpot(spot));
                 return newSpot;
-            } else {
+            }
+            else {
                 const errors = await res.json();
                 console.log("Errors ===>", errors)
                 return errors;
             }
-        }
-    };
+
+        };
+    }
 }
 // update a spot
 export const updateSpot = (spot) => async (dispatch) => {

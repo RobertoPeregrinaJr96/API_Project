@@ -30,7 +30,6 @@ const CreateNewSpot = () => {
     const dispatch = useDispatch();
     const history = useHistory()
 
-    const imgObj = [{ url: images, preview: true }]
 
     const newSpot = {
         'address': address,
@@ -48,6 +47,7 @@ const CreateNewSpot = () => {
 
 
     const onsubmit = async (e) => {
+        const imgObj = [{ url: images, preview: true }]
         e.preventDefault()
         console.log('new spot ===>', newSpot)
 
