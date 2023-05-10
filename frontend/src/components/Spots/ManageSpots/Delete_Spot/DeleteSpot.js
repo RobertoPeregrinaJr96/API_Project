@@ -1,34 +1,13 @@
-import { useDispatch } from "react-redux"
-import { useModal } from "../../../../context/Modal"
-import { deleteSpot } from "../../../../store/spotReducer";
-
+import OpenModalButton from '../../../OpenModalButton/index'
+import DeleteSpotModel from './DeleteSpotModal'
 
 const DeleteSpot = ({ spot }) => {
     console.log('DELETE THIS SPOT')
-    console.log('spot ===>', spot)
-    const { closeModal } = useModal();
-    const dispatch = useDispatch();
-
-    const closeModalSubmit = (e) => {
-        e.preventDefault();
-        return closeModal();
-    };
-
-    const handleSubmit = (e) => {
-        console.log('spot.spot.id')
-        // dispatch(dispatch(deleteSpot(spot.id))).then(closeModal);
-    };
+    // console.log('spot ===>', spot)
 
     return (
-        <form className="delete-form-block" onSubmit={handleSubmit}>
-            <h1>Confirm Delete</h1>
-            <p>Are you sure you want to remove this spot
-                from the listings?
-            </p>
-            <button type="submit">Yes (DELETE SPOT)</button>
-            <button onClick={closeModalSubmit}>No (Keep Spot)</button>
+        <OpenModalButton buttonText={'Delete'} modalComponent={<DeleteSpotModel spot={spot} />}></OpenModalButton>
 
-        </form>
     )
 }
 

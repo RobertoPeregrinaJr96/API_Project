@@ -50,7 +50,7 @@ const CurrentSpotItems = (spot) => {
                 <ul className='spot-review-stars'>{stars()}</ul>
                 <div>
                     <button onClick={onUpdate}>Update</button>
-                    <button ><DeleteSpot spot={spot} /></button>
+                    <DeleteSpot spot={spot.spot} />
 
                 </div>
             </div>

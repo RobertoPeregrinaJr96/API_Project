@@ -27,6 +27,9 @@ const UpdateSpot = () => {
     // const [errors, setErrors] = useState({})
 
     const user = useSelector(state => state.session.user)
+    // console.log(lat)
+    // console.log(lng)
+    // console.log(setImages())
 
 
     const dispatch = useDispatch();
@@ -75,11 +78,11 @@ const UpdateSpot = () => {
         if (!state.length) err.state = 'State is required'
         if (description.length < 30) err.description = 'Description needs a minimum of 30 characters'
         if (!name.length) err.name = 'Name is required'
-        if (!price.length) err.price = 'Price is required'
+        if (!price) err.price = 'Price is required'
         if (images.length) err.images = 'Preview image is required.'
         setErrors(err)
 
-        if (Object.values(err).length > 0) {
+        if (Object.values(err).length === 0) {
             const spot = await dispatch(updateSpot(spotEdit))
             console.log("Updated Spot ====>", spot)
             history.push('/spots/current')
