@@ -16,6 +16,7 @@ const SpotIndexItem = ({ spot }) => {
     }
 
     const url = () => {
+        console.log(spot.previewImage)
         if (spot.previewImage) return spot.previewImage
         return 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537828399628411/images_7.jpg'
     }

@@ -14,7 +14,7 @@ const CreateNewSpot = () => {
     const [price, setPrice] = useState('');
     const [lat, setLat] = useState(-75.67382)
     const [lng, setLng] = useState(-132.31456)
-    const [images, setImages] = useState([])
+    const [images, setImages] = useState('')
     const [errors, setErrors] = useState({})
 
     const user = useSelector(state => state.session.user)
@@ -30,6 +30,8 @@ const CreateNewSpot = () => {
     const dispatch = useDispatch();
     const history = useHistory()
 
+    const imgObj = [{ url: images, preview: true }]
+
     const newSpot = {
         'address': address,
         'city': city,
@@ -41,6 +43,7 @@ const CreateNewSpot = () => {
         'ownerId': user.id,
         'lat': lat,
         'lng': lng,
+        'previewImage': images
     }
 
 
@@ -62,9 +65,9 @@ const CreateNewSpot = () => {
             setErrors(err)
 
             if (Object.values(err).length > 0) {
-                const spot = await dispatch(createSpot(newSpot,images))
+                const spot = await dispatch(createSpot(newSpot, imgObj))
                 console.log("BRAND NEW ====>", spot)
-                history.push('/spots/current')
+                history.push(`/spots/${spot.id}`)
             }
             return;
         }
