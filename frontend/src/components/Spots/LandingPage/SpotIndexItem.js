@@ -4,7 +4,7 @@ const SpotIndexItem = ({ spot }) => {
     // let areaNumber = 0
 
     const stars = () => {
-        let stars = <li>&#9733;</li>;
+        let stars = <li className='spot-review-stars-li'>&#9733;</li>;
         const num = spot.avgRating
         const arr = []
         if (num === null || num === undefined) return ''
@@ -15,16 +15,23 @@ const SpotIndexItem = ({ spot }) => {
         return arr
     }
 
+    const url = () => {
+        if (spot.previewImage) return spot.previewImage
+        return 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537828399628411/images_7.jpg'
+    }
+
     return (
         <li key={spot.id} className='spot-list'>
             <div className='spot-list-block'>
                 <Link to={`/spots/${spot.id}`} className={'spot-Link'}>
-                    <img src={'https://cdn.discordapp.com/attachments/1088906268485357618/1105152225992507502/gettyimages-1269776313-612x612.jpg'} alt='di'></img><br></br>
-                    {spot.name}{'  '}
-                    {spot.city}{'  '}
+                    <img src={url()} alt='di' className='spots-landingPage-img'></img><br></br>
+                    {/* {spot.name},{'  '} */}
+                    {spot.city},{'  '}
                     {spot.state}<br></br>
                     ${spot.price}/night
-                    <ul className='spot-review-stars'>{stars()}</ul>
+                    <ul className='spot-review-stars'>{stars()}
+                        <p className='spot-review-stars-p'>{spot.avgRating}</p>
+                    </ul>
                 </Link>
             </div>
         </li >

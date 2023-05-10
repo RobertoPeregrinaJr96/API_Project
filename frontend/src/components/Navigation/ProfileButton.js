@@ -1,7 +1,7 @@
 // frontend/src/components/Navigation/ProfileButton.js
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
@@ -13,9 +13,9 @@ function ProfileButton({ user }) {
   const ulRef = useRef();
   // demo user
 
-  const handleSubmit = () => {
+  // const handleSubmit = () => {
 
-  }
+  // }
   //
 
   const openMenu = () => {
@@ -51,7 +51,7 @@ function ProfileButton({ user }) {
   // current spots
   return (
     <>
-      <button onClick={openMenu} >
+      <button onClick={openMenu} className="Nav-button">
         <i className="fas fa-user-circle" />
       </button>
       <ul className={ulClassName} ref={ulRef}>

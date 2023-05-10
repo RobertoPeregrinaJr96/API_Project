@@ -7,16 +7,23 @@ const SpotImages = ({ spot }) => {
             images.push({ id: i, url: 'placeHolderUrl.com' })
         }
 
-    // console.log('spot images ===>', images)
-
     let imageCount = 1
-    // let count = 0
+
+
     return (
         <>
+
             {
                 images.map((img) => {
+                    const url = () => {
+                        if (img.url === 'placeHolderUrl.com') {
+                            return 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537828399628411/images_7.jpg'
+                        }
+                        return img.url
+                    }
+                    console.log('img ===>', img)
                     return <li className={`spot-image-${imageCount++}`}>
-                        <img src={'https://cdn.discordapp.com/attachments/1088906268485357618/1105152225992507502/gettyimages-1269776313-612x612.jpg'} alt={''}>
+                        <img src={url()} alt={imageCount++}>
                         </img>
                     </li>
                 })

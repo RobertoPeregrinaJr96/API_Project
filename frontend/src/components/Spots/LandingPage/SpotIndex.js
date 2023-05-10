@@ -24,7 +24,6 @@ const SpotIndex = () => {
     if (!spotsObj) return null
     return (
         <div>
-            <h1>Spots</h1>
             <ul className='spots-ul'>
                 {spots.map((spot) => {
                     return <SpotIndexItem

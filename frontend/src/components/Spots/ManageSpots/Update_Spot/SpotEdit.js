@@ -9,7 +9,7 @@ import { fetchDetailedSpotThunk } from '../../../../store/spotReducer'
 
 const UpdateSpot = () => {
 
-        const spot = useSelector((state) => { return state.spots.singleSpot })
+    const spot = useSelector((state) => { return state.spots.singleSpot })
 
 
     const [address, setAddress] = useState(spot.address);
@@ -19,6 +19,10 @@ const UpdateSpot = () => {
     const [description, setDescription] = useState(spot.description);
     const [name, setName] = useState(spot.name);
     const [price, setPrice] = useState(spot.price);
+    const [lat, setLat] = useState(-75.67382)
+    const [lng, setLng] = useState(-132.31456)
+    const [images, setImages] = useState([])
+    // const [errors, setErrors] = useState({})
 
     // const [errors, setErrors] = useState({})
 
@@ -72,31 +76,54 @@ const UpdateSpot = () => {
     return (
         <div className='update-inputBox'>
             <form onSubmit={onsubmit}>
+
                 <h1>Update your Spot</h1>
-                <p className="update-p-title">Country
-                </p>
-                <input
-                    placeholder={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                />
-                <p className="update-p-title">Street Address</p>
+                <div className="create-div-1">
 
-                <input
-                    placeholder={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                />
-                <p className="update-p-title">City</p>
+                    <p className="update-p-title">Country
+                    </p>
+                    <input
+                        placeholder={country}
+                        onChange={(e) => setCountry(e.target.value)}
+                    />
+                    <p className="update-p-title">Street Address</p>
 
-                <input
-                    placeholder={city}
-                    onChange={(e) => setCity(e.target.value)}
-                />
-                <p className="update-p-title">State</p>
+                    <input
+                        placeholder={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                    />
+                </div>
+                <div className="create-div-2">
+                    <p className="update-p-title">City</p>
 
-                <input
-                    placeholder={state}
-                    onChange={(e) => setState(e.target.value)}
-                />
+                    <input
+                        placeholder={city}
+                        onChange={(e) => setCity(e.target.value)}
+                    />
+                    <p className="update-p-title">State</p>
+
+                    <input
+                        placeholder={state}
+                        onChange={(e) => setState(e.target.value)}
+                    />
+
+                </div>
+                <br></br>
+                <div className="create-div-3">
+                    <p className="create-p-Latitude">Latitude</p>
+                    <input
+                        className="div-2-input"
+                        placeholder="100.100"
+                        onChange={(e) => setLat(e.target.value)}
+                    />
+                    <p className="create-p-Longitude">Longitude</p>
+                    <input
+                        className="div-2-input"
+                        placeholder="100.100"
+                        onChange={(e) => setLng(e.target.value)}
+                    />
+
+                </div>
                 <p className="update-p-title">Describe your place to guests</p>
                 <p>Mention the best features of your space, any special amenities like
                     fast wif or parking, and what you love about the neighborhood.
@@ -121,7 +148,19 @@ const UpdateSpot = () => {
                     placeholder={price}
                     onChange={(e) => setPrice(e.target.value)}
                 />
-
+                <div className='create-div-images'>
+                    <h2>Liven up your spot with photos</h2>
+                    <p>Submit a link to at least one photo to publish your spot</p>
+                    <input></input>
+                    <br></br>
+                    <input></input>
+                    <br></br>
+                    <input></input>
+                    <br></br>
+                    <input></input>
+                    <br></br>
+                    <input></input>
+                </div>
                 <button type='submit'>Submit</button>
             </form>
         </div >

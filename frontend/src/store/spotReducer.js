@@ -99,6 +99,7 @@ export const updateSpot = (spot) => async (dispatch) => {
         return updatedSpot;
     } else {
         const errors = await res.json();
+        console.log(errors)
         return errors;
     }
 };

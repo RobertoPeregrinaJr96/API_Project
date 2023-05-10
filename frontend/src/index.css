@@ -5,26 +5,50 @@
   list-style: none;
   text-decoration: none;
   color: black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 500;
 }
 
 /* Nav */
 .nav-list {
   list-style: none;
 }
+.profile-dropdown {
+  box-shadow: 1px 2px 9px black;
+}
+.active {
+  font-size: 2.3rem;
+  color: #ff385c;
+}
+
+.Nav-button {
+  height: 2.5rem;
+  width: 5rem;
+  padding: 5px 5px 5px 12px;
+}
+.Nav-button:hover {
+  box-shadow: 2px 3px 4px black;
+}
 
 /* Landing Page */
 .spots-ul {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 8rem 8rem 8em 8rem;
+  grid-template-rows: 15rem 15rem 15em 15rem;
   justify-content: center;
   align-items: center;
+  row-gap: 1.3rem;
+  column-gap: 1.3rem;
+  margin: 1%;
+  padding: 2%;
 }
 
 .spot-list-block {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .spot-list {
@@ -32,6 +56,8 @@
   color: black;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  width: 100%;
 }
 
 .spot-Link {
@@ -44,13 +70,31 @@
 }
 
 .spot-review-stars {
-  list-style: none;
   display: inline-flex;
+  list-style: none;
+  align-items: center;
+  height: 1.5rem;
+}
+
+.spot-review-stars-li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+}
+.spot-review-stars-p {
+  padding: 0%;
+  margin: 0%;
+}
+
+.spots-landingPage-img {
+  text-decoration: none;
 }
 
 img {
-  width: 10rem;
-  height: 5rem;
+  width: 20rem;
+  height: 10rem;
+  border-radius: 2%;
 }
 
 /* detailed spot */
@@ -94,9 +138,53 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
+  row-gap: 10px;
 }
 
 .update-p-title {
   font-size: 1.2rem;
   font-weight: bold;
+}
+
+/* create Spot */
+
+.create-inputBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.create-div-1 {
+  display: block;
+  justify-content: center;
+  align-items: center;
+}
+.create-div-2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.div-2-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10px;
+  width: 20%;
+}
+
+.create-div-3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.errors {
+  color: #ff385c;
+}
+
+.create-div-images {
+  display: block;
 }
