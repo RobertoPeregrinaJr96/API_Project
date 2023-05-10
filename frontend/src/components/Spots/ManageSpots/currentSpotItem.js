@@ -28,7 +28,7 @@ const CurrentSpotItems = (spot) => {
         // e.preventDefault();
         history.push(`/spots/${spot.spot.id}/edit`)
     }
-
+    console.log()
     const onDelete = (e) => {
         <DeleteSpot spot={spot.spot} />
 
