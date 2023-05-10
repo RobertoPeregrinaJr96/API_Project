@@ -40,7 +40,7 @@ const CreateNewSpot = () => {
         'price': price,
         'ownerId': user.id,
         'lat': lat,
-        'lng': lng
+        'lng': lng,
     }
 
 
@@ -57,22 +57,24 @@ const CreateNewSpot = () => {
         if (!name.length) err.name = 'Name is required'
         if (!price.length) err.price = 'Price is required'
         if (images.length) err.images = 'Preview image is required.'
-        setErrors(err)
+        if (images[1] && !images[1].endsWith('.png') && !images[1].endsWith('.jpg') && !images[1].endsWith('.jpeg')) {
+            errors.images = "Image URL 1 must end in .png, .jpg, or .jpeg"
+            setErrors(err)
 
-        if (Object.values(err).length > 0) {
-            const spot = await dispatch(createSpot(newSpot))
-            console.log("BRAND NEW ====>", spot)
-            history.push('/spots/current')
+            if (Object.values(err).length > 0) {
+                const spot = await dispatch(createSpot(newSpot,images))
+                console.log("BRAND NEW ====>", spot)
+                history.push('/spots/current')
+            }
+            return;
         }
-        return;
-    }
-    console.log(errors)
+        // console.log(errors)
 
-    const spot = useSelector(state => state)
-    console.log(spot)
-    if (spot.errors) {
+        // const spot = useSelector(state => state)
+        // console.log(spot)
+        // if (spot.errors) {
+        // }
     }
-
     return (
         <div className='create-inputBox'>
             <form onSubmit={onsubmit}>
@@ -166,8 +168,9 @@ const CreateNewSpot = () => {
                     <p className="errors">{errors.images}</p>
                     <input
                         placeholder="something.png"
-                        onChange={(e) => images.push(e.target.value)}
+                        onChange={(e) => setImages(e.target.value)}
                     ></input>
+                    {/* {console.log('img===>', images)} */}
                     <br></br>
                     <input></input>
                     <br></br>
@@ -182,6 +185,7 @@ const CreateNewSpot = () => {
         </div >
     )
 }
+
 
 
 export default CreateNewSpot

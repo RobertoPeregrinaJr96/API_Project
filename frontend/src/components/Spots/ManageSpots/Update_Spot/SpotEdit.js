@@ -22,19 +22,12 @@ const UpdateSpot = () => {
     const [lat, setLat] = useState(-75.67382)
     const [lng, setLng] = useState(-132.31456)
     const [images, setImages] = useState([])
-    // const [errors, setErrors] = useState({})
+    const [errors, setErrors] = useState({})
 
     // const [errors, setErrors] = useState({})
 
     const user = useSelector(state => state.session.user)
-    // console.log('user ===>', user)
-    // console.log('address', address)
-    // console.log('city', city)
-    // console.log('state', state)
-    // console.log('country', country)
-    // console.log('describe', describe)
-    // console.log('name', name)
-    // console.log('price', price)
+
 
     const dispatch = useDispatch();
     const idObj = useParams()
@@ -57,13 +50,13 @@ const UpdateSpot = () => {
     }
 
 
-    const onsubmit = async (e) => {
-        e.preventDefault()
-        console.log('spotEdit ===>', spotEdit)
-        const spot = await dispatch(updateSpot(spotEdit))
-        console.log("Updated Spot ====>", spot)
-        history.push('/spots/current')
-    }
+    // const onsubmit = async (e) => {
+    // e.preventDefault()
+    // console.log('spotEdit ===>', spotEdit)
+    // const spot = await dispatch(updateSpot(spotEdit))
+    // console.log("Updated Spot ====>", spot)
+    // history.push('/spots/current')
+    // }
 
     const spotId = Number(id)
 
@@ -71,6 +64,34 @@ const UpdateSpot = () => {
         dispatch(fetchDetailedSpotThunk(spotId))
     }, [dispatch])
 
+    const onsubmit = async (e) => {
+        e.preventDefault()
+        // console.log('new spot ===>', newSpot)
+
+        const err = {}
+        if (!country.length) err.country = 'Country is required'
+        if (!address.length) err.address = 'Address is required'
+        if (!city.length) err.city = 'City is required'
+        if (!state.length) err.state = 'State is required'
+        if (description.length < 30) err.description = 'Description needs a minimum of 30 characters'
+        if (!name.length) err.name = 'Name is required'
+        if (!price.length) err.price = 'Price is required'
+        if (images.length) err.images = 'Preview image is required.'
+        setErrors(err)
+
+        if (Object.values(err).length > 0) {
+            const spot = await dispatch(updateSpot(spotEdit))
+            console.log("Updated Spot ====>", spot)
+            history.push('/spots/current')
+        }
+        return;
+    }
+    // console.log(errors)
+
+    // const spot = useSelector(state => state)
+    // console.log(spot)
+    // if (spot.errors) {
+    // }
 
 
     return (
@@ -80,30 +101,42 @@ const UpdateSpot = () => {
                 <h1>Update your Spot</h1>
                 <div className="create-div-1">
 
-                    <p className="update-p-title">Country
-                    </p>
-                    <input
-                        placeholder={country}
-                        onChange={(e) => setCountry(e.target.value)}
-                    />
+                    <label>
+                        <p className="update-p-title">Country
+                        </p>
+
+                        <input
+                            placeholder={country}
+                            value={country}
+                            onChange={(e) => setCountry(e.target.value)}
+                        />
+                        <p className="errors">{errors.country}</p>
+
+                    </label>
                     <p className="update-p-title">Street Address</p>
+                    <p className="errors">{errors.address}</p>
 
                     <input
                         placeholder={address}
+                        value={address}
                         onChange={(e) => setAddress(e.target.value)}
                     />
                 </div>
                 <div className="create-div-2">
                     <p className="update-p-title">City</p>
+                    <p className="errors">{errors.city}</p>
 
                     <input
                         placeholder={city}
+                        value={city}
                         onChange={(e) => setCity(e.target.value)}
                     />
                     <p className="update-p-title">State</p>
+                    <p className="errors">{errors.state}</p>
 
                     <input
                         placeholder={state}
+                        value={state}
                         onChange={(e) => setState(e.target.value)}
                     />
 
@@ -111,13 +144,19 @@ const UpdateSpot = () => {
                 <br></br>
                 <div className="create-div-3">
                     <p className="create-p-Latitude">Latitude</p>
+                    <p className="errors">{errors.latitude}</p>
+
                     <input
+                        value={''}
                         className="div-2-input"
                         placeholder="100.100"
                         onChange={(e) => setLat(e.target.value)}
                     />
                     <p className="create-p-Longitude">Longitude</p>
+                    <p className="errors">{errors.longitude}</p>
+
                     <input
+                        value={''}
                         className="div-2-input"
                         placeholder="100.100"
                         onChange={(e) => setLng(e.target.value)}
@@ -125,33 +164,43 @@ const UpdateSpot = () => {
 
                 </div>
                 <p className="update-p-title">Describe your place to guests</p>
+                <p className="errors">{errors.description}</p>
+
                 <p>Mention the best features of your space, any special amenities like
                     fast wif or parking, and what you love about the neighborhood.
                 </p>
                 <textarea
+                    value={description}
                     placeholder={description}
                     onChange={(e) => setDescription(e.target.value)}
                 >
 
                 </textarea>
                 <p className="update-p-title">Create a title for your spot </p>
+                <p className="errors">{errors.name}</p>
                 <p>Catch guests' attention with a spot title that highlights what makes
                     your place special.
                 </p>
 
                 <input
+                    value={name}
                     placeholder={name}
                     onChange={(e) => setName(e.target.value)}
                 />
                 <p className="update-p-title">Set a base price for your spot</p>
+                <p className="errors">{errors.price}</p>
+
                 <input
+                    value={price}
                     placeholder={price}
                     onChange={(e) => setPrice(e.target.value)}
                 />
                 <div className='create-div-images'>
                     <h2>Liven up your spot with photos</h2>
+                    <p className="errors">{errors.images}</p>
+
                     <p>Submit a link to at least one photo to publish your spot</p>
-                    <input></input>
+                    <input  ></input>
                     <br></br>
                     <input></input>
                     <br></br>

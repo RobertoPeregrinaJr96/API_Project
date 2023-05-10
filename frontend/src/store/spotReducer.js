@@ -66,7 +66,10 @@ export const deleteSpot = (spotId) => async (dispatch) => {
     }
 };
 // create a spot
-export const createSpot = (spot) => async (dispatch) => {
+export const createSpot = (spot,image) => async (dispatch) => {
+    console.log("spot ===>",spot)
+    console.log("image ===>",image)
+
     const res = await csrfFetch('/api/spots', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
