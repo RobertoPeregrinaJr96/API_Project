@@ -65,10 +65,7 @@ const validateCreateSpot = [
         .exists({ checkFalsy: true })
         .isDecimal()
         .withMessage('Price per day is required'),
-    check('price')
-        .not()
-        .isString()
-        .withMessage('Price per day is required  '),
+
     handleValidationErrors
 ]
 
