@@ -23,7 +23,8 @@ const SpotIndexItem = ({ spot }) => {
 // console.log(spot.previewImage)
     return (
         <li key={spot.id} className='spot-list'>
-            <div className='spot-list-block'>
+            <div className='spot-list-block tool-tip'>
+                <span className='tool-tip-text'>{spot.name}</span>
                 <Link to={`/spots/${spot.id}`} className={'spot-Link'}>
                     <img src={spot.previewImage} alt='di' className='spots-landingPage-img'></img><br></br>
                     {/* {spot.name},{'  '} */}

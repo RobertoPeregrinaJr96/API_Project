@@ -14,15 +14,15 @@ const CreateNewSpot = () => {
     const [price, setPrice] = useState('');
     const [lat, setLat] = useState(-75.67382)
     const [lng, setLng] = useState(-132.31456)
-    const [images, setImages] = useState('')
+    let [images, setImages] = useState([])
     const [errors, setErrors] = useState({})
 
     const user = useSelector(state => state.session.user)
 
-
     const dispatch = useDispatch();
     const history = useHistory()
 
+    console.log('images ===>', images)
 
     const newSpot = {
         'address': address,
@@ -40,7 +40,11 @@ const CreateNewSpot = () => {
 
 
     const onsubmit = async (e) => {
-        const imgObj = [{ url: images, preview: true }]
+        const imgObj = [];
+        for (let img in images) {
+            imgObj = [{ url: img, preview: true }]
+        }
+        console.log(imgObj)
         e.preventDefault()
         console.log('new spot ===>', newSpot)
 
@@ -75,13 +79,13 @@ const CreateNewSpot = () => {
                     </p>
                     <p className="errors">{errors.country}</p>
                     <input
-                        placeholder="USA"
+                        placeholder="Country"
                         onChange={(e) => setCountry(e.target.value)}
                     />
                     <p className="create-p-Street">Street Address</p>
                     <p className="errors">{errors.address}</p>
                     <input
-                        placeholder="111 Some Street"
+                        placeholder="Address"
                         onChange={(e) => setAddress(e.target.value)}
                     />
                 </div>
@@ -92,21 +96,21 @@ const CreateNewSpot = () => {
 
                     <input
                         className="div-2-input"
-                        placeholder="New York City"
+                        placeholder="City"
                         onChange={(e) => setCity(e.target.value)}
                     />
 
-                    <p className="create-p-State">State</p>
+                    <p className="create-p-State">STATE</p>
                     <p className="errors">{errors.state}</p>
 
                     <input
                         className="div-2-input"
-                        placeholder="NY"
+                        placeholder="State"
                         onChange={(e) => setState(e.target.value)}
                     />
                 </div>
                 <br></br>
-                <div className="create-div-3">
+                {/* <div className="create-div-3">
                     <p className="create-p-Latitude">Latitude</p>
                     <p className="errors">{errors.latitude}</p>
 
@@ -123,7 +127,7 @@ const CreateNewSpot = () => {
                         onChange={(e) => setLng(e.target.value)}
                     />
 
-                </div>
+                </div> */}
                 <p className="create-p-Describe">Describe your place to guests</p>
                 <p className="errors">{errors.description}</p>
 
@@ -131,7 +135,7 @@ const CreateNewSpot = () => {
                     fast wifi or parking, and what you love about the neighborhood.
                 </p>
                 <textarea
-                    placeholder="Describe your spot"
+                    placeholder="Please write at least 30 characters"
                     onChange={(e) => setDescription(e.target.value)}
                 >
 
@@ -143,14 +147,14 @@ const CreateNewSpot = () => {
                     your place special.
                 </p>
                 <input
-                    placeholder="Great Spot for the family Vacation"
+                    placeholder="Name of your Spot"
                     onChange={(e) => setName(e.target.value)}
                 />
                 <p className="create-p-price">Set a base price for your spot</p>
                 <p className="errors">{errors.price}</p>
 
                 $<input
-                    placeholder="200"
+                    placeholder="Price per night(USD)"
                     onChange={(e) => setPrice(e.target.value)}
                 />
                 <div className='create-div-images'>
@@ -158,18 +162,30 @@ const CreateNewSpot = () => {
                     <p>Submit a link to at least one photo to publish your spot</p>
                     <p className="errors">{errors.images}</p>
                     <input
-                        placeholder="something.png"
-                        onChange={(e) => setImages(e.target.value)}
+                        placeholder="Preview Image URL"
+                        onChange={(e) => setImages(images = [...images,e.target.value])}
                     ></input>
                     {/* {console.log('img===>', images)} */}
                     <br></br>
-                    <input></input>
+                    <input placeholder="Image Url"
+                    onChange={(e) => setImages( [...images,e.target.value])}
+                    >
+                    </input >
                     <br></br>
-                    <input></input>
+                    <input placeholder="Image Url"
+                    onChange={(e) => setImages( [...images,e.target.value])}
+                    >
+                    </input>
                     <br></br>
-                    <input></input>
+                    <input placeholder="Image Url"
+                    onChange={(e) => setImages( [...images,e.target.value])}
+                    >
+                    </input>
                     <br></br>
-                    <input></input>
+                    <input placeholder="Image Url"
+                    onChange={(e) => setImages( [...images,e.target.value])}
+                    >
+                    </input>
                 </div>
                 <button type='submit' >Submit</button>
             </form>

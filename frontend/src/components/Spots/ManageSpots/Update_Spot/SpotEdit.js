@@ -5,12 +5,9 @@ import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { fetchDetailedSpotThunk } from '../../../../store/spotReducer'
 
-
-
 const UpdateSpot = () => {
 
     const spot = useSelector((state) => { return state.spots.singleSpot })
-
 
     const [address, setAddress] = useState(spot.address);
     const [city, setCity] = useState(spot.city);
@@ -37,7 +34,6 @@ const UpdateSpot = () => {
     const id = idObj.id
     const history = useHistory()
 
-
     const spotEdit = {
         'id': id,
         'address': address,
@@ -48,18 +44,9 @@ const UpdateSpot = () => {
         'name': name,
         'price': price,
         'ownerId': user.id,
-        'lat': -75.67382,
-        'lng': -132.31456
+        'lat': lat,
+        'lng': lng
     }
-
-
-    // const onsubmit = async (e) => {
-    // e.preventDefault()
-    // console.log('spotEdit ===>', spotEdit)
-    // const spot = await dispatch(updateSpot(spotEdit))
-    // console.log("Updated Spot ====>", spot)
-    // history.push('/spots/current')
-    // }
 
     const spotId = Number(id)
 
@@ -89,13 +76,6 @@ const UpdateSpot = () => {
         }
         return;
     }
-    // console.log(errors)
-
-    // const spot = useSelector(state => state)
-    // console.log(spot)
-    // if (spot.errors) {
-    // }
-
 
     return (
         <div className='update-inputBox'>
@@ -145,7 +125,7 @@ const UpdateSpot = () => {
 
                 </div>
                 <br></br>
-                <div className="create-div-3">
+                {/* <div className="create-div-3">
                     <p className="create-p-Latitude">Latitude</p>
                     <p className="errors">{errors.latitude}</p>
 
@@ -165,7 +145,7 @@ const UpdateSpot = () => {
                         onChange={(e) => setLng(e.target.value)}
                     />
 
-                </div>
+                </div> */}
                 <p className="update-p-title">Describe your place to guests</p>
                 <p className="errors">{errors.description}</p>
 
@@ -198,21 +178,21 @@ const UpdateSpot = () => {
                     placeholder={price}
                     onChange={(e) => setPrice(e.target.value)}
                 />
-                <div className='create-div-images'>
+                {/* <div className='create-div-images'>
                     <h2>Liven up your spot with photos</h2>
                     <p className="errors">{errors.images}</p>
 
                     <p>Submit a link to at least one photo to publish your spot</p>
-                    <input  ></input>
+                    <input value={images[1]} onChange={(e) => setImages([...images, e.target.value])} ></input>
                     <br></br>
-                    <input></input>
+                    <input onChange={(e) => setImages([...images, e.target.value])}></input>
                     <br></br>
-                    <input></input>
+                    <input onChange={(e) => setImages([...images, e.target.value])}></input>
                     <br></br>
-                    <input></input>
+                    <input onChange={(e) => setImages([...images, e.target.value])}></input>
                     <br></br>
-                    <input></input>
-                </div>
+                    <input onChange={(e) => setImages([...images, e.target.value])}></input>
+                </div> */}
                 <button type='submit'>Submit</button>
             </form>
         </div >

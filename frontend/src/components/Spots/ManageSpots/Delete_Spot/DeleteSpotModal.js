@@ -14,6 +14,7 @@ const DeleteFormModel = (spot) => {
     };
 
     const closeForm = (e) => {
+        setTimeout(()=>{},)
         e.preventDefault()
         closeModal()
     }

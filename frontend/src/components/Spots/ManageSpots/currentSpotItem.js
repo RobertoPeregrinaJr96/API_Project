@@ -12,8 +12,6 @@ const CurrentSpotItems = (spot) => {
     // // console.log('spot ====>', spot.spot.id)
     // const { closeModal } = useModal();
 
-
-
     const stars = () => {
         const num = spot.spot.avgRating
         const arr = []
@@ -29,18 +27,19 @@ const CurrentSpotItems = (spot) => {
         history.push(`/spots/${spot.spot.id}/edit`)
     }
 
-    const onDelete = (e) => {
-        <DeleteSpot spot={spot.spot} />
+    // const onDelete = (e) => {
+    //     <DeleteSpot spot={spot.spot} />
 
-        // dispatch(deleteSpot(spot.spot.id))
+    //     // dispatch(deleteSpot(spot.spot.id))
 
-        history.push('/spots/current')
-    };
+    //     history.push('/spots/current')
+    // };
 
 
     return (
         <li key={spot.spot.id} className='current-spot-list'>
-            <div className='current-spot-list-block'>
+            <div className='current-spot-list-block tool-tip'>
+                <span className='tool-tip-text'>{spot.spot.name}</span>
                 <img src={spot.spot.previewImage} alt='di'></img>
                 <br></br>
                 {spot.spot.name}{'  '}
