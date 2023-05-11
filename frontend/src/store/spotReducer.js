@@ -91,19 +91,7 @@ export const createSpot = (spot, image) => async (dispatch) => {
             console.log('img ===>', img)
             const images = await img.json();
             console.log('images ===>', images)
-            if (images) {
-                spot.SpotImages = [images];
-                console.log('spot.SpotImages ==>', spot.SpotImages)
-                dispatch(receiveSpot(spot));
-                return newSpot;
-            }
-            else {
-                const errors = await res.json();
-                console.log("Errors ===>", errors)
-                return errors;
-            }
-
-        };
+        }
     }
 }
 // update a spot

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useSelector, useDispatch } from "react-redux";
 import { createSpot } from "../../../../store/spotReducer";
 import { useHistory } from "react-router-dom";
+// import { Redirect } from "react-router-dom";
 
 const CreateNewSpot = () => {
 
@@ -12,17 +13,25 @@ const CreateNewSpot = () => {
     const [description, setDescription] = useState('');
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
-    const [lat, setLat] = useState(-75.67382)
-    const [lng, setLng] = useState(-132.31456)
-    let [images, setImages] = useState([])
+    const [lat] = useState(-75.67382)
+    const [lng] = useState(-132.31456)
+    const [images, setImages] = useState([])
     const [errors, setErrors] = useState({})
+    const [img1, setImg1] = useState()
+    const [img2, setImg2] = useState()
+    const [img3, setImg3] = useState()
+    const [img4, setImg4] = useState()
+
+
+
+
 
     const user = useSelector(state => state.session.user)
 
     const dispatch = useDispatch();
     const history = useHistory()
 
-    console.log('images ===>', images)
+    // console.log('images ===>', images)
 
     const newSpot = {
         'address': address,
@@ -37,22 +46,26 @@ const CreateNewSpot = () => {
         'lng': lng,
         'previewImage': images
     }
+    let imgArr = [];
 
+    console.log('new spot ===>', newSpot)
+    console.log(imgArr)
 
     const onsubmit = async (e) => {
-        const imgObj = [];
-        for (let img in images) {
-            imgObj = [{ url: img, preview: true }]
-        }
-        console.log(imgObj)
         e.preventDefault()
-        console.log('new spot ===>', newSpot)
+
+        imgArr.push({ url: images, preview: true })
+
 
         const err = {}
         if (!country.length) err.country = 'Country is required'
+        if (img1) imgArr.push({ url: img1, preview: true })
         if (!address.length) err.address = 'Address is required'
+        if (img2) imgArr.push({ url: img2, preview: true })
         if (!city.length) err.city = 'City is required'
+        if (img3) imgArr.push({ url: img3, preview: true })
         if (!state.length) err.state = 'State is required'
+        if (img4) imgArr.push({ url: img4, preview: true })
         if (description.length < 30) err.description = 'Description needs a minimum of 30 characters'
         if (!name.length) err.name = 'Name is required'
         if (!price || price < 0) err.price = 'Price is required'
@@ -61,15 +74,16 @@ const CreateNewSpot = () => {
         //     errors.images = "Image URL 1 must end in .png, .jpg, or .jpeg"
         // }
         setErrors(err)
-
+        // console.log(err)
         if (Object.values(err).length === 0) {
-            const spot = await dispatch(createSpot(newSpot, imgObj))
-            console.log("BRAND NEW ====>", spot)
+            // console.log("BRAND NEW ====>", spot)
+            const spot = await dispatch(createSpot(newSpot, imgArr))
             history.push(`/spots/${spot.id}`)
         }
-        return;
+        return null;
 
     }
+
     return (
         <div className='create-inputBox'>
             <form onSubmit={onsubmit}>
@@ -163,27 +177,27 @@ const CreateNewSpot = () => {
                     <p className="errors">{errors.images}</p>
                     <input
                         placeholder="Preview Image URL"
-                        onChange={(e) => setImages(images = [...images,e.target.value])}
+                        onChange={(e) => setImages(e.target.value)}
                     ></input>
                     {/* {console.log('img===>', images)} */}
                     <br></br>
                     <input placeholder="Image Url"
-                    onChange={(e) => setImages( [...images,e.target.value])}
+                        onChange={(e) => setImg1(e.target.value)}
                     >
                     </input >
                     <br></br>
                     <input placeholder="Image Url"
-                    onChange={(e) => setImages( [...images,e.target.value])}
+                        onChange={(e) => setImg2(e.target.value)}
                     >
                     </input>
                     <br></br>
                     <input placeholder="Image Url"
-                    onChange={(e) => setImages( [...images,e.target.value])}
+                        onChange={(e) => setImg3(e.target.value)}
                     >
                     </input>
                     <br></br>
                     <input placeholder="Image Url"
-                    onChange={(e) => setImages( [...images,e.target.value])}
+                        onChange={(e) => setImg4(e.target.value)}
                     >
                     </input>
                 </div>
@@ -196,3 +210,4 @@ const CreateNewSpot = () => {
 
 
 export default CreateNewSpot
+// https://cdn.discordapp.com/attachments/1088906268485357618/1105996729062543412/images.png
