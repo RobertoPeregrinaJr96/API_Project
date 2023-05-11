@@ -50,47 +50,49 @@ export const fetchDetailedSpotThunk = (spotId) => async (dispatch) => {
         const spot = await response.json()
         // console.log('spot ===>',spot);
         dispatch(singleLoadSpot(spot))
+        return spot
     }
 };
 // delete a spot
 export const deleteSpot = (spotId) => async (dispatch) => {
-    console.log("DELETE")
+    // console.log("DELETE")
     const res = await csrfFetch(`/api/spots/${spotId}`, {
         method: 'DELETE',
     });
-    console.log('res ====>', res)
+    // console.log('res ====>', res)
     const data = await res.json()
-    console.log('data ===>', data)
+    // console.log('data ===>', data)
     if (res.ok) {
         dispatch(removeSpot(spotId));
     }
 };
 // create a spot
 export const createSpot = (spot, image) => async (dispatch) => {
-    console.log("spot ===>", spot)
-    console.log("image ===>", image)
+    // console.log("spot ===>", spot)
+    // console.log("image ===>", image)
 
     const res = await csrfFetch('/api/spots', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(spot),
     });
-    console.log('Response ===>', res)
+    // console.log('Response ===>', res)
     if (res.ok) {
         const newSpot = await res.json();
         spot.avgStarRating = 0;
-        console.log('newSpot ===>', newSpot)
+        // console.log('newSpot ===>', newSpot)
         for (let i of image) {
             // for the images // preview image
-            console.log('i ===>', i)
+            // console.log('i ===>', i)
             let img = await csrfFetch(`/api/spots/${newSpot.id}/images`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(i),
             })
-            console.log('img ===>', img)
+            // console.log('img ===>', img)
             const images = await img.json();
-            console.log('images ===>', images)
+            // console.log('images ===>', images)
+            return newSpot;
         }
     }
 }
@@ -129,7 +131,7 @@ const spotsReducer = (state = initialState, action) => {
             return { ...state, singleSpot: { ...action.spot } }
         case REMOVE_SPOTS:
             delete newState[action.spotId]
-            return newState
+
         case RECEIVE_SPOTS:
             return { ...state, allSpots: action.spot };
         case UPDATE_SPOTS:

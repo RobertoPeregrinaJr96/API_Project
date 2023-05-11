@@ -51,6 +51,7 @@ const CreateNewSpot = () => {
     console.log('new spot ===>', newSpot)
     console.log(imgArr)
 
+
     const onsubmit = async (e) => {
         e.preventDefault()
 
@@ -76,9 +77,9 @@ const CreateNewSpot = () => {
         setErrors(err)
         // console.log(err)
         if (Object.values(err).length === 0) {
-            // console.log("BRAND NEW ====>", spot)
             const spot = await dispatch(createSpot(newSpot, imgArr))
-            history.push(`/spots/${spot.id}`)
+            console.log("BRAND NEW ====>", spot)
+            // history.push(`/spots/${spot.id}`)
         }
         return null;
 

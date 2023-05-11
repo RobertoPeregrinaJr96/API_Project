@@ -1,7 +1,7 @@
 import { useModal } from "../../../../context/Modal"
 import { useDispatch } from "react-redux"
 import { deleteSpot } from "../../../../store/spotReducer";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 
 const DeleteFormModel = (spot) => {
@@ -9,17 +9,20 @@ const DeleteFormModel = (spot) => {
     const dispatch = useDispatch();
     const { closeModal } = useModal();
     console.log(spot.spot)
+
+
     const handleSubmit = (e) => {
         console.log('spot.spot.id')
-        dispatch(dispatch(deleteSpot(spot.spot.id))).then(closeModal);
+        dispatch(deleteSpot(spot.spot.id)).then(closeModal);
+        // e.preventDefault()
     };
 
-    const history = useHistory()
+    // const history = useHistory()
 
     const closeForm = (e) => {
         e.preventDefault()
         closeModal()
-        history.push(`/spots/current`)
+        // history.push(`/spots/current`)
     }
 
     return (

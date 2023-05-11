@@ -17,14 +17,14 @@ const CurrentSpotItems = (spot) => {
         const num = spot.spot.avgRating
         const arr = []
         if (num === null || num === undefined) return ''
-        for (let i = num; i <= 5; i++) {
+        for (let i = 0; i < Math.floor(num); i++) {
             arr.push(<li key={i}>&#9733;</li>)
         }
         return arr
     }
 
     const onUpdate = (e) => {
-        // e.preventDefault();
+        e.preventDefault();
         history.push(`/spots/${spot.spot.id}/edit`)
     }
 
@@ -50,12 +50,12 @@ const CurrentSpotItems = (spot) => {
                     {spot.spot.state}<br></br>
                     ${spot.spot.price}/night
                     <ul className='spot-review-stars'>{stars()}</ul>
+                </Link>
                     <div>
                         <button onClick={onUpdate}>Update</button>
                         <DeleteSpot spot={spot.spot} />
 
                     </div>
-                </Link>
             </div>
         </li >
     )

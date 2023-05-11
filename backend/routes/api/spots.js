@@ -189,7 +189,7 @@ router.get('/', async (req, res) => {
         if (totalReviews == 0) totalReviews = null;
         if (totalStars == 0) totalStars = null;
         const aveStarRating = Number(totalStars / totalReviews)
-        spot.avgRating = Number(aveStarRating.toFixed(1))
+        spot.avgRating = Number(aveStarRating)
         delete spot.Reviews
         // let see if the review has images and if so lets check if one is allowed to be shown
         spot.SpotImages.forEach(image => {
@@ -205,131 +205,7 @@ router.get('/', async (req, res) => {
     })
     res.status(200)
     res.json({ "Spots": arr, "page": page, "size": size })
-    /*
 
-      const spotTest = await Spot.findAll()
-      // console.log(spots)
-
-      if (!spotTest) {
-          res.status(404)
-          res.json({
-              message: 'Cannot find any Spots'
-          })
-      }
-
-      console.log('break ============================================')
-
-      let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
-      page = parseInt(page);
-      console.log('page', page)
-
-      size = parseInt(size);
-      console.log('size', size)
-
-      // console.log(minLat)
-      // console.log(maxLat)
-      // console.log(minLng)
-      // console.log(maxLng)
-      // console.log(minPrice)
-      // console.log(maxPrice)
-
-      console.log('break -------------------------------------')
-
-      const pagination = {};
-
-      if (isNaN(page)) page = 1;
-      if (isNaN(size)) size = 20;
-
-      if (page && size) {
-
-          pagination.limit = size;
-          console.log('limit', pagination.limit)
-
-          pagination.offset = size * (page - 1);
-          console.log('offset', pagination.offset)
-
-      }
-
-      const error = {}
-
-      if (isNaN(page) || !Number.isInteger(page) || page < 1 || page > 10) {
-          error.page = "Page must be greater than or equal to 1 "
-      }
-      else if (isNaN(size) || !Number.isInteger(size) || size < 1 || size > 20) {
-          error.size = "Size must be an integer greater than or equal to 1"
-      }
-      if (maxLat && (maxLat - Math.floor(maxLat)) === 0 || maxLat && isNaN(maxLat)) {
-          error.maxLat = 'Maximum latitude is invalid'
-      }
-      if (minLat && (minLat - Math.floor(minLat)) === 0 || minLat && isNaN(minLat)) {
-          error.minLat = 'Minimum latitude is invalid'
-      }
-      if (minLng && (minLng - Math.floor(minLng)) === 0 || minLng && isNaN(minLng)) {
-          error.minLng = 'Maximum longitude is invalid'
-      }
-      if (maxLng && (maxLng - Math.floor(maxLng)) === 0 || maxLng && isNaN(maxLng)) {
-          error.maxLng = 'Minimum longitude is invalid'
-      }
-      if (minPrice && (minPrice - Math.floor(minPrice)) === 0 || minPrice && isNaN(minPrice) || minPrice >= 0) {
-          error.minPrice = 'Minimum price must be greater than or equal to 0'
-      }
-      if (maxPrice && (maxPrice - Math.floor(maxPrice)) === 0 || maxPrice && isNaN(minPrice) || maxPrice >= 0) {
-          error.maxPrice = 'Maximum price must be greater than or equal to 0'
-      }
-
-      console.log(error)
-
-      console.log(Object.entries(error).length !== 0)
-
-      if (Object.entries(error).length !== 0) {
-          res.status(400).json({ "message": "Bad Request", errors: error })
-      }
-
-
-      const spots = await Spot.findAll({
-          include: [
-              { model: Review },
-              { model: SpotImage, }
-          ],
-          ...pagination
-      });
-
-      let arr = []
-      spots.forEach(spot => arr.push(spot.toJSON()))
-      // console.log('arr',arr)
-
-      let count = 0;
-      arr.forEach(spot => {
-          spot.Reviews.forEach(review => {
-              count += review.stars
-          })
-      })
-
-
-
-      let aveStarRating = (count / arr.length)
-      arr.forEach(spot => {
-          spot.aveRating = Number(aveStarRating.toFixed(1))
-          delete spot.Reviews
-      })
-      arr.forEach(spot => {
-          spot.SpotImages.forEach(image => {
-              // console.log(image)
-              if (image.preview === true || image.preview === 1) {
-                  spot.previewImage = image.url
-                  // console.log(spot.previewImage)
-              }
-              if (!spot.previewImage) {
-                  spot.previewImage = 'no previewImage found'
-              }
-              delete spot.SpotImages
-              // console.log(spot.previewImage)
-          })
-      })
-
-      res.status(200)
-      res.json({ Spots: arr, page: page, size: size })
-    */
 })
 
 // Get all Spots owned by the Current User
@@ -358,7 +234,7 @@ router.get('/current', [requireAuth], async (req, res) => {
         if (totalReviews == 0) totalReviews = 0;
         if (totalStars == 0) totalStars = 0;
         const aveStarRating = Number(totalStars / totalReviews)
-        spot.avgRating = Number(aveStarRating.toFixed(1))
+        spot.avgRating = Number(aveStarRating )
         delete spot.Reviews
         // let see if the review has images and if so lets check if one is allowed to be shown
         spot.SpotImages.forEach(image => {
@@ -372,81 +248,7 @@ router.get('/current', [requireAuth], async (req, res) => {
         spot.price = Number(spot.price)
     })
     return res.status(200).json({ "Spots": arr })
-    /*
-     const { user } = req
-    // console.log(user)
 
-    if (!user) {
-        res.json({
-            message: 'Please Login'
-        })
-    }
-
-    const { id } = user
-    // console.log(id)
-
-    const userSpots = await Spot.findAll({
-        include: [{ model: Review }, { model: SpotImage }],
-        where: {
-            ownerId: id
-        }
-    })
-
-    let arr = []
-
-    userSpots.forEach(spot => {
-        if (id === spot.ownerId) {
-            arr.push(spot.toJSON())
-        }
-    })
-    // console.log('arr', arr)
-
-    let count = 0;
-
-    arr.forEach(spot => {
-        const id = spot.id
-        spot.Reviews.forEach(review => {
-            console.log(review)
-            if (id == review.spotId)
-                count += review.stars
-            console.log(count)
-        })
-    })
-    // console.log(arr.length)
-    // console.log(count)
-    let aveStarRating = (count / arr.length)
-    console.log('aveStarRating', aveStarRating)
-
-    arr.forEach(spot => {
-        spot.aveRating = Number(aveStarRating.toFixed(1))
-        delete spot.Reviews
-    })
-
-    arr.forEach(spot => {
-        spot.SpotImages.forEach(image => {
-            // console.log(image)
-            if (image.preview === true || image.preview === 1) {
-                spot.previewImage = image.url
-                // console.log(spot.previewImage)
-            }
-            if (!spot.previewImage) {
-                spot.previewImage = 'no previewImage found'
-            }
-
-            // console.log(spot.previewImage)
-        })
-        delete spot.SpotImages
-           // turn strings into integers
-           spot.lat = Number(spot.lat)
-           spot.lng = Number(spot.lng)
-           spot.price = Number(spot.price)
-    })
-    // console.log(userSpots)
-
-    res.status(200)
-    res.json({ "Spots": arr })
-
-    */
 })
 
 // Get details of a Spot from an id  // Error handling is Done
@@ -474,16 +276,16 @@ router.get('/:spotId', async (req, res) => {
 
     // let find the average star rating for this spot
     const allSpotReview = await Review.findAll({ where: { spotId: idOfSpot } })
-    let totalReviews = 1;
-    let totalStars = 1
+    let totalReviews = 0;
+    let totalStars = 0
     allSpotReview.forEach(review => {
         totalReviews += 1
         totalStars += Number(review.stars)
     });
-    if (totalReviews == 0) totalReviews = 0;
-    if (totalStars == 0) totalStars = 0;
+        if (totalReviews == 0) totalReviews = 0;
+        if (totalStars == 0) totalStars = 0;
     const avgStarRating = Number(totalStars / totalReviews)
-    spot.avgRating = Number(avgStarRating.toFixed(1))
+    spot.avgRating = Number(avgStarRating )
     delete spot.Reviews
     // lets send the response in a object we structured
     const safeSpot = {

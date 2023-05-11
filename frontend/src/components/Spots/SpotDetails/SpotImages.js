@@ -1,5 +1,5 @@
 const SpotImages = ({ spot }) => {
-    console.log(spot)
+    // console.log(spot)
     const images = spot.SpotImages
 
     if (images.length < 5)
@@ -21,8 +21,8 @@ const SpotImages = ({ spot }) => {
                         }
                         return img.url
                     }
-                    console.log('img ===>', img)
-                    return <li className={`spot-image-${imageCount++}`}>
+                    // console.log('img ===>', img)
+                    return <li className={`spot-image-${imageCount++}`} key={imageCount}>
                         <img src={url()} alt={imageCount++}>
                         </img>
                     </li>
