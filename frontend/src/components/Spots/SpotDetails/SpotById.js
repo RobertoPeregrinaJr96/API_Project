@@ -20,7 +20,7 @@ const SpotById = () => {
     const spot = useSelector((state) => { return state.spots.singleSpot })
     // console.log('spot ==>', spot)
     const reviews = useSelector((state) => { return state.reviews })
-    // console.log("reviews ===> ", reviews)
+    console.log("reviews ===> ", reviews)
 
 
     const bookingAlert = () => {
@@ -54,7 +54,7 @@ const SpotById = () => {
                 <ul className='spot-images-list'>
                     {<SpotImages spot={spot} />}
                 </ul>
-                <div>
+                <div className='spot-detailed-info'>
                     <DetailsForSpot spot={spot} />
                     <button className='alert-button' onClick={bookingAlert}>
                         ${spot.price} night
@@ -63,7 +63,6 @@ const SpotById = () => {
                         <br></br>
                         Reserve
                     </button>
-
                 </div>
                 <ul className='spot-reviews-list'>
                     <SpotReview reviews={reviews} />

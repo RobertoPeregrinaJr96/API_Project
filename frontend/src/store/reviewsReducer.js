@@ -37,12 +37,15 @@ export const loadReview = (reviews) => ({
 /** Thunk Action Creators: */
 // get all Review // should be good
 export const fetchReviewThunk = (spotId) => async (dispatch) => {
+    // console.log('spot id on thunk', spotId)
     const res = await csrfFetch(`/api/spots/${spotId}/reviews`);
+    // console.log('Response on thunk', res)
     if (res.ok) {
-        // console.log('reviews ==>',reviews)
         const reviews = await res.json();
-        // console.log('reviews on Thunk ===> ', reviews)
-        dispatch(loadReview(reviews));
+        // console.log('reviews on thunk ==>', reviews)
+        const review = dispatch(loadReview(reviews));
+        // console.log('review on Thunk ===> ', review)
+
     }
 };
 // get Review by Id
@@ -111,7 +114,10 @@ const initialState = {
 
 const reviewsReducer = (state = initialState, action) => {
     switch (action.type) {
-
+        case LOAD_REVIEW:
+            let newState = { ...state, spot: { ...state.spot } }
+            action.reviews.Reviews.forEach(review => newState.spot[review.id] = review)
+            return newState
         default:
             return state;
     }

@@ -7,9 +7,7 @@ const SpotReview = ({ reviews }) => {
 
     console.log('Spot Reviews')
 
-    console.log('spotId on Reviews ====>', reviews)
-
-
+    console.log('reviews on Reviews ====>', reviews)
 
 
 
