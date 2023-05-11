@@ -16,8 +16,13 @@
   font-size: 1rem;
   /* color: #ff385c; */
 }
-.nav-list a.active {
+.nav-list-logo {
   font-size: 2.3rem;
+  color: #ff385c;
+}
+.nav-list-img {
+  width: 2rem;
+  height: 1.7rem;
   color: #ff385c;
 }
 .nav-manager-link {
@@ -36,6 +41,7 @@
   height: 2.5rem;
   width: 5rem;
   padding: 5px 5px 5px 12px;
+  border-radius: 35% 35%;
 }
 .Nav-button:hover {
   box-shadow: 2px 3px 4px black;
@@ -60,6 +66,15 @@
   align-items: center;
   width: 100%;
   height: 100%;
+}
+
+.tool-tip-text {
+  position: absolute;
+  visibility:hidden
+}
+
+.tool-tip:hover .tool-tip-text {
+  visibility: visible;
 }
 
 .spot-list {
