@@ -1,6 +1,7 @@
 import { useModal } from "../../../../context/Modal"
 import { useDispatch } from "react-redux"
 import { deleteSpot } from "../../../../store/spotReducer";
+import { useHistory } from "react-router-dom";
 
 
 const DeleteFormModel = (spot) => {
@@ -13,10 +14,12 @@ const DeleteFormModel = (spot) => {
         dispatch(dispatch(deleteSpot(spot.spot.id))).then(closeModal);
     };
 
+    const history = useHistory()
+
     const closeForm = (e) => {
-        setTimeout(()=>{},)
         e.preventDefault()
         closeModal()
+        history.push(`/spots/current`)
     }
 
     return (
