@@ -2,7 +2,7 @@ import OpenModalButton from '../../../../OpenModalButton/index'
 import CreateReviewModel from './CreateReviewModal'
 
 const CreateReview = ({ spot,review }) => {
-    console.log('Create your review')
+    // console.log('Create your review in CreateReview')
     // console.log('spot ===>', spot)
 
     return (

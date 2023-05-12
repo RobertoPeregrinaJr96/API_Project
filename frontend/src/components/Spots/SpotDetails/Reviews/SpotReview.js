@@ -7,14 +7,14 @@ import { useSelector } from "react-redux"
 
 const SpotReview = ({ spot, reviews }) => {
 
-    // console.log('Spot Reviews')
-    // console.log('spot on Reviews ===>', spot.id)
-    // console.log('reviews on Reviews ====>', reviews.spot)
-
-    const reviewsArray = [...Object.values(reviews)]
-    // console.log('review Array', reviewsArray)
 
     const user = useSelector(state => state.session.user)
+
+    console.log('User in SpotReview', user)
+    console.log('spot in SpotReview', spot)
+    console.log('review in SpotReview', reviews)
+
+
 
     const stars = () => {
         const num = spot.avgStarRating
@@ -24,47 +24,35 @@ const SpotReview = ({ spot, reviews }) => {
         for (let i = 0; i < Math.floor(num); i++) {
             arr.push(<li key={i}>&#9733;</li>)
         }
-        // console.log(arr)
         return arr
     }
-    // let i = 0
 
-    const realReview = reviewsArray.filter(review => {
-        // console.log('con review==>', review.id)
-        // console.log('con spot',spot.id)
+
+    const reviewArray = Object.values(reviews)
+    console.log('reviewArray in SpotReview', reviewArray)
+
+    const realReview = reviewArray.filter(review => {
         return spot.id === review.spotId
     })
+    console.log('matching id in SpotReview', realReview)
 
-    // let yourReview;
-    // let yourReviewId;
-    // if (realReview) {
-    //     yourReview = realReview.find(review => review.userId === user.id)
-    //     console.log('Hello', yourReview)
-    //     yourReviewId = yourReview.id
-    //     console.log('world', yourReviewId)
+    // to switch between showing create or delete
+    const createOrDelete = () => {
+        if (realReview) {
+            console.log('YOU HAVE A REVIEW')
+            return <DeleteReview reviewId={realReview[0].id} />
+        } else {
+            return <CreateReview spot={spot} review={realReview} />
+        }
+    }
 
-    // }
-
-    // const createOrDelete = () => {
-
-    //     if (yourReview) {
-    //         console.log('YOU HAVE A REVIEW')
-    //         return <DeleteReview reviewId={yourReview.id} />
-    //     } else {
-    //         return <CreateReview spot={spot} review={realReview} />
-    //     }
-    // }
-
-    console.log(spot.numReviews)
     if (!spot && !spot.avgStarRating) return null
-    // if (!yourReview && !yourReviewId) return null
     return (
         <div>
             <div>
                 <ul className='spot-review-stars'>{stars()}{spot.avgStarRating}</ul>
                 <p>  Reviews{spot.numReviews}</p>
-                {/* {createOrDelete} */}
-                <DeleteReview reviewId={7} />
+                <DeleteReview />
                 <CreateReview spot={spot} review={realReview} />
 
             </div>
@@ -72,6 +60,7 @@ const SpotReview = ({ spot, reviews }) => {
                 <ul>
                     {
                         realReview.map(rev => {
+                            // { console.log('rev', rev) }
                             return <ReviewItems review={rev} />
                         })
                     }

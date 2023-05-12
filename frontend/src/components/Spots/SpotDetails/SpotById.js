@@ -19,10 +19,11 @@ const SpotById = () => {
     const spotId = Number(spotIdObj.id)
     // console.log('spotId ====>', spotId)
     const spot = useSelector((state) => { return state.spots.singleSpot })
-    // console.log('spot ==>', spot)
+    console.log('spot  in SpotByID==>', spot)
     const reviews = useSelector((state) => { return state.reviews.spot })
-    // console.log("reviews in Details ===> ", reviews)
-
+    console.log("reviews in SpotById ===> ", reviews)
+    const currentReview = reviews[0]
+    console.log('currentReview in SPotByID', currentReview)
 
     const bookingAlert = () => {
         window.alert('Feature Coming Soon...')
@@ -44,11 +45,12 @@ const SpotById = () => {
     }, [dispatch, spotId])
 
     useEffect(() => {
+        console.log('spotId in useEffect in SpotById', spotId)
         dispatch(fetchReviewThunk(spotId))
     }, [dispatch, spotId])
 
 
-    if (spot && spot.name) {
+    if (spot && spot.name || reviews && Object.values(reviews).length) {
         return (
             <div>
                 <h1>{spot.name}</h1>

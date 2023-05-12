@@ -6,8 +6,8 @@ import { useState } from "react";
 
 
 const CreateReviewModel = (spot, review) => {
-    console.log('spot in modal', spot)
-    console.log('review in modal', spot.review)
+    // console.log('spot in modal', spot)
+    // console.log('review in modal', spot.review)
     const dispatch = useDispatch();
     const { closeModal } = useModal();
     // console.log(spot.spot)
@@ -28,9 +28,9 @@ const CreateReviewModel = (spot, review) => {
         console.log(rev)
         return rev.userId === user.id
     })
-    console.log('reviewOfUser', reviewOfUser)
+    // console.log('reviewOfUser', reviewOfUser)
 
-    console.log('new new new', createNewReview)
+    // console.log('new new new', createNewReview)
 
     const handleSubmit = (e) => {
         const err = {}

@@ -52,7 +52,7 @@ export const createReview = (spotId, review) => async (dispatch) => {
     // console.log("response in Review Thunk", res)
     if (res.ok) {
         const newReview = await res.json();
-        // console.log("newReview in review Thunk")
+        console.log("newReview in review Thunk")
         dispatch(receiveReview(newReview));
         return newReview;
     } else {
@@ -66,12 +66,15 @@ export const createReview = (spotId, review) => async (dispatch) => {
 };
 
 export const deleteReview = (reviewId) => async (dispatch) => {
-    const res = await csrfFetch(`/api/reviews/${reviewId}`, {
+    console.log('reviewId in Thunk ', reviewId)
+    console.log('reviewId.reviewId in Thunk ', reviewId.reviewId)
+    const res = await csrfFetch(`/api/reviews/${reviewId.reviewId}`, {
         method: 'DELETE',
     });
-    if(res.ok){
-        // const message = await res.json();
-        dispatch(removeReview(reviewId))
+    if (res.ok) {
+        const message = await res.json();
+        console.log("response message in ReviewReducer", message)
+        await dispatch(removeReview(reviewId))
     }
 }
 
@@ -88,10 +91,12 @@ const reviewsReducer = (state = initialState, action) => {
             action.reviews.Reviews.forEach(review => newState.spot[review.id] = review)
             return newState
         case RECEIVE_REVIEW:
-            return { ...state, spot: action.review }
+            let createState = { ...state, spot: { ...state.spot } }
+            createState.spot[action.review.id] = action.review
         case REMOVE_REVIEW:
-            delete newState[action.reviewIds]
-            default:
+            const deleteState = { ...state }
+            delete deleteState[action.reviewIds]
+        default:
             return state;
     }
 };

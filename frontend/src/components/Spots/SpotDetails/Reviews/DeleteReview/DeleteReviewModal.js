@@ -3,27 +3,33 @@ import { useDispatch, useSelector } from "react-redux"
 import { deleteReview } from '../../../../../store/reviewsReducer';
 import { useHistory } from "react-router-dom";
 
-const DeleteFormModel = (reviewId) => {
+const DeleteFormModel = () => {
+
+    // console.log('reviewId in DeleteModal')
+    // const rightReviewId = reviewId.reviewId[0].id
+    // console.log('reviewId in DeleteModal', reviewId.reviewId[0].id)
 
     const dispatch = useDispatch();
     const { closeModal } = useModal();
 
 
     const handleSubmit = (e) => {
-        dispatch(deleteReview(reviewId)).then(closeModal);
-        // e.preventDefault()
+        console.log('HANDLESUBMIT')
+        dispatch(deleteReview()).then(closeModal);
+        e.preventDefault()
     };
 
-    // const history = useHistory()
+    const history = useHistory()
 
     const closeForm = (e) => {
-        e.preventDefault()
+        // e.preventDefault()
         closeModal()
-        // history.push(`/spots/current`)
+        // history.push(`/spots/${spotId}`)
     }
 
+    // if (!reviewId && !reviewId[0]) return null
     return (
-
+        // <p>hello</p>
         <form className="delete-form-block" onSubmit={handleSubmit}>
             <h1>Confirm Delete</h1>
             <p>Are you sure you want to remove this spot
