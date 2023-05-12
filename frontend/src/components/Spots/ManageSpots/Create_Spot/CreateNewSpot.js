@@ -79,7 +79,7 @@ const CreateNewSpot = () => {
         if (Object.values(err).length === 0) {
             const spot = await dispatch(createSpot(newSpot, imgArr))
             console.log("BRAND NEW ====>", spot)
-            // history.push(`/spots/${spot.id}`)
+            history.push(`/spots/${spot.id}`)
         }
         return null;
 

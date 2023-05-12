@@ -60,7 +60,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
         method: 'DELETE',
     });
     // console.log('res ====>', res)
-    const data = await res.json()
+    // const data = await res.json()
     // console.log('data ===>', data)
     if (res.ok) {
         dispatch(removeSpot(spotId));
@@ -84,13 +84,13 @@ export const createSpot = (spot, image) => async (dispatch) => {
         for (let i of image) {
             // for the images // preview image
             // console.log('i ===>', i)
-            let img = await csrfFetch(`/api/spots/${newSpot.id}/images`, {
+            await csrfFetch(`/api/spots/${newSpot.id}/images`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(i),
             })
             // console.log('img ===>', img)
-            const images = await img.json();
+            // const images = await img.json();
             // console.log('images ===>', images)
             return newSpot;
         }
@@ -127,11 +127,9 @@ const spotsReducer = (state = initialState, action) => {
             action.spots.Spots.forEach(spot => newState.allSpots[spot.id] = spot)
             return newState
         case SINGLE_LOAD_SPOT:
-            // console.log('action.Spot.singleSpot ====>',action.singleSpot)
             return { ...state, singleSpot: { ...action.spot } }
         case REMOVE_SPOTS:
             delete newState[action.spotId]
-
         case RECEIVE_SPOTS:
             return { ...state, allSpots: action.spot };
         case UPDATE_SPOTS:

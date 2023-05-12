@@ -16,9 +16,9 @@ const UpdateSpot = () => {
     const [description, setDescription] = useState(spot.description);
     const [name, setName] = useState(spot.name);
     const [price, setPrice] = useState(spot.price);
-    const [lat, setLat] = useState(-75.67382)
-    const [lng, setLng] = useState(-132.31456)
-    const [images, setImages] = useState([])
+    const [lat] = useState(-75.67382)
+    const [lng] = useState(-132.31456)
+    const [images] = useState([])
     const [errors, setErrors] = useState({})
 
     // const [errors, setErrors] = useState({})
@@ -52,7 +52,7 @@ const UpdateSpot = () => {
 
     useEffect(() => {
         dispatch(fetchDetailedSpotThunk(spotId))
-    }, [dispatch])
+    }, [dispatch,spotId])
 
     const onsubmit = async (e) => {
         e.preventDefault()

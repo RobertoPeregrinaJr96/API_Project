@@ -22,8 +22,8 @@ const SpotImages = ({ spot }) => {
                         return img.url
                     }
                     // console.log('img ===>', img)
-                    return <li className={`spot-image-${imageCount++}`} key={imageCount}>
-                        <img src={url()} alt={imageCount++}>
+                    return <li className={`spot-image-${imageCount++}`} key={imageCount} >
+                        <img src={url()} alt={''}>
                         </img>
                     </li>
                 })

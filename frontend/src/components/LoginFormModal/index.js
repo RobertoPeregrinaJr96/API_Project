@@ -25,6 +25,10 @@ function LoginFormModal() {
       });
   };
 
+  const demoUser = (e) => {
+    return dispatch(sessionActions.login({ credential:'FakeUser8',  password:'password8' })).then(closeModal)
+  }
+
   return (
     <>
       <h1>Log In</h1>
@@ -52,6 +56,7 @@ function LoginFormModal() {
         )}
         <button type="submit">Log In</button>
       </form>
+      <button onClick={demoUser} type="submit">Demo User</button>
     </>
   );
 }

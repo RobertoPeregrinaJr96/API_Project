@@ -51,6 +51,12 @@ router.get('/', requireAuth, async (req, res) => {
     res.json(users)
 })
 
+router.get('/:userId', async (req, res) => {
+    const userId = req.params.userId
+    const user = await User.findByPk(userId)
+    res.status(200).json(user)
+})
+
 const validateSignup = [
     check('firstName')
         .exists({ checkFalsy: true })

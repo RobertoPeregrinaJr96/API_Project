@@ -6,9 +6,10 @@ import { fetchDetailedSpotThunk } from '../../../store/spotReducer'
 import SpotImages from './SpotImages'
 
 import { fetchReviewThunk } from '../../../store/reviewsReducer';
-import SpotReview from './SpotReview'
+import SpotReview from './Reviews/SpotReview'
 
 import DetailsForSpot from './detailsForSpot';
+
 
 const SpotById = () => {
     const dispatch = useDispatch()
@@ -19,8 +20,8 @@ const SpotById = () => {
     // console.log('spotId ====>', spotId)
     const spot = useSelector((state) => { return state.spots.singleSpot })
     // console.log('spot ==>', spot)
-    const reviews = useSelector((state) => { return state.reviews })
-    console.log("reviews ===> ", reviews)
+    const reviews = useSelector((state) => { return state.reviews.spot })
+    // console.log("reviews in Details ===> ", reviews)
 
 
     const bookingAlert = () => {
@@ -56,16 +57,18 @@ const SpotById = () => {
                 </ul>
                 <div className='spot-detailed-info'>
                     <DetailsForSpot spot={spot} />
-                    <button className='alert-button' onClick={bookingAlert}>
+                    <div>
                         ${spot.price} night
                         <ul className='spot-review-stars'>{stars()}{spot.avgStarRating}</ul>
-                        { }
+                        reviews{spot.numReviews}
                         <br></br>
-                        Reserve
-                    </button>
+                        <button className='alert-button' onClick={bookingAlert}>
+                            Reserve
+                        </button>
+                    </div>
                 </div>
                 <ul className='spot-reviews-list'>
-                    <SpotReview reviews={reviews} />
+                    <SpotReview spot={spot} reviews={reviews} />
 
                 </ul>
 
