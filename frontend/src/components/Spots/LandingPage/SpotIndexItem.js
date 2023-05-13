@@ -21,6 +21,7 @@ const SpotIndexItem = ({ spot }) => {
 //         return 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537828399628411/images_7.jpg'
 //     }
 // console.log(spot.previewImage)
+if(!spot && !spot.id) return null
     return (
         <li key={spot.id} className='spot-list'>
             <div className='spot-list-block tool-tip'>

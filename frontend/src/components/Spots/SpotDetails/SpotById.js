@@ -50,34 +50,34 @@ const SpotById = () => {
     }, [dispatch, spotId])
 
 
-    if (spot && spot.name || reviews && Object.values(reviews).length) {
-        return (
-            <div>
-                <h1>{spot.name}</h1>
-                <ul className='spot-images-list'>
-                    {<SpotImages spot={spot} />}
-                </ul>
-                <div className='spot-detailed-info'>
-                    <DetailsForSpot spot={spot} />
-                    <div>
-                        ${spot.price} night
-                        <ul className='spot-review-stars'>{stars()}{spot.avgStarRating}</ul>
-                        reviews{spot.numReviews}
-                        <br></br>
-                        <button className='alert-button' onClick={bookingAlert}>
-                            Reserve
-                        </button>
-                    </div>
+    if (!(spot && spot.name) || (!reviews && Object.values(reviews).length)) return null
+    return (
+        <div>
+            <h1>{spot.name}</h1>
+            <ul className='spot-images-list'>
+                {<SpotImages spot={spot} />}
+            </ul>
+            <div className='spot-detailed-info'>
+                <DetailsForSpot spot={spot} />
+                <div>
+                    ${spot.price} night
+                    <ul className='spot-review-stars'>{stars()}{spot.avgStarRating}</ul>
+                    reviews{spot.numReviews}
+                    <br></br>
+                    <button className='alert-button' onClick={bookingAlert}>
+                        Reserve
+                    </button>
                 </div>
-                <ul className='spot-reviews-list'>
-                    <SpotReview spot={spot} reviews={reviews} />
-
-                </ul>
-
-
             </div>
-        )
-    }
+            <ul className='spot-reviews-list'>
+                <SpotReview spot={spot} reviews={reviews} />
+
+            </ul>
+
+
+        </div>
+    )
+
 }
 
 

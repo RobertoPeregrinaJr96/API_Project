@@ -14,23 +14,21 @@ function Navigation({ isLoaded }) {
   const spotId = useParams()
   const history = useHistory()
 
-  function refreshPage() {
-    if (!spotId) {
-      return null
-    }
-    if (spotId) {
-      history.push(`/spots/${spotId}`)
-      // window.location.reload()
-      // window.location.href=`/spots/${spotId}`
-    }
-  }
+  // function refreshPage() {
+  //   if (!spotId) {
+  //     return null
+  //   }
 
-  const CreateSpotLink = () => {
-    if (sessionUser) {
-      return <NavLink exact to='/spots/new'
-        onClick={refreshPage}>Create A Spot</NavLink>
-    }
-  }
+  //     history.push(`/spots/${spotId}`)
+
+  // }
+
+  // const CreateSpotLink = () => {
+  //   if (sessionUser) {
+  //     return <NavLink exact to='/spots/new'
+  //       onClick={refreshPage}>Create A Spot</NavLink>
+  //   }
+  // }
 
   return (
     <ul className='nav-list'>
@@ -41,10 +39,11 @@ function Navigation({ isLoaded }) {
         </NavLink>
       </li>
       <li>
-        <CreateSpotLink />
       </li>
       {isLoaded && (
         <li className='nav-landingPage'>
+          <NavLink exact to='/spots/new'>Create A Spot</NavLink>
+
           <ProfileButton user={sessionUser} />
         </li>
       )}

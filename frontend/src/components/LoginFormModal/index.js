@@ -26,27 +26,32 @@ function LoginFormModal() {
   };
 
   const demoUser = (e) => {
-    return dispatch(sessionActions.login({ credential:'FakeUser8',  password:'password8' })).then(closeModal)
+    return dispatch(sessionActions.login({ credential: 'FakeUser8', password: 'password8' })).then(closeModal)
   }
+  let stateCheck = credential.length >= 4 && password.length >= 6 ? true : false
+  console.log('password in Nav', password)
+  console.log('credential in Nav', credential)
 
   return (
-    <>
+    <div className="login-div">
       <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="login-form">
         <label>
-          Username or Email
+          {/* Username or Email */}
           <input
             type="text"
             value={credential}
+            placeholder="Username or Email"
             onChange={(e) => setCredential(e.target.value)}
             required
           />
         </label>
         <label>
-          Password
+          {/* Password */}
           <input
             type="password"
             value={password}
+            placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
             required
           />
@@ -54,10 +59,10 @@ function LoginFormModal() {
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit" disabled={!stateCheck} className="submit-button">Log In</button>
+        <button onClick={demoUser} type="submit" className="demo-user">Demo User</button>
       </form>
-      <button onClick={demoUser} type="submit">Demo User</button>
-    </>
+    </div>
   );
 }
 

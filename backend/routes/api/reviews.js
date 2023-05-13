@@ -66,11 +66,11 @@ router.get('/current', requireAuth, async (req, res) => {
             },
             {
                 model: Spot, include: { model: SpotImage },
-                attributes:{exclude:['createdAt','updatedAt','description']},
+                attributes: { exclude: ['createdAt', 'updatedAt', 'description'] },
 
             }, {
                 model: ReviewImage,
-                attributes:{exclude:['reviewId','createdAt','updatedAt']}
+                attributes: { exclude: ['reviewId', 'createdAt', 'updatedAt'] }
             }
         ],
         where: {
@@ -232,7 +232,7 @@ router.put('/:reviewId', [requireAuth, validateReview], async (req, res) => {
     reviewTest.review = review;
     reviewTest.stars = stars;
     await reviewTest.save();
-    return res.status(200).json( reviewTest );
+    return res.status(200).json(reviewTest);
 
     /*
   const id = req.params.reviewId;
@@ -284,11 +284,15 @@ router.delete('/:reviewId', [requireAuth], async (req, res) => {
     // let get all the data from the request
     const { user } = req;
     const idOfUser = user.id;
+    console.log(`idOfUser`, idOfUser)
     const idOfReview = req.params.reviewId;
+    console.log('idOfReview', idOfReview)
     const reviewTest = await Review.findByPk(idOfReview);
+    console.log('reviewTest.userId', reviewTest.userId)
     // let check if the review is valid
     if (!reviewTest) return res.status(404).json({ "message": "Review couldn't be found" });
     // let check if this review belongs to the user and if not the return an error
+
     if (idOfUser !== reviewTest.userId) return res.status(403).json({ "message": "Forbidden" });
     // if we are the owner the we are allowed to delete
     await reviewTest.destroy();

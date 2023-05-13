@@ -52,29 +52,22 @@ export const createReview = (spotId, review) => async (dispatch) => {
     // console.log("response in Review Thunk", res)
     if (res.ok) {
         const newReview = await res.json();
-        console.log("newReview in review Thunk")
+        // console.log("newReview in review Thunk")
         dispatch(receiveReview(newReview));
         return newReview;
-    } else {
-        try {
-            await res.json();
-        } catch (error) {
-            console.log('err in thunk', error)
-            return error;
-        }
     }
 };
 
 export const deleteReview = (reviewId) => async (dispatch) => {
     console.log('reviewId in Thunk ', reviewId)
-    console.log('reviewId.reviewId in Thunk ', reviewId.reviewId)
-    const res = await csrfFetch(`/api/reviews/${reviewId.reviewId}`, {
+    const res = await csrfFetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE',
     });
+    console.log('Response in thunk')
     if (res.ok) {
         const message = await res.json();
         console.log("response message in ReviewReducer", message)
-        await dispatch(removeReview(reviewId))
+        dispatch(removeReview(reviewId))
     }
 }
 
@@ -84,18 +77,18 @@ const initialState = {
 }
 
 const reviewsReducer = (state = initialState, action) => {
+    let newState;
     switch (action.type) {
         case LOAD_REVIEW:
-            let newState = { ...state, spot: { ...state.spot } }
-            // console.log('newState in Reducer',newState)
+            newState = { ...state, spot: { ...state.spot } }
             action.reviews.Reviews.forEach(review => newState.spot[review.id] = review)
             return newState
         case RECEIVE_REVIEW:
-            let createState = { ...state, spot: { ...state.spot } }
-            createState.spot[action.review.id] = action.review
+            newState = { ...state, spot: { ...state.spot } }
+            newState.spot[action.review.id] = action.review
         case REMOVE_REVIEW:
-            const deleteState = { ...state }
-            delete deleteState[action.reviewIds]
+            newState = { ...state, spot: { ...state.spot } }
+            delete newState.spot[action.reviewId]
         default:
             return state;
     }

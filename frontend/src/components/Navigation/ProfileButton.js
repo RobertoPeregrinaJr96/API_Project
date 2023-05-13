@@ -6,17 +6,14 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import { useHistory } from "react-router-dom";
+import './Navigation.css';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
-  // demo user
-
-  // const handleSubmit = () => {
-
-  // }
-  //
+  const history = useHistory()
 
   const openMenu = () => {
     if (showMenu) return;
@@ -43,6 +40,7 @@ function ProfileButton({ user }) {
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
+    history.push('/')
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
@@ -52,6 +50,7 @@ function ProfileButton({ user }) {
   return (
     <>
       <button onClick={openMenu} className="Nav-button">
+        <i class="fa-solid fa-bars" />
         <i className="fas fa-user-circle" />
       </button>
       <ul className={ulClassName} ref={ulRef}>
@@ -79,7 +78,6 @@ function ProfileButton({ user }) {
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}
             />
-            {/* <Link to={}></Link> */}
           </>
         )}
       </ul>

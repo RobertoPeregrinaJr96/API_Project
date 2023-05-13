@@ -9,6 +9,14 @@ const SpotImages = ({ spot }) => {
 
     let imageCount = 1
 
+    if(Object.values(images).length === 0) {
+        return null;
+      }
+
+
+    if(Object.values(spot).length === 0) {
+        return null;
+      }
 
     return (
         <>

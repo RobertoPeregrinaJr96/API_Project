@@ -13,8 +13,8 @@ const DeleteFormModel = (spot) => {
 
     const handleSubmit = (e) => {
         console.log('spot.spot.id')
-        dispatch(deleteSpot(spot.spot.id)).then(closeModal);
-        // e.preventDefault()
+        e.preventDefault()
+        return dispatch(deleteSpot(spot.spot.id)).then(closeModal);
     };
 
     // const history = useHistory()

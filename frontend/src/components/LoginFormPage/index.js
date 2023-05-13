@@ -25,10 +25,14 @@ function LoginFormPage() {
     );
   };
 
+  let stateCheck = credential.length >= 4 || password.length >= 6 ? true : false
+  console.log('password in Nav', password)
+  console.log('credential in Nav', credential)
+
   return (
     <>
       <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="nav-form">
         <label>
           Username or Email
           <input
@@ -48,7 +52,7 @@ function LoginFormPage() {
           />
         </label>
         {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit">Log In</button>
+        <button type="submit" disabled={!stateCheck}>Log In</button>
       </form>
     </>
   );

@@ -1,10 +1,5 @@
-
-
-
 const ReviewItems = ({ review }) => {
-
-    console.log('array', review)
-
+    // console.log('array', review)
     const date = new Date(review.createdAt).toDateString()
     // console.log("Date ==>", date)
     let i = 0
