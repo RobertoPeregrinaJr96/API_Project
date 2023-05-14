@@ -1,16 +1,13 @@
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { fetchDetailedSpotThunk } from '../../../store/spotReducer'
+import { useHistory } from 'react-router-dom';
 import SpotImages from './SpotImages'
-
-import { fetchReviewThunk } from '../../../store/reviewsReducer';
-import SpotReview from './Reviews/SpotReview'
-
 import DetailsForSpot from './detailsForSpot';
 import './index.css'
-import { useHistory } from 'react-router-dom';
+
+import { fetchDetailedSpotThunk } from '../../../store/spotReducer'
+import { fetchReviewThunk } from '../../../store/reviewsReducer';
 
 const SpotById = () => {
     const dispatch = useDispatch()
@@ -20,10 +17,10 @@ const SpotById = () => {
     const spotId = Number(spotIdObj.id)
     // console.log('spotId ====>', spotId)
     const spot = useSelector((state) => { return state.spots.singleSpot })
-    console.log('spot  in SpotByID==>', spot)
+    // console.log('spot  in SpotByID==>', spot)
     const reviews = useSelector((state) => { return state.reviews.spot })
-    console.log("reviews in SpotById ===> ", reviews)
-    console.log("vales of rev", Object.values(reviews))
+    // console.log("reviews in SpotById ===> ", reviews)
+    // console.log("vales of rev", Object.values(reviews))
 
     const bookingAlert = () => {
         window.alert('Feature Coming Soon...')
@@ -58,8 +55,8 @@ const SpotById = () => {
         })
 
     }
-    console.log('reviewArray', reviewArray)
-    console.log('fskdjflskdjflksjdf', Object.keys(reviews))
+    // console.log('reviewArray', reviewArray)
+    // console.log('fskdjflskdjflksjdf', Object.keys(reviews))
 
     useEffect(() => {
         dispatch(fetchDetailedSpotThunk(spotId)).then(
@@ -69,11 +66,11 @@ const SpotById = () => {
     }, [dispatch, Object.keys(reviews).length])
 
     const checkReviews = (reviews) => {
-        console.log("reviews in checkReviews ===> ", reviews)
+        // console.log("reviews in checkReviews ===> ", reviews)
         if (Object.values(reviews).length === 0) return <p className='no-reviews'>Be the first to post a review!</p>
         else {
             return <ul className='spot-reviews-list'>
-                <SpotReview spot={spot} reviews={reviews} />
+                {/* <SpotReview spot={spot} reviews={reviews} /> */}
 
             </ul>
         }
@@ -81,11 +78,11 @@ const SpotById = () => {
 
     const checkNumOfReviews = (reviews) => {
         if (Object.values(reviews).length === 0) {
-            return <p>review 0</p>
+            return null
         } else if (Object.values(reviews).length === 1) {
-            return <p>{spot.numReviews} review</p>
+            return <p>  · {spot.numReviews} review</p>
         } else {
-            return <p>{spot.numReviews} reviews</p>
+            return <p>  · {spot.numReviews} reviews</p>
         }
     }
 
@@ -112,7 +109,7 @@ const SpotById = () => {
                     <div className='booking-content'>
 
                         ${spot.price} night
-                        <p className='spot-review-stars'> &#9733;{rightRating(spot)}&#8729;{reviews && checkNumOfReviews(reviews)}</p>
+                        <p className='spot-review-stars'> &#9733;{rightRating(spot)} {reviews && checkNumOfReviews(reviews)}</p>
                         <br></br>
                     </div>
                     <button name='alert-button' className='alert-button' onClick={bookingAlert}>

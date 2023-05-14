@@ -6,19 +6,26 @@ const CurrentSpotItems = (spot) => {
     const history = useHistory()
     // const dispatch = useDispatch()
 
-    // // console.log('spot ====>', spot.spot.id)
+    console.log('spot ====>', spot)
     // const { closeModal } = useModal();
 
-    const stars = () => {
-        const num = spot.spot.avgRating
-        const arr = []
-        if (num === null || num === undefined) return ''
-        for (let i = 0; i < Math.floor(num); i++) {
-            arr.push(<li key={i}>&#9733;</li>)
-        }
-        return arr
-    }
 
+    const rightRating = (spot) => {
+        let rating = spot.avgRating
+        if (rating === undefined || rating === null) {
+            rating = "New"
+
+            return rating
+        }
+        else if (rating - Math.floor(rating) === 0) {
+
+            return rating
+        } else {
+
+            return rating.toFixed(1)
+        }
+
+    }
     const onUpdate = (e) => {
         e.preventDefault();
         history.push(`/spots/${spot.spot.id}/edit`)
@@ -45,13 +52,13 @@ const CurrentSpotItems = (spot) => {
                     {spot.spot.city}{'  '}
                     {spot.spot.state}<br></br>
                     ${spot.spot.price}/night
-                    <ul className='spot-review-stars'>{stars()}</ul>
+                    <ul className='spot-review-stars'>{rightRating(spot)}</ul>
                 </Link>
-                    <div>
-                        <button onClick={onUpdate}>Update</button>
-                        <DeleteSpot spot={spot.spot} />
+                <div>
+                    <button onClick={onUpdate}>Update</button>
+                    <DeleteSpot spot={spot.spot} />
 
-                    </div>
+                </div>
             </div>
         </li >
     )

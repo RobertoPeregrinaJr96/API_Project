@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
 
 import { fetchSpotsThunk } from '../../../store/spotReducer';
-
+import './index.css'
 const CurrentSpot = () => {
     const history = useHistory()
     // console.log("Current Spot")
@@ -29,7 +29,7 @@ const CurrentSpot = () => {
     }
 
     return (
-        <>
+        <div className="manage-container">
             <h1>Manage Your Spots</h1>
             <button onClick={newSpot}>Create a New Spot</button>
             <ul className="current-ul">
@@ -39,7 +39,7 @@ const CurrentSpot = () => {
                         key={spot.id} />
                 })}
             </ul>
-        </>
+        </div>
     )
 }
 
