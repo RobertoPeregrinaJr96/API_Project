@@ -20,14 +20,14 @@ export const deleteReview = (review) => ({
 /** Thunk Action Creators: */
 // get all Review // should be good
 export const fetchReviewThunk = (spotId) => async (dispatch) => {
-    console.log('spotId in fetchReviewThunk', spotId)
+    // console.log('spotId in fetchReviewThunk', spotId)
     const response = await fetch(`/api/spots/${spotId}/reviews`);
-    console.log('response in fetchReviewThunk', response)
+    // console.log('response in fetchReviewThunk', response)
     if (response.ok) {
         const data = await response.json();
-        console.log('data in fetchReviewThunk', data)
+        // console.log('data in fetchReviewThunk', data)
         const review = dispatch(getReview(data));
-        console.log('review in fetchReviewThunk', review)
+        // console.log('review in fetchReviewThunk', review)
         return review
     }
 };
@@ -52,7 +52,7 @@ export const deleteReviewThunk = (review) => async (dispatch) => {
     });
     if (response.ok) {
         const data = await response.json();
-        console.log('data in Delete thunk')
+        // console.log('data in Delete thunk')
         dispatch(deleteReview(review.id))
     }
 }
@@ -65,14 +65,13 @@ const reviewsReducer = (state = initialState, action) => {
     let newState;
     switch (action.type) {
         case GET_REVIEW:
-            newState = { ...state }
-            // console.log('action.reviews.Reviews in  reviewReducer',  action.reviews)
-            const spot = {};
+            newState = { ...state ,spot:{...state.spot}}
             action.reviews.Reviews.forEach(review => {
                 // console.log('review in reviewReducer', review)
                 // console.log('newState in ReviewReducer',newState)
                 newState.spot[review.id] = review
             });
+            console.log('newState in  reviewReducer', newState)
             return newState
         case NEW_REVIEW:
             newState = { ...state, spot: { ...state.spot } }
