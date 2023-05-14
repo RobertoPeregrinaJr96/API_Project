@@ -41,13 +41,22 @@ function SignupFormModal() {
     });
   };
 
-  const checkState = !Object.values(errors).length
-  // console.log('checkState', checkState)
+  const checkState = () => {
+    let boolean = false;
+    if (Object.values(errors).length) boolean = true
+    else if (email.length === 0) boolean = true
+    else if (username <= 3 || username.length === 0) boolean = true
+    else if (firstName.length === 0) boolean = true
+    else if (lastName.length === 0) boolean = true
+    else if (password.length <= 5) boolean = true
+    return boolean
+  }
+
 
   return (
     <div className="sign-up-div">
       <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit} className="sign-up-form">
+      <form onSubmit={handleSubmit} className="sign-up-form"  >
         <label>
 
           <input
@@ -116,7 +125,7 @@ function SignupFormModal() {
         {errors.confirmPassword && (
           <p className="errors">{errors.confirmPassword}</p>
         )}
-        <button type="submit" className="sign-up-submit" disabled={checkState}>Sign Up</button>
+        <button type="submit" className="sign-up-submit" disabled={checkState()}>Sign Up</button>
       </form>
     </div>
   );

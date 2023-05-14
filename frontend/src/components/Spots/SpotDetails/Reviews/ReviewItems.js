@@ -4,17 +4,13 @@ const ReviewItems = ({ review }) => {
     // console.log("Date ==>", date)
     let i = 0
     return (
-        <>
-            <li key={i++}>
-                {review.User.firstName}
-                {'  '}
-                {date}
-                <br></br>
-                <br></br>
-                {review.review}
-            </li>
+
+        <p>{review.User.firstName}{review.User.lastName}{'   '}
+            {date}
             <br></br>
-        </>
+            {review.review}
+        </p>
+
     )
 }
 

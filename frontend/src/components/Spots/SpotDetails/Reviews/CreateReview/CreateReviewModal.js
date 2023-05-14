@@ -53,7 +53,7 @@ const CreateReviewModel = ({ spot }) => {
     };
 
     let stateCheck = newReview.length >= 10
-    console.log('stateCheck', stateCheck)
+    // console.log('stateCheck', stateCheck)
 
     if (!spot && !spot.id) return null
     return (

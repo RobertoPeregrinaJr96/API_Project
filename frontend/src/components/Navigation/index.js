@@ -1,35 +1,23 @@
 // frontend/src/components/Navigation/index.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
-// import spotsReducer from '../../store/spotReducer';
-import { useParams } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
 
-  const spotId = useParams()
-  const history = useHistory()
+  const user = useSelector(state => state.session.user)
 
-  // function refreshPage() {
-  //   if (!spotId) {
-  //     return null
-  //   }
+  const isLogin = (user) => {
+    if (!user) return null
+    else return <NavLink exact to='/spots/new'>Create A Spot</NavLink>
+  }
 
-  //     history.push(`/spots/${spotId}`)
-
-  // }
-
-  // const CreateSpotLink = () => {
-  //   if (sessionUser) {
-  //     return <NavLink exact to='/spots/new'
-  //       onClick={refreshPage}>Create A Spot</NavLink>
-  //   }
-  // }
-
+  useEffect(() => {
+    console.log('Navigation')
+  }, [])
   return (
     <ul className='nav-list'>
       <li className='nav-list-logo'>
@@ -38,12 +26,10 @@ function Navigation({ isLoaded }) {
           SRC
         </NavLink>
       </li>
-      <li>
-      </li>
       {isLoaded && (
         <li className='nav-landingPage'>
-          <NavLink exact to='/spots/new'>Create A Spot</NavLink>
-
+          {/* <NavLink exact to='/spots/new'>Create A Spot</NavLink> */}
+          {isLogin(user)}
           <ProfileButton user={sessionUser} />
         </li>
       )}

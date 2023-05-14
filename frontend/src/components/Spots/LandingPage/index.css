@@ -1,3 +1,161 @@
 #spot-list {
   list-style: none;
 }
+.spots-ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 15rem 15rem 15em 15rem;
+  justify-content: center;
+  align-items: center;
+  row-gap: 1.3rem;
+  column-gap: 1.3rem;
+  margin: 1%;
+  padding: 2%;
+}
+
+.spot-list-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.tool-tip-text {
+  position: absolute;
+  visibility: hidden;
+}
+
+.tool-tip:hover .tool-tip-text {
+  visibility: visible;
+}
+
+.spot-list {
+  list-style: none;
+  color: black;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.spot-Link {
+  text-decoration: none;
+}
+
+.nav-landingPage {
+  display: flex;
+  justify-content: right;
+}
+
+.spot-review-stars {
+  display: inline-flex;
+  list-style: none;
+  align-items: center;
+  height: 1.5rem;
+}
+
+.spot-review-stars-li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+}
+.spot-review-stars-p {
+  padding: 0%;
+  margin: 0%;
+}
+
+.spots-landingPage-img {
+  text-decoration: none;
+}
+
+img {
+  width: 20rem;
+  height: 10rem;
+  border-radius: 2%;
+}
+
+.star-rating {
+  display: inline-flex;
+}
+
+@media screen and (max-width: 1025) {
+  #spot-list {
+    list-style: none;
+  }
+  .spots-ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 15rem 15rem 15em 15rem;
+    justify-content: center;
+    align-items: center;
+    row-gap: 1.3rem;
+    column-gap: 1.3rem;
+    margin: 1%;
+    padding: 2%;
+  }
+
+  .spot-list-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .tool-tip-text {
+    position: absolute;
+    visibility: hidden;
+  }
+
+  .tool-tip:hover .tool-tip-text {
+    visibility: visible;
+  }
+
+  .spot-list {
+    list-style: none;
+    color: black;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .spot-Link {
+    text-decoration: none;
+  }
+
+  .nav-landingPage {
+    display: flex;
+    justify-content: right;
+  }
+
+  .spot-review-stars {
+    display: inline-flex;
+    list-style: none;
+    align-items: center;
+    height: 1.5rem;
+  }
+
+  .spot-review-stars-li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+  }
+  .spot-review-stars-p {
+    padding: 0%;
+    margin: 0%;
+  }
+
+  .spots-landingPage-img {
+    text-decoration: none;
+  }
+
+  img {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 2%;
+  }
+}

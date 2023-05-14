@@ -41,6 +41,20 @@ function SignupFormPage() {
     });
   };
 
+
+  const checkState = () => {
+    let boolean = false;
+    if (Object.values(errors).length) boolean = true
+    else if (email.length === 0) boolean = true
+    else if (username < 4 || username.length === 0) boolean = true
+    else if (firstName.length === 0) boolean = true
+    else if (lastName.length === 0) boolean = true
+    else if (password.length < 6) boolean = true
+    return boolean
+  }
+
+
+
   return (
     <>
       <h1>Sign Up</h1>
@@ -105,7 +119,7 @@ function SignupFormPage() {
           />
         </label>
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit">Sign Up</button>
+        <button type="submit" disabled={!checkState}>Sign Up</button>
       </form>
     </>
   );

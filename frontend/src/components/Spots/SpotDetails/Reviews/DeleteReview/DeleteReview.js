@@ -2,13 +2,13 @@ import { useSelector } from 'react-redux'
 import OpenModalButton from '../../../../OpenModalButton/index'
 import DeleteFormModel from './DeleteReviewModal'
 
-const DeleteSpot = ({ spotId, reviewId }) => {
-    console.log('DeleteReview')
-    console.log('reviewId in DeleteReviews', reviewId)
+const DeleteSpot = ({ spotId, review }) => {
+    console.log('spotId in DeleteReview', spotId)
+    console.log('reviewId in DeleteReviews', review)
 
 
     return (
-        <OpenModalButton buttonText={'Delete'} modalComponent={<DeleteFormModel spotId={spotId} reviewId={reviewId} />}></OpenModalButton>
+        <OpenModalButton buttonText={'Delete'} modalComponent={<DeleteFormModel spotId={spotId} review={review} />}></OpenModalButton>
 
     )
 }

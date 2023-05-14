@@ -1,13 +1,13 @@
 
 
 
-const DetailsForSpot = ({spot}) => {
+const DetailsForSpot = ({ spot }) => {
 
 
 
     return (
-        <div>
-            <h1>Hosted by {spot.name}</h1>
+        <div >
+            <h1>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</h1>
             <p>{spot.description}</p>
 
         </div>

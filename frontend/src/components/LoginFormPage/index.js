@@ -26,8 +26,8 @@ function LoginFormPage() {
   };
 
   let stateCheck = credential.length >= 4 || password.length >= 6 ? true : false
-  console.log('password in Nav', password)
-  console.log('credential in Nav', credential)
+  // console.log('password in Nav', password)
+  // console.log('credential in Nav', credential)
 
   return (
     <>

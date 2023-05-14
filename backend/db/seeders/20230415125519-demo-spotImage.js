@@ -56,22 +56,22 @@ const demoSpotImages = [
   {
     url: 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537886360715355/images_4.jpg',
     preview: true,
-    spotId: 9,
+    spotId: 10,
   },
   {
     url: 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537886704652308/images_3.jpg',
     preview: true,
-    spotId: 9,
+    spotId: 11,
   },
   {
     url: 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537916001865749/download_5.jpg',
     preview: true,
-    spotId: 9,
+    spotId: 12,
   },
   {
     url: 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537916236742707/download_4.jpg',
     preview: true,
-    spotId: 10,
+    spotId: 13,
   },
 
 ]

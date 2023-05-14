@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import SpotIndexItem from './SpotIndexItem';
 import { fetchSpotsThunk } from '../../../store/spotReducer';
-
+import './index.css';
 
 const SpotIndex = () => {
     // console.log("SPOT INDEX")
@@ -12,7 +12,7 @@ const SpotIndex = () => {
     const dispatch = useDispatch()
 
     const spots = Object.values(spotsObj)
-    console.log("Spots : ", spots)
+    // console.log("Spots : ", spots)
 
 
     useEffect(() => {

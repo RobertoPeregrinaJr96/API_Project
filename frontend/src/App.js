@@ -5,11 +5,11 @@ import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
 
 // my components
-import SpotIndex from './components/Spots/LandingPage/SpotIndex'
-import CurrentSpot from './components/Spots/ManageSpots/CurrentSpot'
-import CreateNewSpot from './components/Spots/ManageSpots/Create_Spot/CreateNewSpot'
-import SpotById from './components/Spots/SpotDetails/SpotById'
-import SpotEdit from './components/Spots/ManageSpots/Update_Spot/SpotEdit'
+import SpotIndex from './components/Spots/LandingPage/index'
+import CurrentSpot from './components/Spots/ManageSpots/index'
+import CreateNewSpot from './components/Spots/ManageSpots/Create_Spot/index'
+import SpotById from './components/Spots/SpotDetails/index'
+import SpotEdit from './components/Spots/ManageSpots/Update_Spot/index'
 
 
 function App() {
@@ -34,11 +34,3 @@ function App() {
 }
 
 export default App;
-
-
-/* For later */
-
-/*
-
-
- */

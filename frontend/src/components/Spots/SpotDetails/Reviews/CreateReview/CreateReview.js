@@ -2,8 +2,8 @@ import OpenModalButton from '../../../../OpenModalButton/index'
 import CreateReviewModel from './CreateReviewModal'
 
 const CreateReview = ({ spot,reviews }) => {
-    console.log('Create your review in CreateReview')
-    console.log('spot in CreateReview ===>', spot)
+    // console.log('Create your review in CreateReview')
+    // console.log('spot in CreateReview ===>', spot)
 
 
     if (!spot && !spot.id) return false

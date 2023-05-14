@@ -12,7 +12,7 @@
 
 
 /* Landing Page */
-.spots-ul {
+/* .spots-ul {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 15rem 15rem 15em 15rem;
@@ -85,9 +85,9 @@ img {
   width: 20rem;
   height: 10rem;
   border-radius: 2%;
-}
+} */
 
-/* detailed spot */
+/* detailed spot
 
 .spot-images-list {
   display: grid;
@@ -113,14 +113,14 @@ img {
 }
 .spot-image-5 {
   grid-area: "e";
-}
+} */
 
 /* current spot */
 
-.current-ul {
+/* .current-ul {
   display: flex;
   justify-content: space-around;
-}
+} */
 
 /* Update spot */
 

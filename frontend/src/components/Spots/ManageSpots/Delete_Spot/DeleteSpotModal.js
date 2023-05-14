@@ -12,7 +12,7 @@ const DeleteFormModel = (spot) => {
 
 
     const handleSubmit = (e) => {
-        console.log('spot.spot.id')
+        // console.log('spot.spot.id')
         e.preventDefault()
         return dispatch(deleteSpot(spot.spot.id)).then(closeModal);
     };

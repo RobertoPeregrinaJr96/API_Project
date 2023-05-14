@@ -1,27 +1,26 @@
 import { Link } from 'react-router-dom';
 
 const SpotIndexItem = ({ spot }) => {
-    // let areaNumber = 0
 
-    const stars = () => {
-        let stars = <li className='spot-review-stars-li'>&#9733;</li>;
-        const num = spot.avgRating
-        const arr = []
-        if (num === null || num === undefined) return ''
-        for (let i = num; i <= 5; i++) {
-            arr.push(stars)
+    const rightRating = () => {
+        let rating = spot.avgRating
+        if (rating === undefined || rating === null) {
+            rating = "New"
+            // console.log(' no rating', rating)
+            return rating
         }
-        // console.log('stars ===>', stars)
-        return arr
+        else if (rating - Math.floor(rating) === 0) {
+            rating = `${rating}.0`
+            // console.log('new rating', rating)
+            return rating
+        } else {
+            // console.log('fixed rating', rating.toFixed(1))
+            return rating.toFixed(1)
+        }
     }
 
-//     const url = () => {
-//         console.log(spot.previewImage)
-//         if (spot.previewImage) return spot.previewImage
-//         return 'https://cdn.discordapp.com/attachments/1088906268485357618/1105537828399628411/images_7.jpg'
-//     }
-// console.log(spot.previewImage)
-if(!spot && !spot.id) return null
+
+    if (!spot && !spot.id) return null
     return (
         <li key={spot.id} className='spot-list'>
             <div className='spot-list-block tool-tip'>
@@ -32,9 +31,12 @@ if(!spot && !spot.id) return null
                     {spot.city},{'  '}
                     {spot.state}<br></br>
                     ${spot.price}/night
-                    <ul className='spot-review-stars'>{stars()}
-                        <p className='spot-review-stars-p'>{spot.avgRating}</p>
-                    </ul>
+                    {/* <ul className='spot-review-stars'>{stars()} */}
+                    <div className='star-rating'>
+                        <p>&#9733;</p>
+                        <p className='spot-review-stars-p'>{rightRating()}</p>
+                    </div>
+                    {/* </ul> */}
                 </Link>
             </div>
         </li >

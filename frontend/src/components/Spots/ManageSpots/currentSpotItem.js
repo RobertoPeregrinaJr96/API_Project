@@ -1,9 +1,5 @@
 import { useHistory } from "react-router-dom";
-// import DeleteSpot from "./Delete_Spot/DeleteSpot";
-// import { useModal } from "../../../context/Modal";
-// import { deleteSpot } from "../../../store/spotReducer";
-// import { useDispatch } from 'react-redux';
-import DeleteSpot from './Delete_Spot/DeleteSpot'
+import DeleteSpot from './Delete_Spot'
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const CurrentSpotItems = (spot) => {

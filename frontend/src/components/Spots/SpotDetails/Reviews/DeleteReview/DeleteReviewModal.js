@@ -3,29 +3,33 @@ import { useDispatch, useSelector } from "react-redux"
 import { deleteReview } from '../../../../../store/reviewsReducer';
 import { useHistory } from "react-router-dom";
 
-const DeleteFormModel = ({ spotId, reviewId }) => {
+const DeleteFormModel = ({ spotId, review }) => {
 
-    console.log('reviewId in DeleteModal', reviewId)
+    console.log('review in DeleteModal', review)
+    console.log('spotId in DeleteModal', spotId)
+
+    const reviewId = review?.id
+
+    const history = useHistory()
 
     const dispatch = useDispatch();
     const { closeModal } = useModal();
 
-    const user = useSelector(state => state.session.user)
-    console.log('user in DeleteModal', user)
+    // const user = useSelector(state => state.session.user)
+    // console.log('user in DeleteModal', user)
 
     const handleSubmit = (e) => {
-        e.preventDefault()
+        // e.preventDefault()
         dispatch(deleteReview(reviewId)).then(closeModal);
         history.push(`/spots/${spotId}`)
-
     };
 
-    const history = useHistory()
+    // const history = useHistory()
 
     const closeForm = (e) => {
         // e.preventDefault()
         closeModal()
-        history.push(`/spots/${spotId}`)
+        // history.push(`/spots/${spotId}`)
     }
 
     // if (!reviewId && !reviewId[0]) return null
