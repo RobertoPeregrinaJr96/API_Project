@@ -7,7 +7,7 @@ import DetailsForSpot from './detailsForSpot';
 import './index.css'
 
 import { fetchDetailedSpotThunk } from '../../../store/spotReducer'
-import { fetchReviewThunk } from '../../../store/reviewsReducer';
+import ReviewItemsIndex from './Reviews/index'
 
 const SpotById = () => {
     const dispatch = useDispatch()
@@ -28,7 +28,7 @@ const SpotById = () => {
 
     const history = useHistory()
 
-
+    ReviewItemsIndex()
     const rightRating = (spot) => {
         let rating = spot.avgStarRating
         if (rating === undefined || rating === null) {
@@ -47,23 +47,23 @@ const SpotById = () => {
     }
 
 
-    let reviewArray;
-    if (!!Object.values(reviews).length) {
-        const arr = (Object.values(reviews))
-        reviewArray = arr.filter(review => {
-            return review.spotId === spot.id
-        })
+    // let reviewArray;
+    // if (!!Object.values(reviews).length) {
+    //     const arr = (Object.values(reviews))
+    //     reviewArray = arr.filter(review => {
+    //         return review.spotId === spot.id
+    //     })
 
-    }
+    // }
     // console.log('reviewArray', reviewArray)
     // console.log('fskdjflskdjflksjdf', Object.keys(reviews))
 
-    useEffect(() => {
-        dispatch(fetchDetailedSpotThunk(spotId)).then(
-            dispatch(fetchReviewThunk(spotId))
-        )
-        // history.push(`/spots/${spotId}`)
-    }, [dispatch, Object.keys(reviews).length])
+    // useEffect(() => {
+    //     dispatch(fetchDetailedSpotThunk(spotId)).then(
+    //         dispatch(fetchReviewThunk(spotId))
+    //     )
+    //     // history.push(`/spots/${spotId}`)
+    // }, [dispatch, Object.keys(reviews).length])
 
     const checkReviews = (reviews) => {
         // console.log("reviews in checkReviews ===> ", reviews)
@@ -103,12 +103,12 @@ const SpotById = () => {
             <ul className='spot-images-list'>
                 {<SpotImages spot={spot} />}
             </ul>
-            <div className='spot-detailed-info'>
-                <DetailsForSpot spot={spot} />
-                <div className='booking-div'>
-                    <div className='booking-content'>
+            {/* <div className='spot-detailed-info'> */}
+            {/* <DetailsForSpot spot={spot} /> */}
+            {/* <div className='booking-div'> */}
+            {/* <div className='booking-content'> */}
 
-                        ${spot.price} night
+            {/* ${spot.price} night
                         <p className='spot-review-stars'> &#9733;{rightRating(spot)} {reviews && checkNumOfReviews(reviews)}</p>
                         <br></br>
                     </div>
@@ -118,7 +118,7 @@ const SpotById = () => {
                     </button>
                 </div>
             </div>
-            {reviews && checkReviews(reviews)}
+            {reviews && checkReviews(reviews)} */}
 
 
 
