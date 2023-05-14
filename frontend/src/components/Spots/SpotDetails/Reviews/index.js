@@ -7,6 +7,7 @@ import { deleteReviewThunk } from "../../../../store/reviewsReducer";
 import OpenModalButton from '../../../OpenModalButton/index'
 import DeleteReviewModal from "./deleteReview";
 import { fetchDetailedSpotThunk } from "../../../../store/spotReducer";
+import CreateReview from "./createReview";
 
 
 
@@ -79,6 +80,7 @@ const ReviewItemsIndex = () => {
     if (!spotIdObj && !spotId) return null
     return (
         <div className="review-container">
+            <CreateReview reviewObj={review}/>
             <OpenModalButton buttonText='Delete' modalComponent={<DeleteReviewModal reviewObj={review} />}></OpenModalButton>
             {/* {buttonSwitch(review)} */}
 
