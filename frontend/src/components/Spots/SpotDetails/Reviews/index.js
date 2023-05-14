@@ -11,25 +11,27 @@ import OpenModalButton from '../../../OpenModalButton/index'
 
 const ReviewItemsIndex = () => {
 
-    const spotIdObj = useParams()
-    console.log('spotIdObj in ReviewItemsIndex', spotIdObj)
-    const spotId = spotIdObj.id
     const dispatch = useDispatch();
     const user = useSelector(state => state.session.user)
     console.log('user in ReviewItemsIndex', user)
 
     useEffect(() => {
         dispatch(fetchReviewThunk(spotId))
-    })
+    }, [dispatch, spotId])
+
     const review = useSelector(state => state.reviews.spot)
     console.log('review in ReviewItemsIndex', review)
+    const spotIdObj = useParams()
+    console.log('spotIdObj in ReviewItemsIndex', spotIdObj)
+    let spotId;
+    Object.values(spotIdObj).length ? spotId = spotIdObj.id : spotId = null
+    if (spotId === null) { return null }
+
+
     const reviewArray = Object.values(review)
     console.log('spotIdObj in ReviewItemsIndex', spotIdObj)
     const sortedReviewArray = reviewArray.sort((a, b) => new Date(a) - new Date(b))
     console.log('sortedReviewArray in ReviewItemsIndex', sortedReviewArray)
-
-
-
 
     return (
         <div className="review-container">
