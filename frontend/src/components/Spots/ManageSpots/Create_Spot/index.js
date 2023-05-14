@@ -49,11 +49,6 @@ const CreateNewSpot = () => {
     }
     let imgArr = [];
 
-    // console.log('new spot ===>', newSpot)
-    // console.log(imgArr)
-
-
-
     const onsubmit = async (e) => {
         e.preventDefault()
 

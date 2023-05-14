@@ -87,10 +87,12 @@ export const createSpot = (spot, image) => async (dispatch) => {
             let spotImg = await csrfFetch(`/api/spots/${newSpot.id}/images`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(img),
+                body: JSON.stringify(img)
             })
-            // const date = await spotImg.json()
-            // if (date) {
+            // console.log('spotImg', spotImg)
+            // if (spotImg.ok) {
+            //     const data = await spotImg.json()
+            //     console.log('data', data)
             //     spot.SpotImages = [data]
             //     console.log('spot.SpotImages', spot.SpotImages)
             //     dispatch(receiveSpot(spot))
@@ -98,6 +100,7 @@ export const createSpot = (spot, image) => async (dispatch) => {
             // }
         }
 
+        return newSpot
     }
 }
 // update a spot
