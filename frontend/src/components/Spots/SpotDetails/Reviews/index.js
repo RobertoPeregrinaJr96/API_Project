@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import reviewsReducer, { fetchReviewThunk } from "../../../../store/reviewsReducer";
 import { deleteReviewThunk } from "../../../../store/reviewsReducer";
 import OpenModalButton from '../../../OpenModalButton/index'
-import DeleteReview from "./deleteReview";
+import DeleteReviewModal from "./deleteReview";
 import { fetchDetailedSpotThunk } from "../../../../store/spotReducer";
 
 
@@ -23,13 +23,13 @@ const ReviewItemsIndex = () => {
     // console.log('user in ReviewItemsIndex', user)
 
     const review = useSelector(state => state.reviews.spot)
-    console.log('review in ReviewItemsIndex', review)
+    // console.log('review in ReviewItemsIndex', review)
     const reviewArray = Object.values(review)
     // console.log('reviewArray in ReviewItemsIndex', reviewArray)
     const sortedReviewArray = reviewArray.sort((a, b) => new Date(a) - new Date(b))
     // console.log('sortedReviewArray in ReviewItemsIndex', sortedReviewArray)
     const spot = useSelector(state => state.spots.singleSpot)
-    console.log('spot in ReviewItemsIndex', spot)
+    // console.log('spot in ReviewItemsIndex', spot)
 
     useEffect(() => {
         dispatch(fetchDetailedSpotThunk(spotId))
@@ -37,7 +37,17 @@ const ReviewItemsIndex = () => {
     }, [dispatch, spotId])
 
     const buttonSwitch = (review) => {
-        return user && user.id === review.userId ? <OpenModalButton buttonText='Delete' modalComponent={<DeleteReview reviewId={review.id} />}></OpenModalButton> : null
+        if (!user) return null
+        const rev = Object.values(review)
+        // console.log("rev in ButtonSwith", rev)
+        rev.forEach(review => {
+            // console.log("rev.userId in ButtonSwitch", review.User.id)
+            // console.log("user in ButtonSwitch", user.id)
+            if (user && user.id == review.User.id) {
+                // console.log(user && user.id === review.User.id)
+                return <OpenModalButton buttonText='Delete' modalComponent={<DeleteReviewModal spotId={spotId} reviewId={review} />}></OpenModalButton>
+            }
+        })
     }
     const rightRating = (spot) => {
         let rating = spot.avgStarRating
@@ -65,10 +75,13 @@ const ReviewItemsIndex = () => {
             return <p>&#9733;{rightRating(spot)} &#8729; {spot.numReviews}  Review</p>
         }
     }
+    // console.log(review)
     if (!spotIdObj && !spotId) return null
     return (
         <div className="review-container">
-            {buttonSwitch(review)}
+            <OpenModalButton buttonText='Delete' modalComponent={<DeleteReviewModal reviewObj={review} />}></OpenModalButton>
+            {/* {buttonSwitch(review)} */}
+
             {sortedReviewArray && checkHowManyReviews(sortedReviewArray)}
             {sortedReviewArray.map((review) => {
                 // console.log("review in Map in ReviewItemIndex", review)

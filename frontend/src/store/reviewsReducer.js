@@ -46,14 +46,16 @@ export const createReviewThunk = (spotId, review, user) => async (dispatch) => {
     }
 };
 
-export const deleteReviewThunk = (review) => async (dispatch) => {
-    const response = await csrfFetch(`/api/reviews/${review.id}`, {
+export const deleteReviewThunk = (reviewId) => async (dispatch) => {
+    console.log('reviewId in DeleteReviewThunk', reviewId)
+    const response = await csrfFetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE',
     });
+    console.log('response in DeleteReviewThunk', response)
     if (response.ok) {
         const data = await response.json();
         // console.log('data in Delete thunk')
-        dispatch(deleteReview(review.id))
+        dispatch(deleteReview(reviewId))
     }
 }
 
@@ -65,13 +67,13 @@ const reviewsReducer = (state = initialState, action) => {
     let newState;
     switch (action.type) {
         case GET_REVIEW:
-            newState = { ...state ,spot:{...state.spot}}
+            newState = { ...state, spot: { ...state.spot } }
             action.reviews.Reviews.forEach(review => {
                 // console.log('review in reviewReducer', review)
                 // console.log('newState in ReviewReducer',newState)
                 newState.spot[review.id] = review
             });
-            console.log('newState in  reviewReducer', newState)
+            // console.log('newState in  reviewReducer', newState)
             return newState
         case NEW_REVIEW:
             newState = { ...state, spot: { ...state.spot } }
