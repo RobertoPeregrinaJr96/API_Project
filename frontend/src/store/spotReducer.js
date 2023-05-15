@@ -43,12 +43,12 @@ export const fetchSpotsThunk = () => async (dispatch) => {
 };
 // get spot by Id
 export const fetchDetailedSpotThunk = (spotId) => async (dispatch) => {
-    // console.log(spotId)
+    // console.log('spotId in fetchDetailedSpotThunk', spotId)
     const response = await csrfFetch(`/api/spots/${spotId}`)
-    // console.log('response ===> ',response)
+    // console.log('response in fetchDetailedSpotThunk', response)
     if (response.ok) {
         const spot = await response.json()
-        // console.log('spot ===>',spot);
+        // console.log('spot  in fetchDetailedSpotThunk', spot);
         dispatch(singleLoadSpot(spot))
         return spot
     }
@@ -132,7 +132,7 @@ const spotsReducer = (state = initialState, action) => {
         case LOAD_SPOTS:
             let newState = { ...state, allSpots: { ...state.allSpots } }
             action.spots.Spots.forEach(spot => newState.allSpots[spot.id] = spot)
-            return newState
+            return {...newState}
         case SINGLE_LOAD_SPOT:
             return { ...state, singleSpot: { ...action.spot } }
         case REMOVE_SPOTS:

@@ -24,8 +24,6 @@ const SpotById = () => {
         window.alert('Feature Coming Soon...')
     }
 
-    const history = useHistory()
-
     const rightRating = (spot) => {
         let rating = spot.avgStarRating
         if (rating === undefined || rating === null) {
@@ -43,24 +41,6 @@ const SpotById = () => {
         }
     }
 
-
-    // console.log("SpotId in Spot Details Index")
-    // let reviewArray;
-    // if (!!Object.values(reviews).length) {
-    //     const arr = (Object.values(reviews))
-    //     reviewArray = arr.filter(review => {
-    //         return review.spotId === spot.id
-    //     })
-
-    // }
-
-
-    useEffect(() => {
-        dispatch(fetchDetailedSpotThunk(spotId))
-        // history.push(`/spots/${spotId}`)
-        console.log("DING DING DING useEffect RENDER-------------------------------")
-    }, [dispatch, spotId,Object.values(reviews).length])
-
     const checkReviews = (reviews) => {
         // console.log("reviews in checkReviews in Spot Detail Index", reviews)
         if (Object.values(reviews).length === 0) return <p className='no-reviews'>Be the first to post a review!</p>
@@ -69,9 +49,6 @@ const SpotById = () => {
             </ul>
         }
     }
-    // console.log("reviews in checkReviews ===> ", reviews)
-    // console.log("reviews in checkReviews ===> ", reviews)
-    // console.log("reviews in checkReviews ===> ", reviews)
 
     const checkNumOfReviews = (reviews) => {
         if (Object.values(reviews).length === 0) {
@@ -82,16 +59,26 @@ const SpotById = () => {
             return <p>  · {spot.numReviews} reviews</p>
         }
     }
+    useEffect(() => {
+        let initialState = {
+            spot: {}
+        }
+        initialState[spot] = spot
+        // console.log('initialState', initialState)
+        // console.log('spotId in useEffect in SpotDetail Index', spotId)
+        dispatch(fetchDetailedSpotThunk(spotId))
+        console.log("DING DING DING useEffect RENDER-------------------------------")
+    }, [dispatch])
 
-    if (!(spot && spot.name) || (!reviews && Object.values(reviews).length)) return null
+    if (!(spot && spot.name) || (!reviews)) return null
     return (
         <div >
             <h1>{spot.name}</h1>
             <ul className='spot-images-list'>
-                {<SpotImages spot={spot} />}
+                {spot && <SpotImages spot={spot} />}
             </ul>
             <div className='spot-detailed-info'>
-                <DetailsForSpot spot={spot} />
+                {spot && <DetailsForSpot spot={spot} />}
 
                 <div className='booking-div'>
                     <div className='booking-content'>
@@ -107,7 +94,7 @@ const SpotById = () => {
                 </div>
             </div>
             {reviews && checkReviews(reviews)}
-            <ReviewItemsIndex />
+            {spot && <ReviewItemsIndex />}
 
 
 

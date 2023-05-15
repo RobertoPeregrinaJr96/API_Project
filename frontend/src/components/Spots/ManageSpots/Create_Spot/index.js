@@ -68,25 +68,25 @@ const CreateNewSpot = () => {
         if (!name.length) err.name = 'Name is required'
         if (!price || price < 0) err.price = 'Price is required'
         if (!images.length) err.images = 'Preview image is required.'
-        console.log('img1', img1)
+        // console.log('img1', img1)
         if (img1.length >= 4 && !(img1.endsWith('.png') || img1.endsWith('.jpg')
             || img1.endsWith('.jpeg'))) err.img1 = 'Image URL must end in .png, .jpg or jpeg'
-        console.log('img2', img2)
+        // console.log('img2', img2)
 
         if (img2.length >= 4 && !(img2.endsWith('.png') || img2.endsWith('.jpg')
             || img2.endsWith('.jpeg'))) err.img2 = 'Image URL must end in .png, .jpg or jpeg'
-        console.log('img3', img3)
+        // console.log('img3', img3)
 
         if (img3.length >= 4 && !(img3.endsWith('.png') || img3.endsWith('.jpg')
             || img3.endsWith('.jpeg'))) err.img3 = 'Image URL must end in .png, .jpg or jpeg'
-        console.log('img4', img4)
+        // console.log('img4', img4)
 
         if (img4.length >= 4 &&
             !(img4.endsWith('.png') ||
                 img4.endsWith('.jpg') ||
                 img4.endsWith('.jpeg'))
         ) err.img4 = 'Image URL must end in .png, .jpg or jpeg'
-        console.log('images', images)
+        // console.log('images', images)
 
         if (images &&
             !(images.endsWith('.png') ||

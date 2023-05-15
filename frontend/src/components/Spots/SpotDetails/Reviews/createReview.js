@@ -2,97 +2,112 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useModal } from "../../../../context/Modal";
 
-import { newReview } from "../../../../store/reviewsReducer";
+import { createReviewThunk, fetchReviewThunk } from "../../../../store/reviewsReducer";
 
-const CreateReview = ({ reviewObj }) => {
+const CreateReview = ({ spotId }) => {
 
-    console.log('reviewObj in CreateReview', reviewObj)
+    console.log('spotId in CreateReview', spotId)
 
     const dispatch = useDispatch();
     const { closeModal } = useModal()
     const [review, setReview] = useState('')
-    const [stars, setStars] = useState('')
-    const [starHover, setStarHover] = useState(0)
-    const [rating, setRating] = useState('')
-    const [userId, setUserId] = useState('')
-    const [errors, setErrors] = useState({})
-    const user = useSelector(state => state.session.user)
+    const [starHover, setStarHover] = useState(1)
+    const [rating, setRating] = useState(1)
 
+    const user = useSelector(state => state.session.user)
+    // console.log('user in CreateReview', user)
     const spot = useSelector(state => state.spots.singleSpot)
     // console.log('spot in CreateReview', spot)
+    const reviews = useSelector(state => state.reviews.spot)
+    // console.log('reviews in CreateReview', reviews)
 
-    const spotId = spot.id
+    const reviewArray = Object.values(reviews)
+    const err = {}
+    if (reviewArray.length !== 0) {
+        // console.log('reviewArray in CreateReview ', reviewArray)
 
-    setUserId(user.id)
-
-    const newReviewObj = {
-        "review": review,
-        "stars": rating
+        reviewArray.forEach(rev => {
+            if (rev && user && (user.id === rev.userId)) err.hasAExistingReview = 'Review already exists for this spot'
+        })
     }
+
+    // disable the submit button if it has less than 10 characters
+    let isDisabled = true;
+    if (review.length >= 10 || Object.values(err).length === 0) {
+        isDisabled = false
+    }
+
     const handleSubmit = (e) => {
-        console.log('newReviewObj in CreateReview dispatch', newReviewObj)
-        console.log('spotId in CreateReview dispatch', spotId)
-        console.log('userId in CreateReview dispatch', userId)
-        e.preventDefault()
-        dispatch(newReview(newReviewObj, spotId, userId)).then(closeModal())
-        setStars('')
-    }
-    // if (reviewObj && user.id === userReview.userId) err.user = 'Review already exists for this spot'
-    // let stateCheck = newReview.length >= 10
-    // console.log('stateCheck', stateCheck)
+        // console.log('newReviewObj in CreateReview dispatch', newReviewObj)
 
-    const onClickHandler = (rating) => {
-        setStars(rating)
+        const newReviewObj = {
+            "review": review,
+            "stars": rating
+        }
+        // console.log('newReviewOBj in CreateReview', newReviewObj)
+
+        if (Object.values(err).length === 0) {
+            e.preventDefault()
+            // console.log('spotId in CreateReview dispatch', spotId)
+            // console.log('userId in CreateReview dispatch', newReviewObj)
+            dispatch(createReviewThunk(newReviewObj, spotId))
+        }
+        // e.preventDefault()
+        closeModal()
     }
 
     const starEvent = (num) => {
-        if (num <= starHover) return "fa-solid fa-star fa-beat"
-        if (num <= stars) return "fa-solid fa-star fa-beat"
-        return "fa-solid fa-star"
+        if (num <= rating) return "fa-solid fa-star fa-beat"
+        return "fa-regular fa-star"
     }
+
     useEffect(() => {
-        if (stars) {
-            const starRating = stars
-            setRating(starRating)
-        }
-    }, [])
+        dispatch(fetchReviewThunk())
+
+    }, [dispatch])
+
     return (
         <div>
             <form className="create-review-block" onSubmit={handleSubmit}>
-                {/* <p className="errors">{errors.user}</p> */}
+                <p className="errors">{err.hasAExistingReview}</p>
                 <h1>How was your stay</h1>
                 <textarea placeholder="Leave your review here..." onChange={(e => setReview(e.target.value))}></textarea>
                 <div className="starW-rating-hover">
 
                 </div>
-                <button type="submit"  >Submit
+                <button type="submit" disabled={isDisabled} >Submit
                     Your Review</button>
+                {/* star : hover : rating */}
                 <i class="fa-regular fa-star"
-                    onClick={onClickHandler(1)}
+                    onClick={() => setRating(1)}
                     onMouseEnter={() => setStarHover(1)}
                     onMouseLeave={() => setStarHover(0)}
                     className={starEvent(1)}
                 ></i>
+
                 <i class="fa-regular fa-star"
-                    onClick={onClickHandler(2)}
+                    onClick={() => setRating(2)}
                     onMouseEnter={() => setStarHover(2)}
                     onMouseLeave={() => setStarHover(0)}
                     className={starEvent(2)}
                 ></i>
+
                 <i class="fa-regular fa-star"
-                    onClick={onClickHandler(3)}
+                    onClick={() => setRating(3)}
                     onMouseEnter={() => setStarHover(3)}
                     onMouseLeave={() => setStarHover(0)}
                     className={starEvent(3)}
                 ></i>
+
                 <i class="fa-regular fa-star"
-                    onClick={onClickHandler(4)}
+                    onClick={() => setRating(4)}
                     onMouseEnter={() => setStarHover(4)}
                     onMouseLeave={() => setStarHover(0)}
                     className={starEvent(4)}
                 ></i>
+
                 <i class="fa-regular fa-star"
-                    onClick={onClickHandler(5)}
+                    onClick={() => setRating(5)}
                     onMouseEnter={() => setStarHover(5)}
                     onMouseLeave={() => setStarHover(0)}
                     className={starEvent(5)}

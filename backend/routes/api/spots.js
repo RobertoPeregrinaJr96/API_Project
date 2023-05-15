@@ -598,74 +598,7 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res) 
         "stars": stars
     })
     return res.status(201).json(newReview)
-    /*
 
-        const id = req.params.spotId;
-        // console.log('id', id)
-
-        const { user } = req
-        // console.log('user',user)
-
-        // if user is not logged in then send a error response
-        if (!user) {
-            res.status(500);
-            res.json({
-                message: 'Please login'
-            });
-        }
-
-        const userId = user.id
-        console.log("userId", userId)
-        console.log('break')
-
-
-
-        // test if the user already left a review for the spot
-        const reviewTest = await Review.findAll({
-            where: {
-                spotId: id,
-                userId: userId
-            }
-        })
-        console.log('reviewTest', reviewTest)
-        console.log('length', reviewTest.length)
-
-        if (reviewTest.length) {
-            res.status(403);
-            res.json({
-                message: 'You have already made a review for this spot'
-            })
-        }
-
-        // we find the spot by the id in the endpoint
-        const spot = await Spot.findByPk(id, {
-            include: [
-                { model: Review },
-            ],
-        })
-        // console.log(spot)
-
-        // if spot does not exist then send error response
-        if (!spot) {
-            res.status(404);
-            res.json({
-                message: 'Spot couldn\'t be found'
-            })
-        }
-
-        const { review, stars } = req.body
-
-
-        const spotReview = await Review.create({
-            review,
-            stars,
-            spotId: spot.id,
-            userId: user.id
-        })
-
-        res.status(201);
-        res.json(spotReview)
-    */
 })
 
 // Get all Bookings for a Spot based on the Spot's id

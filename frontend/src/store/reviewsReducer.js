@@ -32,26 +32,30 @@ export const fetchReviewThunk = (spotId) => async (dispatch) => {
     }
 };
 // // create a Review
-export const createReviewThunk = (spotId, review, user) => async (dispatch) => {
+export const createReviewThunk = (review, spotId) => async (dispatch) => {
+    // console.log('spotId in CreateReviewThunk in ReviewReducer', spotId)
+    // console.log('review in CreateReviewThunk in ReviewReducer', review)
     const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(review),
     });
+    console.log('response in CreateReviewThunk in ReviewReducer', response)
     if (response.ok) {
         const data = await response.json();
-        data.User = user
-        dispatch(newReview(data));
-        return data;
+        // console.log('data in CreateReviewThunk in ReviewReducer', data)
+        const returnResponse = await dispatch(newReview(data));
+        // console.log(' returnResponse in CreateReviewThunk in returnResponse', response)
+        return returnResponse;
     }
 };
 
 export const deleteReviewThunk = (reviewId) => async (dispatch) => {
-    console.log('reviewId in DeleteReviewThunk', reviewId)
+    // console.log('reviewId in DeleteReviewThunk', reviewId)
     const response = await csrfFetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE',
     });
-    console.log('response in DeleteReviewThunk', response)
+    // console.log('response in DeleteReviewThunk', response)
     if (response.ok) {
         const data = await response.json();
         // console.log('data in Delete thunk')
@@ -64,24 +68,28 @@ const initialState = {
 }
 
 const reviewsReducer = (state = initialState, action) => {
-    let newState;
+
     switch (action.type) {
         case GET_REVIEW:
-            newState = { ...state, spot: { ...state.spot } }
+            const newState = { spot: {} }
+            // console.log('sdfsdsdfsd', newState)
             action.reviews.Reviews.forEach(review => {
                 // console.log('review in reviewReducer', review)
-                // console.log('newState in ReviewReducer',newState)
+                // console.log('newState in ReviewReducer', newState)
                 newState.spot[review.id] = review
             });
             // console.log('newState in  reviewReducer', newState)
             return newState
         case NEW_REVIEW:
-            newState = { ...state, spot: { ...state.spot } }
-            newState.spot[action.review.id] = action.review
-            return newReview
+            const newNewState = { ...state, spot: { ...state.spot } }
+            // console.log('Create A REVIEW STATE', newNewState)
+            newNewState.spot[action.review.id] = action.review
+            // console.log('Create A REVIEW STATE', newNewState)
+            return newNewState
         case DELETE_REVIEW:
-            const deleteState = { ...state }
-            delete deleteReviewThunk.spot[action.review]
+            const deleteState = { ...state, spot: { ...state.spot } }
+            delete deleteState.spot[action.review]
+            return deleteState
         default:
             return state;
     }

@@ -3,7 +3,10 @@ const SpotImages = ({ spot }) => {
     const images = spot.SpotImages
     // console.log('images in SpotImages', images)
 
-    const length = images.length
+    let length;
+    if(images){
+        length = images.length
+    }
     // console.log('array length', length)
 
     for (let i = length; i < 5; i++) {

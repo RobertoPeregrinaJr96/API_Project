@@ -17,7 +17,7 @@ const SpotIndex = () => {
 
     useEffect(() => {
         dispatch(fetchSpotsThunk())
-    }, [dispatch])
+    }, [dispatch, spots.length])
 
 
 

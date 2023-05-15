@@ -2,8 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import reviewsReducer, { fetchReviewThunk } from "../../../../store/reviewsReducer";
-import { deleteReviewThunk } from "../../../../store/reviewsReducer";
+import { fetchReviewThunk } from "../../../../store/reviewsReducer";
 import OpenModalButton from '../../../OpenModalButton/index'
 import DeleteReviewModal from "./deleteReview";
 import { fetchDetailedSpotThunk } from "../../../../store/spotReducer";
@@ -13,7 +12,6 @@ import CreateReview from "./createReview";
 
 const ReviewItemsIndex = () => {
 
-
     const dispatch = useDispatch();
     const spotIdObj = useParams()
     // console.log('spotIdObj in ReviewItemsIndex', spotIdObj)
@@ -21,10 +19,10 @@ const ReviewItemsIndex = () => {
     // console.log('spotId in ReviewItemsIndex', spotId)
 
     const user = useSelector(state => state.session.user)
-    // console.log('user in ReviewItemsIndex', user)
+    console.log('user in ReviewItemsIndex', user)
 
     const review = useSelector(state => state.reviews.spot)
-    // console.log('review in ReviewItemsIndex', review)
+    console.log('review in ReviewItemsIndex', review)
     const reviewArray = Object.values(review)
     // console.log('reviewArray in ReviewItemsIndex', reviewArray)
     const sortedReviewArray = reviewArray.sort((a, b) => new Date(a) - new Date(b))
@@ -35,21 +33,9 @@ const ReviewItemsIndex = () => {
     useEffect(() => {
         dispatch(fetchDetailedSpotThunk(spotId))
         dispatch(fetchReviewThunk(spotId))
-    }, [dispatch, spotId])
 
-    const buttonSwitch = (review) => {
-        if (!user) return null
-        const rev = Object.values(review)
-        // console.log("rev in ButtonSwith", rev)
-        rev.forEach(review => {
-            // console.log("rev.userId in ButtonSwitch", review.User.id)
-            // console.log("user in ButtonSwitch", user.id)
-            if (user && user.id == review.User.id) {
-                // console.log(user && user.id === review.User.id)
-                return <OpenModalButton buttonText='Delete' modalComponent={<DeleteReviewModal spotId={spotId} reviewId={review} />}></OpenModalButton>
-            }
-        })
-    }
+    }, [dispatch, spotId, reviewArray.length])
+
     const rightRating = (spot) => {
         let rating = spot.avgStarRating
         if (rating === undefined || rating === null) {
@@ -68,7 +54,7 @@ const ReviewItemsIndex = () => {
     }
     const checkHowManyReviews = (sortedReviewArray) => {
 
-        if (sortedReviewArray.length === 0) {
+        if (sortedReviewArray && sortedReviewArray?.length === 0) {
             return <p>&#9733; {rightRating(spot)}</p>
         } else if (sortedReviewArray === 1) {
             return <p>&#9733; {rightRating(spot)} &#8729; 1 Review</p>
@@ -76,25 +62,48 @@ const ReviewItemsIndex = () => {
             return <p>&#9733;{rightRating(spot)} &#8729; {spot.numReviews}  Review</p>
         }
     }
+
+    // const buttonSwitch = (sortedReviewArray) => {
+    //     let boolean = true
+    //     // console.log(review)
+    //     // console.log(sortedReviewArray)
+    //     // debugger
+    //     let arr = sortedReviewArray.filter(review => user.id === review.User.id)
+    //     // console.log('arr in buttonSwitch', arr)
+    //     if (arr.length > 0) boolean = false
+    //     // console.log(boolean)
+    //     return boolean
+    // }
+
+    // const ulClassName = (buttonSwitch(sortedReviewArray) ? "" : "hidden");
+    // console.log('ulClassName', ulClassName)
+    // // console.log(buttonSwitch(sortedReviewArray))
+
     // console.log(review)
     if (!spotIdObj && !spotId) return null
     return (
         <div className="review-container">
-            <CreateReview reviewObj={review}/>
-            <OpenModalButton buttonText='Delete' modalComponent={<DeleteReviewModal reviewObj={review} />}></OpenModalButton>
-            {/* {buttonSwitch(review)} */}
 
+            {/* <OpenModalButton buttonText={'Post Your Review'} modalComponent={<CreateReview spotId={spotId} />}></OpenModalButton>  <OpenModalButton buttonText={'Post Your Review'} modalComponent={<CreateReview spotId={spotId} />}></OpenModalButton> */}
+
+
+            {<OpenModalButton buttonText={'Post Your Review'} modalComponent={<CreateReview spotId={spotId} />}></OpenModalButton>}
+
+            {<OpenModalButton buttonText={'Delete'} modalComponent={<DeleteReviewModal reviewObj={review} />}></OpenModalButton>}
             {sortedReviewArray && checkHowManyReviews(sortedReviewArray)}
-            {sortedReviewArray.map((review) => {
-                // console.log("review in Map in ReviewItemIndex", review)
-                return (
-                    <div className="review-content-div">
-                        <p className="review-User-name">{review.User.firstName}  {review.User.lastName}</p>
-                        <p className="review-review">{review.review}</p>
-                    </div>
-                )
-            })}
-        </div>
+            {
+                sortedReviewArray.map((review) => {
+                    // console.log("review in Map in ReviewItemIndex", review)
+
+                    return (
+                        <div className="review-content-div">
+                            <p className="review-User-name">{ review?.User?.firstName}  {review?.User?.lastName}</p>
+                            <p className="review-review">{review.review}</p>
+                        </div>
+                    )
+                })
+            }
+        </div >
     )
 
 

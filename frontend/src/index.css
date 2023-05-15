@@ -1,15 +1,14 @@
 /* TODO Add site wide styles */
 /* apply to everything */
-
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200&display=swap");
 * {
   list-style: none;
   text-decoration: none;
   color: black;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 500;
+  font-family: "Manrope", sans-serif;
+  font-weight:bold
   /* background-color: #eef1bd; */
 }
-
 
 /* Landing Page */
 /* .spots-ul {

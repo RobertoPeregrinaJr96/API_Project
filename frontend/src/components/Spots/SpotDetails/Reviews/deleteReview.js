@@ -1,15 +1,16 @@
 import { useModal } from '../../../../context/Modal'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { deleteReviewThunk } from '../../../../store/reviewsReducer'
+import { deleteReviewThunk, fetchReviewThunk } from '../../../../store/reviewsReducer'
+import { useEffect } from 'react'
 
 const DeleteReviewModal = ({ spotId, reviewObj }) => {
     const user = useSelector(state => state.session.user)
-    console.log('reviewId in DeleteReviewModal', reviewObj)
+    // console.log('reviewId in DeleteReviewModal', reviewObj)
     const reviews = Object.values(reviewObj)
-    console.log('reviews in DeleteReviewModal', reviews)
+    // console.log('reviews in DeleteReviewModal', reviews)
     const userReview = reviews.find(review => review.userId === user.id)
-    console.log('userReview in DeleteReviewModal', userReview)
+    // console.log('userReview in DeleteReviewModal', userReview)
 
 
     const { closeModal } = useModal()
@@ -23,7 +24,12 @@ const DeleteReviewModal = ({ spotId, reviewObj }) => {
         e.preventDefault();
         return closeModal()
     }
-    console.log("Hello World in delteReview")
+
+    useEffect(() => {
+        dispatch(fetchReviewThunk())
+    }, [dispatch, Object.values(reviewObj).length])
+
+    // console.log("Hello World in delteReview")
     return (
         <div className='delete-Modal-div'>
             <form className="delete-form-block" onSubmit={handleSubmit}>

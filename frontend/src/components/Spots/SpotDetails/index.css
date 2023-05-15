@@ -50,7 +50,6 @@ h1 {
   justify-content: space-around;
   align-items: center;
   width: 100%;
-
 }
 
 .alert-button {
@@ -64,4 +63,8 @@ h1 {
   color: white;
   width: 100%;
   height: 100%;
+}
+
+.hidden {
+  display: none;
 }
