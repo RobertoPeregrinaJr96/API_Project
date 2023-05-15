@@ -94,22 +94,22 @@ router.get('/current', requireAuth, async (req, res) => {
 
             if (img.preview === true) {
                 spot.previewImage = img.url
-                console.log('previewImage', spot.previewImage)
+                // console.log('previewImage', spot.previewImage)
             }
-            console.log('break-------------------------------------')
+            // console.log('break-------------------------------------')
             if (!spot.previewImage) {
                 spot.previewImage = 'no previewImage found'
-                console.log('previewImage', spot.previewImage)
+                // console.log('previewImage', spot.previewImage)
             }
         }
 
         delete spot.SpotImages // it works??? but not saving in the outer obj
-        console.log('data', spot.SpotImages)
+        // console.log('data', spot.SpotImages)
     }
 
-    console.log('break 2 ===========================')
+    // console.log('break 2 ===========================')
 
-    console.log('reviewList', arr)
+    // console.log('reviewList', arr)
 
     res.json({ Reviews: arr })
 })
@@ -284,11 +284,11 @@ router.delete('/:reviewId', [requireAuth], async (req, res) => {
     // let get all the data from the request
     const { user } = req;
     const idOfUser = user.id;
-    console.log(`idOfUser`, idOfUser)
+    // console.log(`idOfUser`, idOfUser)
     const idOfReview = req.params.reviewId;
-    console.log('idOfReview', idOfReview)
+    // console.log('idOfReview', idOfReview)
     const reviewTest = await Review.findByPk(idOfReview);
-    console.log('reviewTest.userId', reviewTest.userId)
+    // console.log('reviewTest.userId', reviewTest.userId)
     // let check if the review is valid
     if (!reviewTest) return res.status(404).json({ "message": "Review couldn't be found" });
     // let check if this review belongs to the user and if not the return an error
