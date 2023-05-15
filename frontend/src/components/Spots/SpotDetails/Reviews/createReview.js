@@ -60,6 +60,7 @@ const CreateReview = ({ spotId }) => {
 
     const starEvent = (num) => {
         if (num <= rating) return "fa-solid fa-star fa-beat"
+        if (num <= starHover) return "fa-solid fa-star fa-beat"
         return "fa-regular fa-star"
     }
 
