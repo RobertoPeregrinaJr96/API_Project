@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { useModal } from "../../../../context/Modal";
 
 import { createReviewThunk, fetchReviewThunk } from "../../../../store/reviewsReducer";
-
+import './index.css'
 const CreateReview = ({ spotId }) => {
 
-    console.log('spotId in CreateReview', spotId)
+    // console.log('spotId in CreateReview', spotId)
 
     const dispatch = useDispatch();
     const { closeModal } = useModal()
-    const [review, setReview] = useState('')
+    const [newReview, setReview] = useState('')
     const [starHover, setStarHover] = useState(1)
     const [rating, setRating] = useState(1)
 
@@ -33,15 +33,17 @@ const CreateReview = ({ spotId }) => {
 
     // disable the submit button if it has less than 10 characters
     let isDisabled = true;
-    if (review.length >= 10 || Object.values(err).length === 0) {
+    console.log(newReview.length)
+    if (newReview.length >= 10 && Object.values(err).length === 0) {
         isDisabled = false
     }
+    console.log('isDisable', isDisabled)
 
     const handleSubmit = (e) => {
         // console.log('newReviewObj in CreateReview dispatch', newReviewObj)
 
         const newReviewObj = {
-            "review": review,
+            "review": newReview,
             "stars": rating
         }
         // console.log('newReviewOBj in CreateReview', newReviewObj)
@@ -63,55 +65,63 @@ const CreateReview = ({ spotId }) => {
 
     useEffect(() => {
         dispatch(fetchReviewThunk())
-
     }, [dispatch])
 
     return (
         <div>
             <form className="create-review-block" onSubmit={handleSubmit}>
                 <p className="errors">{err.hasAExistingReview}</p>
-                <h1>How was your stay</h1>
-                <textarea placeholder="Leave your review here..." onChange={(e => setReview(e.target.value))}></textarea>
+                <h1 className="create-h1">How was your stay?</h1>
+                <textarea className="create-textarea" placeholder="Leave your review here..." onChange={(e => setReview(e.target.value))}></textarea>
                 <div className="starW-rating-hover">
 
                 </div>
-                <button type="submit" disabled={isDisabled} >Submit
-                    Your Review</button>
                 {/* star : hover : rating */}
-                <i class="fa-regular fa-star"
-                    onClick={() => setRating(1)}
-                    onMouseEnter={() => setStarHover(1)}
-                    onMouseLeave={() => setStarHover(0)}
-                    className={starEvent(1)}
-                ></i>
+                <div className="stars">
+                    <i class="fa-regular fa-star"
+                        style={{ color: '#e1d700', fontSize: '30px' }}
+                        onClick={() => setRating(1)}
+                        onMouseEnter={() => setStarHover(1)}
+                        onMouseLeave={() => setStarHover(0)}
+                        className={starEvent(1)}
+                    ></i>
 
-                <i class="fa-regular fa-star"
-                    onClick={() => setRating(2)}
-                    onMouseEnter={() => setStarHover(2)}
-                    onMouseLeave={() => setStarHover(0)}
-                    className={starEvent(2)}
-                ></i>
+                    <i class="fa-regular fa-star"
+                        style={{ color: '#e1d700', fontSize: '30px' }}
+                        onClick={() => setRating(2)}
+                        onMouseEnter={() => setStarHover(2)}
+                        onMouseLeave={() => setStarHover(0)}
+                        className={starEvent(2)}
+                    ></i>
 
-                <i class="fa-regular fa-star"
-                    onClick={() => setRating(3)}
-                    onMouseEnter={() => setStarHover(3)}
-                    onMouseLeave={() => setStarHover(0)}
-                    className={starEvent(3)}
-                ></i>
+                    <i class="fa-regular fa-star"
+                        style={{ color: '#e1d700', fontSize: '30px' }}
+                        onClick={() => setRating(3)}
+                        onMouseEnter={() => setStarHover(3)}
+                        onMouseLeave={() => setStarHover(0)}
+                        className={starEvent(3)}
+                    ></i>
 
-                <i class="fa-regular fa-star"
-                    onClick={() => setRating(4)}
-                    onMouseEnter={() => setStarHover(4)}
-                    onMouseLeave={() => setStarHover(0)}
-                    className={starEvent(4)}
-                ></i>
+                    <i class="fa-regular fa-star"
+                        style={{ color: '#e1d700', fontSize: '30px' }}
+                        onClick={() => setRating(4)}
+                        onMouseEnter={() => setStarHover(4)}
+                        onMouseLeave={() => setStarHover(0)}
+                        className={starEvent(4)}
+                    ></i>
 
-                <i class="fa-regular fa-star"
-                    onClick={() => setRating(5)}
-                    onMouseEnter={() => setStarHover(5)}
-                    onMouseLeave={() => setStarHover(0)}
-                    className={starEvent(5)}
-                ></i>
+                    <i class="fa-regular fa-star"
+                        style={{ color: '#e1d700', fontSize: '30px' }}
+                        onClick={() => setRating(5)}
+                        onMouseEnter={() => setStarHover(5)}
+                        onMouseLeave={() => setStarHover(0)}
+                        className={starEvent(5)}
+                    ></i>
+                    {'   '}
+                    stars
+                </div>
+                <button type="submit" disabled={!!isDisabled} className="create-button">Submit
+                    Your Review</button>
             </form>
         </div>
     )

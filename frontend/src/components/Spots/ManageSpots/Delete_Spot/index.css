@@ -1,0 +1,49 @@
+#modal-content {
+  display: flex;
+  justify-content: center;
+  align-items: normal;
+  /* height: 50;
+    display: grid;
+    justify-content: space-around;
+    align-items: center;
+    grid-template-columns: 100%;
+    grid-template-rows: 0% 30% 40% 20%; */
+}
+/* /* DELETE FORM */
+.delete-Modal-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.delete-form-block {
+  height: 25rem;
+  border: solid 3px black;
+  border-radius: 3%;
+}
+.delete-header {
+  justify-content: center;
+  font-weight: bolder;
+  font-size: 2rem;
+}
+.delete-p {
+  display: flex;
+  font-size: large;
+  font-weight: bolder;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
+}
+.yeah-delete {
+  height: 4rem;
+  color: white;
+  background-color: #ff385c;
+}
+.dont-delete {
+  height: 4rem;
+  color: white;
+  background-color: grey;
+}
+.button-div {
+  display: grid;
+  row-gap: 10%;
+}

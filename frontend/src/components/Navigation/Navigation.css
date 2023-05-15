@@ -12,12 +12,12 @@
   /* color: #ff385c; */
 }
 .nav-list-logo {
-  font-size: 2.3rem;
+  font-size: 1rem;
   color: #ff385c;
 }
 .nav-list-img {
-  width: 2rem;
-  height: 1.7rem;
+  width: 3rem;
+  height: 2.7rem;
   color: #ff385c;
 }
 .nav-manager-link {
@@ -26,14 +26,25 @@
 }
 .profile-dropdown {
   box-shadow: 1px 2px 9px black;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: solid 1px black;
+  align-items: center;
+  top: 5rem;
+  justify-content: center;
+  width: 12rem;
+  right: 0%;
   /* display: grid; */
 }
-.active {
-  font-size: 2.3rem;
+a.active {
+  font-size: 1rem;
   color: #ff385c;
 }
 
 .Nav-button {
+  /* position: absolute; */
   height: 2.5rem;
   width: 5rem;
   padding: 5px 5px 5px 12px;
@@ -44,11 +55,20 @@
 }
 .nav-landingPage {
   display: grid;
-  grid-template-columns: 50% 50%;
-  grid-row: 100%;
-
+  /* grid-template-columns: 50% 50%; */
+  /* grid-row: 100%; */
   justify-content: center;
   align-items: center;
   width: 25%;
-  padding: none;
+  /* padding: none; */
+}
+.nav-link-div {
+  right: 20rem;
+}
+
+.nav-link-div a {
+  font-size: 1rem;
+}
+.nav-create-spot active {
+  font-size: 1rem;
 }

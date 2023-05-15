@@ -47,7 +47,6 @@ const CurrentSpotItems = (spot) => {
                 <Link exact to={`/spots/${spot.spot.id}`}>
 
                     <img src={spot.spot.previewImage} alt='di'></img>
-                    <br></br>
                     {spot.spot.name}{'  '}
                     {spot.spot.city}{'  '}
                     {spot.spot.state}<br></br>
