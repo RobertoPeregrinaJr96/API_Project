@@ -12,7 +12,7 @@ function Navigation({ isLoaded }) {
 
   const isLogin = (user) => {
     if (!user) return null
-    else return <NavLink exact to='/spots/new'>Create A Spot</NavLink>
+    else return <NavLink exact to='/spots/new' className='nav-create-spot'>Create A New Spot&#160;&#160;&#160;&#160;</NavLink>
   }
 
   useEffect(() => {
@@ -21,10 +21,12 @@ function Navigation({ isLoaded }) {
   return (
     <ul className='nav-list'>
       <li className='nav-list-logo'>
-        <NavLink exact to="/">
-          <img className='nav-list-img' src='https://cdn.discordapp.com/attachments/1088906268485357618/1106002225421103195/download.png' alt=''></img>
-          SRC
-        </NavLink>
+        <div className='nav-link-div'>
+          <NavLink exact to="/">
+            <img className='nav-list-img' src='https://cdn.discordapp.com/attachments/1088906268485357618/1106002225421103195/download.png' alt=''></img>
+            SRC
+          </NavLink>
+        </div>
       </li>
       {isLoaded && (
         <li className='nav-landingPage'>

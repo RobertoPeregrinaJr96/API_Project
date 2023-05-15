@@ -1,8 +1,9 @@
 import { useModal } from "../../../../context/Modal"
 import { useDispatch } from "react-redux"
-import { deleteSpot } from "../../../../store/spotReducer";
+import { deleteSpot, fetchSpotsThunk } from "../../../../store/spotReducer";
 // import { useHistory } from "react-router-dom";
-
+import './index.css'
+import { useEffect } from "react";
 
 const DeleteFormModel = (spot) => {
 
@@ -20,23 +21,29 @@ const DeleteFormModel = (spot) => {
     // const history = useHistory()
 
     const closeForm = (e) => {
-        e.preventDefault()
+        // e.preventDefault()
         closeModal()
         // history.push(`/spots/current`)
     }
 
+    useEffect(() => {
+        dispatch(fetchSpotsThunk())
+    }, [dispatch, spot])
+
     return (
+        <div className='delete-Modal-div'>
+            <form className='delete-form-block' onSubmit={handleSubmit}>
+                <h1 className='delete-header'>Confirm Delete</h1>
+                <p className='delete-p'>Are you sure you want to remove this spot from the listings?
+                </p>
+                <div className="button-div">
+                    <button type="submit" onClick={handleSubmit} className='yeah-delete'>Yes (DELETE SPOT)</button>
 
-        <form className="delete-form-block" onSubmit={handleSubmit}>
-            <h1>Confirm Delete</h1>
-            <p>Are you sure you want to remove this spot
-                from the listings?
-            </p>
-            <button type="submit" onClick={handleSubmit}>Yes (DELETE SPOT)</button>
-            <button onClick={closeForm}>No (Keep Spot)</button>
-        </form>
+                    <button onClick={closeForm} className='dont-delete'>No (Keep Spot)</button>
+                </div>
+            </form>
 
-
+        </div >
     )
 
 }

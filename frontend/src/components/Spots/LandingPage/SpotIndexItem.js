@@ -26,17 +26,21 @@ const SpotIndexItem = ({ spot }) => {
             <div className='spot-list-block tool-tip'>
                 <span className='tool-tip-text'>{spot.name}</span>
                 <Link to={`/spots/${spot.id}`} className={'spot-Link'}>
-                    <img src={spot.previewImage} alt='di' className='spots-landingPage-img'></img><br></br>
-                    {/* {spot.name},{'  '} */}
-                    {spot.city},{'  '}
-                    {spot.state}<br></br>
-                    ${spot.price}/night
-                    {/* <ul className='spot-review-stars'>{stars()} */}
-                    <div className='star-rating'>
-                        <p>&#9733;</p>
-                        <p className='spot-review-stars-p'>{rightRating()}</p>
+                    <img src={spot.previewImage} alt='di' className='spots-landingPage-img'></img>
+                    <div className='spot-content'>
+                        <div className='spot-name'>
+                            {spot.city},
+                            {spot.state}
+                        </div>
+                        <div className='star-rating'>
+                            <p>&#9733;</p>
+                            <p className='spot-review-stars-p'>{rightRating()}</p>
+                        </div>
+                        <div className='spot-price'>
+                            ${spot.price} night
+                        </div>
+
                     </div>
-                    {/* </ul> */}
                 </Link>
             </div>
         </li >

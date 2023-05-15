@@ -132,11 +132,11 @@ const spotsReducer = (state = initialState, action) => {
         case LOAD_SPOTS:
             let newState = { ...state, allSpots: { ...state.allSpots } }
             action.spots.Spots.forEach(spot => newState.allSpots[spot.id] = spot)
-            return {...newState}
+            return { ...newState }
         case SINGLE_LOAD_SPOT:
             return { ...state, singleSpot: { ...action.spot } }
         case REMOVE_SPOTS:
-            let deleteState = { ...state }
+            let deleteState = { ...state, allSpots: { ...state.allSpots } }
             delete deleteState.allSpots[action.spotId]
             return deleteState
         case RECEIVE_SPOTS:

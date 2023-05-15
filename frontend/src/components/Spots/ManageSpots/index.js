@@ -21,7 +21,7 @@ const CurrentSpot = () => {
 
     useEffect(() => {
         dispatch(fetchSpotsThunk())
-    }, [dispatch ])
+    }, [dispatch])
 
     const newSpot = (e) => {
         e.preventDefault();
