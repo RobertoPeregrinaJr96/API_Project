@@ -53,6 +53,12 @@ function SignupFormPage() {
     return boolean
   }
 
+  // console.log(email)
+  // console.log(username)
+  // console.log(firstName)
+  // console.log(lastName)
+  // console.log(password)
+  // console.log(boolean)
 
 
   return (
