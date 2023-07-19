@@ -43,7 +43,7 @@ function ProfileButton({ user }) {
     history.push('/')
   };
 
-  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+  const ulClassName = "profile-dropdown" + (showMenu ? "" : "hidden");
 
 
   // current spots
@@ -65,22 +65,30 @@ function ProfileButton({ user }) {
               <Link to={'/spots/current'} className='nav-manager-link'>Manage Spots</Link>
             </li>
             <li>
+              <Link to={'/reviews/current'} className='nav-review-link'>My Reviews</Link>
+            </li>
+            <li>
+              <Link to={'/bookings/current'} className='nav-booking-link'>Bookings</Link>
+            </li>
+            <li>
               <button onClick={logout}>Log Out</button>
             </li>
           </>
         ) : (
-          <>
-            <OpenModalMenuItem
-              itemText="Log In"
-              onItemClick={closeMenu}
-              modalComponent={<LoginFormModal />}
-            />
-            <OpenModalMenuItem
-              itemText="Sign Up"
-              onItemClick={closeMenu}
-              modalComponent={<SignupFormModal />}
-            />
-          </>
+          <div className={ulClassName}>
+            <div className="default">
+              <OpenModalMenuItem
+                itemText="Log In"
+                onItemClick={closeMenu}
+                modalComponent={<LoginFormModal />}
+              />
+              <OpenModalMenuItem
+                itemText="Sign Up"
+                onItemClick={closeMenu}
+                modalComponent={<SignupFormModal />}
+              />
+            </div>
+          </div>
         )}
       </ul>
     </>

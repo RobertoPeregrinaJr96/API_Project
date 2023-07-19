@@ -1,6 +1,7 @@
 import { csrfFetch } from "./csrf";
 /** Action Type Constants: */
 export const GET_REVIEW = 'Spots/LOAD_REVIEW';
+export const GET_USER_REVIEWS = 'Reviews/GET_USER_REVIEWS'
 export const NEW_REVIEW = 'Spots/RECEIVE_REVIEW';
 export const DELETE_REVIEW = 'Spots/REMOVE_REVIEW';
 /**  Action Creators: */
@@ -9,6 +10,10 @@ export const getReview = (reviews) => ({
     type: GET_REVIEW,
     reviews
 });
+export const getUserReviews = (reviews) => ({
+    type: GET_USER_REVIEWS,
+    reviews
+})
 export const newReview = (review) => ({
     type: NEW_REVIEW,
     review,
@@ -26,11 +31,23 @@ export const fetchReviewThunk = (spotId) => async (dispatch) => {
     if (response.ok) {
         const data = await response.json();
         // console.log('data in fetchReviewThunk', data)
-        const review = dispatch(getReview(data));
+        const reviews = dispatch(getReview(data));
         // console.log('review in fetchReviewThunk', review)
-        return review
+        return reviews
     }
 };
+// GET All Users Reviews
+export const fetchUserReviewsThunk = () => async (dispatch) => {
+    const response = await csrfFetch('/api/reviews/current')
+    console.log('response', response)
+    if (response.ok) {
+        const data = await response.json();
+        console.log('data in fetchReviewThunk', data)
+        const review = dispatch(getUserReviews(data));
+        console.log('review in fetchReviewThunk', review)
+        return review
+    }
+}
 // // create a Review
 export const createReviewThunk = (review, spotId) => async (dispatch) => {
     // console.log('spotId in CreateReviewThunk in ReviewReducer', spotId)
@@ -64,7 +81,8 @@ export const deleteReviewThunk = (reviewId) => async (dispatch) => {
 }
 
 const initialState = {
-    spot: {}
+    spot: {},
+    userReviews: {}
 }
 
 const reviewsReducer = (state = initialState, action) => {
@@ -80,6 +98,14 @@ const reviewsReducer = (state = initialState, action) => {
             });
             // console.log('newState in  reviewReducer', newState)
             return newState
+        case GET_USER_REVIEWS:
+            const userReviewState = { ...state, userReviews: { ...state.userReviews } }
+            console.log('state', userReviewState)
+            action.reviews.Reviews.forEach(review => {
+                console.log("949494949", review)
+                userReviewState.userReviews[review.id] = review
+            })
+            return userReviewState
         case NEW_REVIEW:
             const newNewState = { ...state, spot: { ...state.spot } }
             // console.log('Create A REVIEW STATE', newNewState)

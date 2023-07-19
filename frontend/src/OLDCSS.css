@@ -1,0 +1,799 @@
+/* TODO Add site wide styles */
+/* apply to everything */
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200&display=swap");
+* {
+  list-style: none;
+  text-decoration: none;
+  color: black;
+  font-family: "Manrope", sans-serif;
+  font-weight:bold
+  /* background-color: #eef1bd; */
+}
+.login-div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 20% 50%;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  display: flex;
+  width: 100%;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.submit-button {
+  background-color: #ff385c;
+  height: 2rem;
+}
+#modal-content {
+  display: flex;
+  justify-content: center;
+  align-items: normal;
+  /* height: 50;
+  display: grid;
+  justify-content: space-around;
+  align-items: center;
+  grid-template-columns: 100%;
+  grid-template-rows: 0% 30% 40% 20%; */
+}
+.create-review-block {
+  /* display: grid; */
+  height: 100%;
+  width: 100%;
+}
+
+.create-textarea {
+  width: 25rem;
+  height: 8rem;
+  border: solid 2px black;
+  color: black;
+  background-color: rgb(197, 225, 255);
+}
+.create-h1 {
+  height: 30px;
+  font-weight: bolder;
+  justify-content: center;
+  align-items: center;
+}
+.stars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 4rem;
+}
+.fa-regular .fa-star {
+  color: rgb(255, 215, 0);
+}
+.fa-solid .fa-star .fa-beat {
+  color: rgb(255, 215, 0);
+}
+/* <i class="fa-regular fa-star" style="color: #e1d700;"></i> */
+.create-button {
+  width: 25.5rem;
+  height: 3rem;
+  color: white;
+  background-color: #ff385c;
+}
+/* /* DELETE FORM */
+.delete-Modal-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.delete-form-block{
+ height: 25rem;
+}
+.delete-header {
+  justify-content: center;
+  font-weight: bolder;
+}
+.delete-p {
+  display: flex;
+  font-size: large;
+  font-weight: bolder;
+}
+.yeah-delete {
+  height: 4rem;
+  color: white;
+  background-color: #ff385c;
+}
+.dont-delete {
+  height: 4rem;
+  color: white;
+  background-color: grey;
+}
+.button-div {
+  display: grid;
+  row-gap: 10%;
+}
+
+/* Delete a review */
+
+
+
+
+@media screen and (max-width: 1800px) {
+  #modal-content {
+    display: flex;
+    width: 30rem;
+    height: 25rem;
+    justify-content: center;
+    align-items: normal;
+    padding: auto;
+  }
+  .create-textarea {
+    padding: 5px;
+    margin: 5px;
+    width: 25rem;
+    height: 8rem;
+    border: solid 2px black;
+    color: black;
+    background-color: rgb(197, 225, 255);
+  }
+  .create-button {
+    width: 26.5rem;
+    height: 3rem;
+    color: white;
+    background-color: #ff385c;
+  }
+}
+@media screen and (max-width: 1025px) {
+  #modal-content {
+    display: flex;
+    width: 30rem;
+    height: 25rem;
+    justify-content: center;
+    align-items: normal;
+    padding: auto;
+  }
+  .create-textarea {
+    padding: 5px;
+    margin: 5px;
+    width: 25rem;
+    height: 8rem;
+    border: solid 2px black;
+    color: black;
+    background-color: rgb(197, 225, 255);
+  }
+  .create-button {
+    width: 26.5rem;
+    height: 3rem;
+    color: white;
+    background-color: #ff385c;
+  }
+}
+
+.demo-user {
+  border: none;
+  text-decoration: underline;
+  background-color: white;
+}
+.sign-up-div {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 20% 80%;
+}
+
+h1 {
+  height: 30%;
+}
+
+.sign-up-form {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 7px;
+}
+
+input {
+  width: 100%;
+}
+
+.sign-up-submit {
+  height: 2rem;
+  background-color: #ff385c;
+  box-shadow: 2px 2px 2px black;
+}
+
+.errors {
+    color:#ff385c;
+    font-weight: 400;
+
+}
+
+/* Landing Page */
+/* .spots-ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 15rem 15rem 15em 15rem;
+  justify-content: center;
+  align-items: center;
+  row-gap: 1.3rem;
+  column-gap: 1.3rem;
+  margin: 1%;
+  padding: 2%;
+}
+
+.spot-list-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.tool-tip-text {
+  position: absolute;
+  visibility:hidden
+}
+
+.tool-tip:hover .tool-tip-text {
+  visibility: visible;
+}
+
+.spot-list {
+  list-style: none;
+  color: black;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.spot-Link {
+  text-decoration: none;
+}
+
+.nav-landingPage {
+  display: flex;
+  justify-content: right;
+}
+
+.spot-review-stars {
+  display: inline-flex;
+  list-style: none;
+  align-items: center;
+  height: 1.5rem;
+}
+
+.spot-review-stars-li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+}
+.spot-review-stars-p {
+  padding: 0%;
+  margin: 0%;
+}
+
+.spots-landingPage-img {
+  text-decoration: none;
+}
+
+img {
+  width: 20rem;
+  height: 10rem;
+  border-radius: 2%;
+} */
+
+/* detailed spot
+
+.spot-images-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "a a a b c"
+    "a a a c d"
+    "a a a c d";
+}
+
+.spot-image-1 {
+  grid-area: "a";
+}
+.spot-image-2 {
+  grid-area: "b";
+}
+.spot-image-3 {
+  grid-area: "c";
+}
+.spot-image-4 {
+  grid-area: "d";
+}
+.spot-image-5 {
+  grid-area: "e";
+} */
+
+/* current spot */
+
+/* .current-ul {
+  display: flex;
+  justify-content: space-around;
+} */
+
+/* Update spot */
+
+.update-inputBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  row-gap: 10px;
+}
+
+.update-p-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* create Spot */
+
+.create-inputBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.create-div-1 {
+  display: block;
+  justify-content: center;
+  align-items: center;
+}
+.create-div-2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.div-2-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10px;
+  width: 20%;
+}
+
+.create-div-3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.errors {
+  color: #ff385c;
+}
+
+.create-div-images {
+  display: block;
+}
+
+#modal-content {
+    display: flex;
+    justify-content: center;
+    align-items: normal;
+    /* height: 50;
+      display: grid;
+      justify-content: space-around;
+      align-items: center;
+      grid-template-columns: 100%;
+      grid-template-rows: 0% 30% 40% 20%; */
+  }
+  /* /* DELETE FORM */
+  .delete-Modal-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .delete-form-block {
+    height: 25rem;
+    border: solid 3px black;
+    border-radius: 3%;
+  }
+  .delete-header {
+    justify-content: center;
+    font-weight: bolder;
+    font-size: 2rem;
+  }
+  .delete-p {
+    display: flex;
+    font-size: large;
+    font-weight: bolder;
+    justify-content: center;
+    align-items: center;
+    margin-left: 1rem;
+  }
+  .yeah-delete {
+    height: 4rem;
+    color: white;
+    background-color: #ff385c;
+  }
+  .dont-delete {
+    height: 4rem;
+    color: white;
+    background-color: grey;
+  }
+  .button-div {
+    display: grid;
+    row-gap: 10%;
+  }
+  * {
+    font-size: 15px;
+  }
+
+  .create-form {
+    display: grid;
+  }
+
+  .create-p {
+    font-weight: bolder;
+  }
+  input {
+    border: solid 2px black;
+    background-color: rgb(197, 225, 255);
+  }
+  textarea {
+    border: solid 2px black;
+    background-color: rgb(197, 225, 255);
+    height: 6rem;
+  }
+  .create-h1-header {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 1.5rem;
+  }
+  .create-div-1 {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    height: 5rem;
+    justify-content: center;
+    align-items: center;
+  }
+  .left-1-input {
+    width: 110%;
+  }
+  .right-1-input {
+    margin-left: 85px;
+    width: 60%;
+  }
+
+  .create-div-2 {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    height: 5rem;
+    justify-content: center;
+    align-items: center;
+  }
+  .div-2-input {
+    width: 17rem;
+    height: 1.5rem;
+  }
+
+  .right-div {
+    width: 18rem;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  .left-div {
+    width: 9rem;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  .create-p-Describe {
+    font-size: 20px;
+  }
+  .opps {
+    height: 5rem;
+  }
+  .line {
+    border: solid 1px black;
+  }
+
+  .price-input {
+    margin-left: 1rem;
+    width: 80%;
+  }
+  .errors {
+    color: #ff385c;
+    font-size: 1rem;
+    font-weight: bolder;
+  }
+  .h2-p {
+    display: inline-flex;
+  }
+
+  .sub-button {
+    height: 2rem;
+    width: 8rem;
+    background-color: #ff385c;
+    color: white;
+  }
+
+  .button-div {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+  #spot-list {
+    list-style: none;
+  }
+  .spots-ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 15rem 15rem 15em 15rem;
+    justify-content: center;
+    align-items: center;
+    row-gap: 1.3rem;
+    column-gap: 1.3rem;
+    margin: 1%;
+    padding: 2%;
+  }
+
+  .spot-list-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .tool-tip-text {
+    position: absolute;
+    visibility: hidden;
+  }
+
+  .tool-tip:hover .tool-tip-text {
+    visibility: visible;
+  }
+
+  .spot-list {
+    list-style: none;
+    color: black;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .spot-Link {
+    text-decoration: none;
+  }
+
+  .nav-landingPage {
+    display: flex;
+    justify-content: right;
+  }
+
+  .spot-review-stars {
+    display: inline-flex;
+    list-style: none;
+    align-items: center;
+    height: 1.5rem;
+  }
+
+  .spot-review-stars-li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+  }
+  .spot-review-stars-p {
+    padding: 0%;
+    margin: 0%;
+  }
+
+  .spots-landingPage-img {
+    text-decoration: none;
+  }
+
+  img {
+    width: 20rem;
+    height: 10rem;
+    border-radius: 2%;
+  }
+
+  .star-rating {
+    display: flex;
+    align-content: center;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .spot-content {
+    display: grid;
+    grid-template-columns: 80% 20%;
+    grid-template-rows: 60% 40%;
+  }
+
+  @media screen and (max-width: 1400px) {
+    #spot-list {
+      list-style: none;
+    }
+    .spots-ul {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-rows: 15rem 15rem 15em 15rem;
+      justify-content: center;
+      align-items: center;
+      row-gap: 0.5rem;
+      column-gap: 0.5rem;
+      margin: 1%;
+      padding: 2%;
+    }
+
+    .spot-list-block {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .tool-tip-text {
+      position: absolute;
+      visibility: hidden;
+    }
+
+    .tool-tip:hover .tool-tip-text {
+      visibility: visible;
+    }
+
+    .spot-list {
+      list-style: none;
+      color: black;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+    }
+
+    .spot-Link {
+      text-decoration: none;
+    }
+
+    .nav-landingPage {
+      display: flex;
+      justify-content: right;
+    }
+
+    .spot-review-stars {
+      display: inline-flex;
+      list-style: none;
+      align-items: center;
+      height: 1.5rem;
+    }
+
+    .spot-review-stars-li {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+    }
+    .spot-review-stars-p {
+      padding: 0%;
+      margin: 0%;
+    }
+
+    .spots-landingPage-img {
+      text-decoration: none;
+    }
+
+    img {
+      width: 14rem;
+      height: 8rem;
+      border-radius: 2%;
+    }
+    .star-rating {
+      display: flex;
+      align-content: center;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spot-content {
+      display: grid;
+      grid-template-columns: 80% 20%;
+      grid-template-rows: 60% 40%;
+    }
+  }
+  #spot-list {
+    list-style: none;
+  }
+  .current-ul {
+    height: 50rem;
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20%;
+    column-gap: 1%;
+    grid-template-rows: 35% 35% 35% 20% 20% ;
+    row-gap: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  .image-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .main-image {
+    width: 100%;
+    height: 100%;
+  }
+  .side-image {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 50%;
+    row-gap: 6px;
+    column-gap: 6px;
+  }
+  .image-0 {
+    height: 21rem;
+    width: 30rem;
+  }
+
+  h1 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .spot-detailed-info {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    padding: 3%;
+    margin: 2%;
+  }
+
+  .booking-div {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    border: solid 2px black;
+    width: 15rem;
+    border-radius: 15px;
+    height: 10rem;
+    flex-direction: column;
+  }
+
+  .booking-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+  }
+
+  .alert-button {
+    background-color: red;
+    color: white;
+    width: 10rem;
+    height: 2rem;
+  }
+
+  .alert-button-label {
+    color: white;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hidden {
+    display: none;
+  }

@@ -10,6 +10,8 @@ import CurrentSpot from './components/Spots/ManageSpots/index'
 import CreateNewSpot from './components/Spots/ManageSpots/Create_Spot/index'
 import SpotById from './components/Spots/SpotDetails/index'
 import SpotEdit from './components/Spots/ManageSpots/Update_Spot/index'
+import UserReviews from "./components/MyReviews";
+import Bookings from "./components/Bookings";
 
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
     <>
       <Navigation isLoaded={isLoaded} />
       {isLoaded && <Switch>
+        <Route exact path='/reviews/current' component={UserReviews} />
+        <Route exact path='/bookings/current' component={Bookings} />
         <Route exact path='/spots/current' component={CurrentSpot} />
         <Route exact path='/spots/new' component={CreateNewSpot} />
         <Route exact path='/spots/:id' component={SpotById} />

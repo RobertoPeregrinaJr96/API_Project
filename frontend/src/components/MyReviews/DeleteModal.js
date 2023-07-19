@@ -1,25 +1,19 @@
-import { useModal } from '../../../../context/Modal'
+import { useModal } from '../../context/Modal'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { deleteReviewThunk, fetchReviewThunk } from '../../../../store/reviewsReducer'
+import { deleteReviewThunk, fetchReviewThunk } from '../../store/reviewsReducer'
 import { useEffect } from 'react'
 import './index.css'
 
 
-const DeleteReviewModal = ({ spotId, reviewObj }) => {
-    const user = useSelector(state => state.session.user)
-    console.log('reviewObj in DeleteReviewModal', reviewObj)
-    const reviews = /*Object.values(reviewObj)*/[reviewObj]
-    console.log('reviews in DeleteReviewModal', reviews)
-    const userReview = reviews.find(review => review?.userId === user?.id)
-    console.log('userReview in DeleteReviewModal', userReview)
-
-
+const DeleteModal = ({ reviewsObj }) => {
+    console.log("94949494949",reviewsObj)
     const { closeModal } = useModal()
     const dispatch = useDispatch();
+
     const handleSubmit = async (e) => {
         e.preventDefault()
-        dispatch(deleteReviewThunk(Number(userReview.id))).then(closeModal)
+        dispatch(deleteReviewThunk()).then(closeModal)
     }
 
     const closeModalSubmit = (e) => {
@@ -29,7 +23,7 @@ const DeleteReviewModal = ({ spotId, reviewObj }) => {
 
     useEffect(() => {
         dispatch(fetchReviewThunk())
-    }, [dispatch, Object.values(reviewObj).length])
+    }, [dispatch])
 
     // console.log("Hello World in deleteReview")
     return (
@@ -47,4 +41,4 @@ const DeleteReviewModal = ({ spotId, reviewObj }) => {
     )
 }
 
-export default DeleteReviewModal;
+export default DeleteModal;

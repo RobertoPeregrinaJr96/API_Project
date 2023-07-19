@@ -3,72 +3,37 @@
 }
 /* Nav */
 .nav-list {
-  display: flex;
-  justify-content: space-between;
-  list-style: none;
-  font-size: 1rem;
-  border-bottom: solid 0.5px gray;
-  padding-bottom: 15px;
-  /* color: #ff385c; */
-}
-.nav-list-logo {
-  font-size: 1rem;
-  color: #ff385c;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  justify-content: center;
+  align-items: center;
 }
 .nav-list-img {
-  width: 3rem;
-  height: 2.7rem;
-  color: #ff385c;
-}
-.nav-manager-link {
-  color: black;
-  font-size: 1rem;
-}
-.profile-dropdown {
-  box-shadow: 1px 2px 9px black;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border: solid 1px black;
-  align-items: center;
-  top: 5rem;
-  justify-content: center;
-  width: 12rem;
-  right: 0%;
-  /* display: grid; */
-}
-a.active {
-  font-size: 1rem;
-  color: #ff385c;
-}
-
-.Nav-button {
-  /* position: absolute; */
-  height: 2.5rem;
+  height: 5rem;
   width: 5rem;
-  padding: 5px 5px 5px 12px;
-  border-radius: 35% 35%;
 }
-.Nav-button:hover {
-  box-shadow: 2px 3px 4px black;
-}
-.nav-landingPage {
-  display: grid;
-  /* grid-template-columns: 50% 50%; */
-  /* grid-row: 100%; */
-  justify-content: center;
-  align-items: center;
-  width: 25%;
-  /* padding: none; */
+.nav-list-logo {
 }
 .nav-link-div {
-  right: 20rem;
+  font-size: 5rem;
+}
+.nav-link-div a{
+  font-size: 5rem;
+  text-decoration: none;
+  color: var(--Airbnb-red);
 }
 
-.nav-link-div a {
-  font-size: 1rem;
+.nav-landingPage {
 }
-.nav-create-spot active {
-  font-size: 1rem;
+
+/* Profile Button */
+.nav-manager-link {
+}
+.Nav-button {
+}
+.fas .fa-user-circle {
+}
+.fa-solid .fa-bars {
+}
+.default {
 }
